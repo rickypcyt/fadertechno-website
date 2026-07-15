@@ -1,0 +1,307 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["driverAdapters"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  USER
+  STAFF
+  PROMOTER
+  ADMIN
+  SUPER_ADMIN
+}
+
+enum OrderStatus {
+  PENDING
+  PAID
+  REFUNDED
+  CANCELLED
+}
+
+enum MediaType {
+  IMAGE
+  VIDEO
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String    @unique
+  emailVerified Boolean   @default(false)
+  image         String?
+  role          Role      @default(USER)
+
+  sessions      Session[]
+  accounts      Account[]
+  orders        Order[]
+  transactions  CreditTransaction[]
+
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
+model Session {
+  id        String   @id @default(cuid())
+  expiresAt DateTime
+  token     String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  ipAddress String?
+  userAgent String?
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Account {
+  id                    String    @id @default(cuid())
+  accountId             String
+  providerId            String
+  userId                String
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  password              String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  @@unique([providerId, accountId])
+}
+
+model Verification {
+  id         String    @id @default(cuid())
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+enum CreditType {
+  EARN
+  SPEND
+  BONUS
+  REFUND
+}
+
+model CreditTransaction {
+  id          String     @id @default(cuid())
+  userId      String
+  amount      Int
+  type        CreditType
+  description String?
+  createdAt   DateTime   @default(now())
+
+  user        User       @relation(fields: [userId], references: [id])
+}
+
+model Reward {
+  id          String  @id @default(cuid())
+  name        String
+  description String?
+  cost        Int
+  stock       Int?
+  active      Boolean @default(true)
+}
+
+model Venue {
+  id        String   @id @default(cuid())
+  name      String
+  slug      String   @unique
+  address   String?
+  city      String?
+  capacity  Int?
+  latitude  Float?
+  longitude Float?
+  instagram String?
+  website   String?
+
+  events    Event[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model MediaAsset {
+  id        String      @id @default(cuid())
+  url       String
+  publicId  String?
+  alt       String?
+  type      MediaType   @default(IMAGE)
+
+  coverEvents Event[]
+  artists     Artist[]
+  sponsors    Sponsor[]
+  gallery     GalleryImage[]
+
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+}
+
+model Event {
+  id          String   @id @default(cuid())
+  title       String
+  slug        String   @unique
+
+  description String
+
+  startDate   DateTime
+  endDate     DateTime?
+
+  coverImageId String?
+  coverImage   MediaAsset? @relation(fields: [coverImageId], references: [id])
+
+  venueId    String
+  venue      Venue    @relation(fields: [venueId], references: [id])
+
+  published  Boolean  @default(false)
+
+  images       GalleryImage[]
+  artists      EventArtist[]
+  ticketTypes  TicketType[]
+  sponsors     SponsorEvent[]
+  orders       Order[]
+
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model GalleryImage {
+  id           String   @id @default(cuid())
+
+  alt          String?
+  order        Int      @default(0)
+  featured     Boolean  @default(false)
+
+  eventId      String
+  event        Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
+
+  mediaAssetId String
+  mediaAsset   MediaAsset @relation(fields: [mediaAssetId], references: [id], onDelete: Cascade)
+
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model Artist {
+  id           String   @id @default(cuid())
+  name         String
+  slug         String   @unique
+  bio          String?
+  imageId      String?
+  image        MediaAsset? @relation(fields: [imageId], references: [id])
+  instagram    String?
+  soundcloud   String?
+  spotify      String?
+  resident     Boolean  @default(false)
+
+  events EventArtist[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model EventArtist {
+  eventId  String
+  artistId String
+
+  setStart DateTime?
+  setEnd   DateTime?
+
+  event  Event  @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  artist Artist @relation(fields: [artistId], references: [id], onDelete: Cascade)
+
+  @@id([eventId, artistId])
+}
+
+model Sponsor {
+  id          String   @id @default(cuid())
+  name        String
+  slug        String   @unique
+  website     String?
+  logoAssetId String?
+  logo        MediaAsset? @relation(fields: [logoAssetId], references: [id])
+
+  events SponsorEvent[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model SponsorEvent {
+  sponsorId String
+  eventId   String
+
+  sponsor Sponsor @relation(fields: [sponsorId], references: [id], onDelete: Cascade)
+  event   Event   @relation(fields: [eventId], references: [id], onDelete: Cascade)
+
+  @@id([sponsorId, eventId])
+}
+
+model TicketType {
+  id    String  @id @default(cuid())
+  name  String
+  price Decimal
+  stock Int
+
+  eventId String
+  event   Event   @relation(fields: [eventId], references: [id], onDelete: Cascade)
+
+  tickets Ticket[]
+}
+
+model Order {
+  id     String      @id @default(cuid())
+  total  Decimal
+  status OrderStatus
+
+  stripeId String?
+
+  userId  String
+  user    User   @relation(fields: [userId], references: [id])
+
+  eventId String
+  event   Event  @relation(fields: [eventId], references: [id])
+
+  tickets Ticket[]
+
+  createdAt DateTime @default(now())
+}
+
+model Ticket {
+  id            String    @id @default(cuid())
+  code          String    @unique
+  checkedIn     Boolean   @default(false)
+  checkedInAt   DateTime?
+
+  orderId       String
+  order         Order     @relation(fields: [orderId], references: [id])
+
+  ticketTypeId  String
+  ticketType    TicketType @relation(fields: [ticketTypeId], references: [id])
+}
+
+model NewsletterSubscriber {
+  id         String   @id @default(cuid())
+  email      String   @unique
+  subscribed Boolean  @default(true)
+  createdAt  DateTime @default(now())
+}
+
+model SiteSettings {
+  id                String  @id @default("main")
+  heroTitle         String
+  heroDescription   String
+  instagram         String?
+  soundcloud        String?
+  spotify           String?
+}
+

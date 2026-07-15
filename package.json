@@ -3,6 +3,31 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "npx serve ."
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "postinstall": "prisma generate",
+    "db:generate": "prisma generate",
+    "db:migrate": "prisma migrate dev",
+    "db:push": "prisma db push",
+    "db:studio": "prisma studio"
+  },
+  "dependencies": {
+    "@neondatabase/serverless": "0.10.4",
+    "@prisma/adapter-neon": "5",
+    "@prisma/client": "5",
+    "better-auth": "^1.6.23",
+    "next": "^16.2.10",
+    "react": "^19.2.7",
+    "react-dom": "^19.2.7",
+    "ws": "^8.21.1"
+  },
+  "devDependencies": {
+    "@types/node": "^26.1.1",
+    "@types/react": "19",
+    "@types/react-dom": "19",
+    "@types/ws": "^8.18.1",
+    "prisma": "5",
+    "typescript": "5"
   }
 }
