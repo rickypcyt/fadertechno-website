@@ -3,5 +3,5 @@ import { sentinelClient } from '@better-auth/infra/client'
 
 export const authClient = createAuthClient({
   baseURL: process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000',
-  plugins: [sentinelClient()],
+  plugins: [sentinelClient({ identifyUrl: '' })],
 })
