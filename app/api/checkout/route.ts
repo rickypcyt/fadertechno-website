@@ -1,8 +1,10 @@
 import { NextRequest } from 'next/server'
 import type { Stripe } from 'stripe'
-import { stripe } from '@/lib/stripe'
+import { getStripe } from '@/lib/stripe'
 import prisma from '@/lib/prisma'
 import { getCurrentUser } from '@/lib/auth'
+
+export const dynamic = 'force-dynamic'
 
 export async function POST(request: NextRequest) {
   const user = await getCurrentUser()
@@ -79,7 +81,7 @@ export async function POST(request: NextRequest) {
   const appUrl =
     process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000'
 
-  const session = await stripe.checkout.sessions.create({
+  const session = await getStripe().checkout.sessions.create({
     mode: 'payment',
     line_items: lineItems,
     success_url: `${appUrl}/user/events/${ticketTypes[0].eventId}/success?order=${order.id}`,
