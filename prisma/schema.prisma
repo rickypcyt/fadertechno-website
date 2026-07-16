@@ -1,3 +1,4 @@
+
 generator client {
   provider        = "prisma-client-js"
   previewFeatures = ["driverAdapters"]
@@ -29,20 +30,22 @@ enum MediaType {
 }
 
 model User {
-  id            String    @id @default(cuid())
+  id            String  @id @default(cuid())
   name          String?
-  email         String    @unique
-  emailVerified Boolean   @default(false)
+  email         String  @unique
+  emailVerified Boolean @default(false)
   image         String?
-  role          Role      @default(USER)
+  role          Role    @default(USER)
 
-  sessions      Session[]
-  accounts      Account[]
-  orders        Order[]
-  transactions  CreditTransaction[]
+  sessions     Session[]
+  accounts     Account[]
+  orders       Order[]
+  transactions CreditTransaction[]
 
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("user")
 }
 
 model Session {
@@ -55,6 +58,9 @@ model Session {
   userAgent String?
   userId    String
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("session")
 }
 
 model Account {
@@ -74,15 +80,20 @@ model Account {
   updatedAt             DateTime  @updatedAt
 
   @@unique([providerId, accountId])
+  @@index([userId])
+  @@map("account")
 }
 
 model Verification {
-  id         String    @id @default(cuid())
+  id         String   @id @default(cuid())
   identifier String
   value      String
   expiresAt  DateTime
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
+
+  @@index([identifier])
+  @@map("verification")
 }
 
 enum CreditType {
@@ -100,7 +111,7 @@ model CreditTransaction {
   description String?
   createdAt   DateTime   @default(now())
 
-  user        User       @relation(fields: [userId], references: [id])
+  user User @relation(fields: [userId], references: [id])
 }
 
 model Reward {
@@ -113,9 +124,9 @@ model Reward {
 }
 
 model Venue {
-  id        String   @id @default(cuid())
+  id        String  @id @default(cuid())
   name      String
-  slug      String   @unique
+  slug      String  @unique
   address   String?
   city      String?
   capacity  Int?
@@ -124,84 +135,84 @@ model Venue {
   instagram String?
   website   String?
 
-  events    Event[]
+  events Event[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
 model MediaAsset {
-  id        String      @id @default(cuid())
-  url       String
-  publicId  String?
-  alt       String?
-  type      MediaType   @default(IMAGE)
+  id       String    @id @default(cuid())
+  url      String
+  publicId String?
+  alt      String?
+  type     MediaType @default(IMAGE)
 
   coverEvents Event[]
   artists     Artist[]
   sponsors    Sponsor[]
   gallery     GalleryImage[]
 
-  createdAt   DateTime    @default(now())
-  updatedAt   DateTime    @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Event {
-  id          String   @id @default(cuid())
-  title       String
-  slug        String   @unique
+  id    String @id @default(cuid())
+  title String
+  slug  String @unique
 
   description String
 
-  startDate   DateTime
-  endDate     DateTime?
+  startDate DateTime
+  endDate   DateTime?
 
   coverImageId String?
   coverImage   MediaAsset? @relation(fields: [coverImageId], references: [id])
 
-  venueId    String
-  venue      Venue    @relation(fields: [venueId], references: [id])
+  venueId String
+  venue   Venue  @relation(fields: [venueId], references: [id])
 
-  published  Boolean  @default(false)
+  published Boolean @default(false)
 
-  images       GalleryImage[]
-  artists      EventArtist[]
-  ticketTypes  TicketType[]
-  sponsors     SponsorEvent[]
-  orders       Order[]
+  images      GalleryImage[]
+  artists     EventArtist[]
+  ticketTypes TicketType[]
+  sponsors    SponsorEvent[]
+  orders      Order[]
 
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model GalleryImage {
-  id           String   @id @default(cuid())
+  id String @id @default(cuid())
 
-  alt          String?
-  order        Int      @default(0)
-  featured     Boolean  @default(false)
+  alt      String?
+  order    Int     @default(0)
+  featured Boolean @default(false)
 
-  eventId      String
-  event        Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  eventId String
+  event   Event  @relation(fields: [eventId], references: [id], onDelete: Cascade)
 
   mediaAssetId String
   mediaAsset   MediaAsset @relation(fields: [mediaAssetId], references: [id], onDelete: Cascade)
 
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Artist {
-  id           String   @id @default(cuid())
-  name         String
-  slug         String   @unique
-  bio          String?
-  imageId      String?
-  image        MediaAsset? @relation(fields: [imageId], references: [id])
-  instagram    String?
-  soundcloud   String?
-  spotify      String?
-  resident     Boolean  @default(false)
+  id         String      @id @default(cuid())
+  name       String
+  slug       String      @unique
+  bio        String?
+  imageId    String?
+  image      MediaAsset? @relation(fields: [imageId], references: [id])
+  instagram  String?
+  soundcloud String?
+  spotify    String?
+  resident   Boolean     @default(false)
 
   events EventArtist[]
 
@@ -223,9 +234,9 @@ model EventArtist {
 }
 
 model Sponsor {
-  id          String   @id @default(cuid())
+  id          String      @id @default(cuid())
   name        String
-  slug        String   @unique
+  slug        String      @unique
   website     String?
   logoAssetId String?
   logo        MediaAsset? @relation(fields: [logoAssetId], references: [id])
@@ -253,7 +264,7 @@ model TicketType {
   stock Int
 
   eventId String
-  event   Event   @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  event   Event  @relation(fields: [eventId], references: [id], onDelete: Cascade)
 
   tickets Ticket[]
 }
@@ -265,8 +276,8 @@ model Order {
 
   stripeId String?
 
-  userId  String
-  user    User   @relation(fields: [userId], references: [id])
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
 
   eventId String
   event   Event  @relation(fields: [eventId], references: [id])
@@ -277,16 +288,16 @@ model Order {
 }
 
 model Ticket {
-  id            String    @id @default(cuid())
-  code          String    @unique
-  checkedIn     Boolean   @default(false)
-  checkedInAt   DateTime?
+  id          String    @id @default(cuid())
+  code        String    @unique
+  checkedIn   Boolean   @default(false)
+  checkedInAt DateTime?
 
-  orderId       String
-  order         Order     @relation(fields: [orderId], references: [id])
+  orderId String
+  order   Order  @relation(fields: [orderId], references: [id])
 
-  ticketTypeId  String
-  ticketType    TicketType @relation(fields: [ticketTypeId], references: [id])
+  ticketTypeId String
+  ticketType   TicketType @relation(fields: [ticketTypeId], references: [id])
 }
 
 model NewsletterSubscriber {
@@ -297,11 +308,12 @@ model NewsletterSubscriber {
 }
 
 model SiteSettings {
-  id                String  @id @default("main")
-  heroTitle         String
-  heroDescription   String
-  instagram         String?
-  soundcloud        String?
-  spotify           String?
+  id              String  @id @default("main")
+  heroTitle       String
+  heroDescription String
+  instagram       String?
+  soundcloud      String?
+  spotify         String?
 }
+
 
