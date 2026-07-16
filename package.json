@@ -19,6 +19,8 @@
     "@stripe/stripe-js": "^9.10.0",
     "better-auth": "^1.6.23",
     "next": "^16.2.10",
+    "qrcode.react": "^4.2.0",
+    "qr-scanner": "^1.4.2",
     "react": "^19.2.7",
     "react-dom": "^19.2.7",
     "stripe": "^22.3.2",
