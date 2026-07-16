@@ -13,8 +13,6 @@ const links = [
 ]
 
 export default function Nav() {
-  const [menuOpen, setMenuOpen] = useState(false)
-
   return (
     <nav className="nav" id="nav">
       <div className="container">
@@ -41,42 +39,10 @@ export default function Nav() {
           Registrarse
         </Link>
 
-        <button
-          className="nav-burger"
-          id="navBurger"
-          aria-label="Menú"
-          aria-expanded={menuOpen}
-          onClick={() => setMenuOpen((v) => !v)}
-        >
-          <span></span>
-          <span></span>
-          <span></span>
-        </button>
+        <Link href="/register" className="nav-cta nav-cta-mobile">
+          Registrarse
+        </Link>
       </div>
-
-      {menuOpen && (
-        <div className="nav-mobile-menu">
-          {links.map((link) => (
-            <a
-              key={link.href}
-              href={link.href}
-              onClick={() => setMenuOpen(false)}
-              className="nav-mobile-link"
-            >
-              {link.label}
-            </a>
-          ))}
-          <div className="nav-mobile-actions">
-            <Link
-              href="/register"
-              className="nav-cta"
-              onClick={() => setMenuOpen(false)}
-            >
-              Registrarse
-            </Link>
-          </div>
-        </div>
-      )}
     </nav>
   )
 }

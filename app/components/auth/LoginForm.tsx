@@ -22,7 +22,10 @@ export default function LoginForm({ redirect }: { redirect?: string }) {
         password,
       })
 
+      console.log('Login response:', res)
+
       if (res.error) {
+        console.error('Login error:', res.error)
         setError(res.error.message ?? 'Error al iniciar sesión')
         setLoading(false)
         return
@@ -36,8 +39,10 @@ export default function LoginForm({ redirect }: { redirect?: string }) {
 
       try {
         const meRes = await fetch('/api/me')
+        console.log('Me response status:', meRes.status)
         if (meRes.ok) {
           const me = await meRes.json()
+          console.log('User role:', me.role)
           if (me.role === 'SUPER_ADMIN') {
             router.push('/admin/superadmin')
           } else if (me.role === 'ADMIN') {
@@ -51,8 +56,18 @@ export default function LoginForm({ redirect }: { redirect?: string }) {
           }
           router.refresh()
           return
+        } else {
+          console.error('Me fetch failed:', meRes.status)
+          setError('Error al obtener datos de usuario')
+          setLoading(false)
+          return
         }
-      } catch {}
+      } catch (err) {
+        console.error('Me fetch error:', err)
+        setError('Error de conexión al servidor')
+        setLoading(false)
+        return
+      }
 
       router.push('/user/dashboard')
       router.refresh()

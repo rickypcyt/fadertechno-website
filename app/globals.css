@@ -410,6 +410,10 @@ img {
   background: #aaa;
 }
 
+.nav-cta-mobile {
+  display: none;
+}
+
 .nav-burger {
   display: none;
   flex-direction: column;
@@ -1275,12 +1279,24 @@ img {
 
 /* ===== AUTH ===== */
 .auth-page {
-  min-height: 100vh;
+  min-height: 100dvh;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 24px;
-  padding-top: 100px;
+}
+
+@media (max-width: 768px) {
+  .auth-page {
+    min-height: auto;
+    display: block;
+    padding: 0;
+  }
+
+  .auth-card {
+    margin: 16px;
+    margin-top: 0;
+  }
 }
 
 .auth-card {
@@ -1314,6 +1330,16 @@ img {
   display: flex;
   flex-direction: column;
   gap: 16px;
+  position: relative;
+  z-index: 1;
+}
+
+.auth-form button {
+  position: relative;
+  z-index: 2;
+  pointer-events: auto !important;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .auth-form input {
@@ -2658,52 +2684,19 @@ img {
   }
 
   .nav-burger {
-    display: flex;
+    display: none;
   }
 
   .nav-cta-desktop {
     display: none;
   }
 
-  .nav-mobile-menu {
-    display: flex;
-    flex-direction: column;
-    position: absolute;
-    top: 100%;
-    left: 0;
-    right: 0;
-    background: rgba(0, 0, 0, 0.98);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    padding: 20px 16px;
-    gap: 4px;
-    border-bottom: 1px solid var(--border);
-  }
-
-  .nav-mobile-link {
-    font-size: 0.9rem;
-    font-weight: 500;
-    color: var(--text-dim);
-    padding: 12px 12px;
-    border-radius: var(--radius);
-    transition: color 0.2s, background 0.2s;
-  }
-
-  .nav-mobile-link:hover {
-    color: var(--text);
-    background: rgba(255, 255, 255, 0.04);
-  }
-
-  .nav-mobile-actions {
-    margin-top: 12px;
-    padding-top: 12px;
-    border-top: 1px solid var(--border);
-  }
-
-  .nav-mobile-actions .nav-cta {
+  .nav-cta-mobile {
     display: inline-flex;
-    width: 100%;
-    justify-content: center;
+  }
+
+  .nav-mobile-menu {
+    display: none;
   }
 
   .hero-content {
