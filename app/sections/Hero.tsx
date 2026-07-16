@@ -22,6 +22,7 @@ export default function Hero() {
         </span>
         <h1>
           FA<span>DER</span>
+          <span className="sr-only"> — Techno contemporáneo en Alicante</span>
         </h1>
         <div className="hero-sub">
           <p>
