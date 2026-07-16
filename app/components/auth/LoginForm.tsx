@@ -3,9 +3,8 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { authClient } from '@/lib/auth-client'
-import { getRedirectUrl } from '@/app/actions/get-redirect-url'
 
-export default function LoginForm() {
+export default function LoginForm({ redirect }: { redirect?: string }) {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
@@ -17,24 +16,50 @@ export default function LoginForm() {
     setError('')
     setLoading(true)
 
-    const res = await authClient.signIn.email({
-      email,
-      password,
-    })
-
-    if (res.error) {
-      setError(res.error.message ?? 'Error al iniciar sesión')
-      setLoading(false)
-      return
-    }
-
     try {
-      const redirectUrl = await getRedirectUrl()
-      router.push(redirectUrl)
-      router.refresh()
-    } catch {
+      const res = await authClient.signIn.email({
+        email,
+        password,
+      })
+
+      if (res.error) {
+        setError(res.error.message ?? 'Error al iniciar sesión')
+        setLoading(false)
+        return
+      }
+
+      if (redirect) {
+        router.push(redirect)
+        router.refresh()
+        return
+      }
+
+      try {
+        const meRes = await fetch('/api/me')
+        if (meRes.ok) {
+          const me = await meRes.json()
+          if (me.role === 'SUPER_ADMIN') {
+            router.push('/admin/superadmin')
+          } else if (me.role === 'ADMIN') {
+            router.push('/admin/dashboard')
+          } else if (me.role === 'STAFF') {
+            router.push('/staff/dashboard')
+          } else if (me.role === 'PROMOTER') {
+            router.push('/promoter')
+          } else {
+            router.push('/user/dashboard')
+          }
+          router.refresh()
+          return
+        }
+      } catch {}
+
       router.push('/user/dashboard')
       router.refresh()
+    } catch (err) {
+      console.error('Login error:', err)
+      setError('Error inesperado. Revisa la consola.')
+      setLoading(false)
     }
   }
 

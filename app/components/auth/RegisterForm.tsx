@@ -3,9 +3,8 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { authClient } from '@/lib/auth-client'
-import { getRedirectUrl } from '@/app/actions/get-redirect-url'
 
-export default function RegisterForm() {
+export default function RegisterForm({ redirect }: { redirect?: string }) {
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -41,14 +40,14 @@ export default function RegisterForm() {
       return
     }
 
-    try {
-      const redirectUrl = await getRedirectUrl()
-      router.push(redirectUrl)
+    if (redirect) {
+      router.push(redirect)
       router.refresh()
-    } catch {
-      router.push('/user/dashboard')
-      router.refresh()
+      return
     }
+
+    router.push('/user/dashboard')
+    router.refresh()
   }
 
   return (

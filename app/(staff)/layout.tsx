@@ -22,8 +22,10 @@ export default async function StaffLayout({
   }
 
   return (
-    <div className="admin-shell">
-      <main className="admin-main">{children}</main>
+    <div className="staff-shell">
+      <main className="staff-main">
+        {children}
+      </main>
     </div>
   )
 }

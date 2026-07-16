@@ -1,61 +1,77 @@
-import Image from 'next/image'
-import Link from 'next/link'
+import prisma from '@/lib/prisma'
+import SessionsClient from './SessionsClient'
 
-export default function Sessions() {
+export default async function Sessions() {
+  const now = new Date()
+
+  const [upcomingEvent, lastPastEvent] = await Promise.all([
+    prisma.event.findFirst({
+      where: {
+        published: true,
+        startDate: { gte: now },
+      },
+      include: {
+        venue: true,
+        coverImage: true,
+        ticketTypes: true,
+        artists: { include: { artist: true } },
+      },
+      orderBy: { startDate: 'asc' },
+    }),
+    prisma.event.findFirst({
+      where: {
+        published: true,
+        startDate: { lt: now },
+      },
+      include: {
+        venue: true,
+        coverImage: true,
+        artists: { include: { artist: true } },
+      },
+      orderBy: { startDate: 'desc' },
+    }),
+  ])
+
   return (
-    <section id="eventos" className="sec sec-2 layout-wide" style={{ paddingTop: '80px', paddingBottom: '80px' }}>
-      <div className="sessions-event sessions-event-tba reveal">
-        <div className="sessions-tba">
-          <span className="sessions-tba-text">TBA</span>
-        </div>
-        <div className="sessions-info">
-          <div className="section-label">02 — Próximo evento</div>
-          <h3>FADER Session 015</h3>
-          <p>Próximo evento. Pronto anunciaremos line-up y fecha.</p>
-          <div className="sessions-meta">
-            <div className="sessions-meta-item">
-              <strong>Sala</strong>
-              Kalicante — Alicante
-            </div>
-            <div className="sessions-meta-item">
-              <strong>Acceso</strong>
-              +18
-            </div>
-          </div>
-          <div className="sessions-actions">
-            <Link href="#" className="nav-cta">
-              Early Bird
-            </Link>
-            <Link href="#" className="btn btn-ghost">
-              Más info
-            </Link>
-          </div>
-        </div>
-      </div>
-
-      <div className="sessions-event reveal" style={{ marginTop: '80px' }}>
-        <div className="sessions-image">
-          <Image
-            src="/wonderfull.jpg"
-            alt="Wonderfull"
-            width={400}
-            height={300}
-            sizes="(max-width: 860px) 100vw, 60vw"
-            style={{ width: '100%', height: 'auto', display: 'block' }}
-          />
-          <div className="archive-overlay" />
-        </div>
-        <div className="sessions-info">
-          <div className="section-label">Última experiencia</div>
-          <h3>Wonderfull</h3>
-          <p>El evento más reciente. Lo que vivimos.</p>
-          <div className="sessions-actions">
-            <Link href="#archivo" className="btn btn-ghost">
-              Ver archivo
-            </Link>
-          </div>
-        </div>
-      </div>
-    </section>
+    <SessionsClient
+      upcoming={
+        upcomingEvent
+          ? {
+              id: upcomingEvent.id,
+              title: upcomingEvent.title,
+              slug: upcomingEvent.slug,
+              description: upcomingEvent.description,
+              startDate: upcomingEvent.startDate,
+              venue: { name: upcomingEvent.venue.name, city: upcomingEvent.venue.city },
+              coverImage: upcomingEvent.coverImage
+                ? { url: upcomingEvent.coverImage.url, alt: upcomingEvent.coverImage.alt }
+                : null,
+              ticketTypes: upcomingEvent.ticketTypes.map((tt) => ({
+                id: tt.id,
+                name: tt.name,
+                price: tt.price.toString(),
+              })),
+              artists: upcomingEvent.artists.map((a) => ({ artist: { name: a.artist.name } })),
+            }
+          : null
+      }
+      lastPast={
+        lastPastEvent
+          ? {
+              id: lastPastEvent.id,
+              title: lastPastEvent.title,
+              slug: lastPastEvent.slug,
+              description: lastPastEvent.description,
+              startDate: lastPastEvent.startDate,
+              venue: { name: lastPastEvent.venue.name, city: lastPastEvent.venue.city },
+              coverImage: lastPastEvent.coverImage
+                ? { url: lastPastEvent.coverImage.url, alt: lastPastEvent.coverImage.alt }
+                : null,
+              ticketTypes: [],
+              artists: lastPastEvent.artists.map((a) => ({ artist: { name: a.artist.name } })),
+            }
+          : null
+      }
+    />
   )
 }

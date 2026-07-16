@@ -3,6 +3,7 @@ import SignOutButton from './SignOutButton'
 
 const navItems = [
   { href: '/admin/dashboard', label: 'Dashboard' },
+  { href: '/admin/superadmin', label: '⚡ Super Admin', superAdminOnly: true },
   { href: '/admin/events', label: 'Eventos' },
   { href: '/admin/tickets', label: 'Entradas' },
   { href: '/admin/artists', label: 'Artistas' },
@@ -16,12 +17,16 @@ const navItems = [
   { href: '/admin/settings', label: 'Configuración' },
 ]
 
-export default function Sidebar() {
+export default function Sidebar({ userRole }: { userRole?: string }) {
+  const visibleItems = navItems.filter(
+    (item) => !item.superAdminOnly || userRole === 'SUPER_ADMIN'
+  )
+
   return (
     <aside className="admin-sidebar">
       <div className="admin-brand">FADER ADMIN</div>
       <nav className="admin-nav">
-        {navItems.map((item) => (
+        {visibleItems.map((item) => (
           <Link key={item.href} href={item.href} className="admin-nav-link">
             {item.label}
           </Link>

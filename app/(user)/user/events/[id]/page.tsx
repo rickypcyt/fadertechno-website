@@ -1,7 +1,6 @@
 import { notFound } from 'next/navigation'
 import prisma from '@/lib/prisma'
-import { requireRole } from '@/lib/permissions'
-import { Role } from '@/lib/roles'
+import { getCurrentUser } from '@/lib/auth'
 import TicketSelector from './TicketSelector'
 
 export default async function EventDetailPage({
@@ -9,7 +8,7 @@ export default async function EventDetailPage({
 }: {
   params: Promise<{ id: string }>
 }) {
-  const user = await requireRole(Role.USER)
+  const user = await getCurrentUser()
   const { id } = await params
 
   const event = await prisma.event.findUnique({
@@ -26,12 +25,14 @@ export default async function EventDetailPage({
     notFound()
   }
 
-  const userTickets = await prisma.ticket.findMany({
-    where: {
-      order: { userId: user.id },
-      ticketType: { eventId: event.id },
-    },
-  })
+  const userTickets = user
+    ? await prisma.ticket.findMany({
+        where: {
+          order: { userId: user.id },
+          ticketType: { eventId: event.id },
+        },
+      })
+    : []
 
   const hasTicket = userTickets.length > 0
 

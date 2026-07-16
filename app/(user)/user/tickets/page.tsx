@@ -1,6 +1,7 @@
 import prisma from '@/lib/prisma'
 import { requireRole } from '@/lib/permissions'
 import { Role } from '@/lib/roles'
+import TicketQR from '@/app/components/user/TicketQR'
 
 export default async function UserTicketsPage() {
   const user = await requireRole(Role.USER)
@@ -36,23 +37,20 @@ export default async function UserTicketsPage() {
       {activeTickets.length === 0 ? (
         <p className="text-dim">No tienes entradas activas.</p>
       ) : (
-        <div className="admin-list">
+        <div className="ticket-list">
           {activeTickets.map((ticket: typeof activeTickets[0]) => (
-            <div key={ticket.id} className="admin-list-item">
-              <div>
-                <div>
-                  <strong>{ticket.ticketType.event.title}</strong>
-                </div>
-                <div className="text-dim" style={{ fontSize: '0.85rem' }}>
-                  {ticket.ticketType.name} ·{' '}
-                  {new Date(ticket.ticketType.event.startDate).toLocaleDateString('es-ES')}
-                </div>
-                <div className="text-dim" style={{ fontSize: '0.8rem' }}>
-                  Código: {ticket.code}
-                </div>
-              </div>
-              <span className="admin-badge">Válida</span>
-            </div>
+            <TicketQR
+              key={ticket.id}
+              code={ticket.code}
+              eventTitle={ticket.ticketType.event.title}
+              ticketType={ticket.ticketType.name}
+              eventDate={new Date(ticket.ticketType.event.startDate).toLocaleDateString('es-ES', {
+                weekday: 'long',
+                day: 'numeric',
+                month: 'long',
+              })}
+              venue={ticket.ticketType.event.venue.name}
+            />
           ))}
         </div>
       )}

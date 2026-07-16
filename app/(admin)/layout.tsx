@@ -28,11 +28,12 @@ export default async function AdminLayout({
 
   return (
     <div className="admin-shell">
-      <Sidebar />
+      <Sidebar userRole={user.role} />
       <MobileNav
         brand="FADER ADMIN"
         navItems={[
           { href: '/admin/dashboard', label: 'Dashboard' },
+          ...(user.role === 'SUPER_ADMIN' ? [{ href: '/admin/superadmin', label: '⚡ Super Admin' }] : []),
           { href: '/admin/events', label: 'Eventos' },
           { href: '/admin/tickets', label: 'Entradas' },
           { href: '/admin/artists', label: 'Artistas' },

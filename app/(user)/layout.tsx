@@ -1,6 +1,4 @@
-import { redirect } from 'next/navigation'
-import { requireRole } from '@/lib/permissions'
-import { Role } from '@/lib/roles'
+import { getCurrentUser } from '@/lib/auth'
 import SignOutButton from '@/app/components/admin/SignOutButton'
 import MobileNav from '@/app/components/admin/MobileNav'
 
@@ -17,12 +15,16 @@ export default async function UserLayout({
 }: {
   children: React.ReactNode
 }) {
-  let user
+  const user = await getCurrentUser()
 
-  try {
-    user = await requireRole(Role.USER)
-  } catch {
-    redirect('/login')
+  if (!user) {
+    return (
+      <div style={{ paddingBottom: '80px' }}>
+        <div className="container">
+          {children}
+        </div>
+      </div>
+    )
   }
 
   return (

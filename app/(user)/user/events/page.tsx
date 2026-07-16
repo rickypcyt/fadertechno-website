@@ -1,9 +1,8 @@
 import prisma from '@/lib/prisma'
-import { requireRole } from '@/lib/permissions'
-import { Role } from '@/lib/roles'
+import { getCurrentUser } from '@/lib/auth'
 
-export default async function UserEventsPage() {
-  const user = await requireRole(Role.USER)
+export default async function EventsPage() {
+  const user = await getCurrentUser()
 
   const events = await prisma.event.findMany({
     where: {
@@ -18,22 +17,46 @@ export default async function UserEventsPage() {
     orderBy: { startDate: 'asc' },
   })
 
-  const userTickets = await prisma.ticket.findMany({
-    where: { order: { userId: user.id } },
-    include: { ticketType: true },
-  })
+  const userTickets = user
+    ? await prisma.ticket.findMany({
+        where: { order: { userId: user.id } },
+        include: { ticketType: true },
+      })
+    : []
 
-  const userEventIds = new Set(userTickets.map((t: typeof userTickets[0]) => t.ticketType.eventId))
+  const userEventIds = new Set(
+    userTickets.map((t: typeof userTickets[0]) => t.ticketType.eventId)
+  )
 
   return (
     <div>
+      <div style={{ marginBottom: '24px' }}>
+        <a href="/" className="text-dim" style={{ fontSize: '0.85rem' }}>
+          ← Volver
+        </a>
+      </div>
       <h1>Eventos</h1>
       <p className="text-dim">Próximos eventos disponibles</p>
 
       {events.length === 0 ? (
-        <p className="text-dim" style={{ marginTop: '32px' }}>
-          No hay eventos disponibles ahora mismo. Vuelve pronto.
-        </p>
+        <div className="admin-list" style={{ marginTop: '32px' }}>
+          <div className="admin-list-item">
+            <div>
+              <div>
+                <strong>FADER Session 015 — TBA</strong>
+              </div>
+              <div className="text-dim" style={{ fontSize: '0.85rem' }}>
+                Próximamente · Kalicante — Alicante · +18
+              </div>
+              <div className="text-dim" style={{ fontSize: '0.8rem' }}>
+                Pronto anunciaremos line-up y fecha.
+              </div>
+            </div>
+            <div className="admin-actions">
+              <span className="admin-badge">Próximamente</span>
+            </div>
+          </div>
+        </div>
       ) : (
         <div className="admin-list" style={{ marginTop: '32px' }}>
           {events.map((event: typeof events[0]) => {

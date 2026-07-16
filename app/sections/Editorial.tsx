@@ -15,7 +15,7 @@ export default function Editorial() {
         <div className="newsletter-actions">
           <RegisterModal />
           <a
-            href="#"
+            href="https://chat.whatsapp.com/"
             className="btn btn-ghost"
             target="_blank"
             rel="noopener noreferrer"

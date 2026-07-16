@@ -1,14 +1,26 @@
 import prisma from '@/lib/prisma'
-import { requireRole } from '@/lib/permissions'
-import { Role } from '@/lib/roles'
+import { getCurrentUser } from '@/lib/auth'
+import SuccessPoller from './SuccessPoller'
 
 export default async function SuccessPage({
   searchParams,
 }: {
   searchParams: Promise<{ order?: string }>
 }) {
-  const user = await requireRole(Role.USER)
+  const user = await getCurrentUser()
   const { order: orderId } = await searchParams
+
+  if (!user) {
+    return (
+      <div>
+        <h1>Inicia sesión</h1>
+        <p className="text-dim">Necesitas iniciar sesión para ver tu orden.</p>
+        <div style={{ marginTop: '24px' }}>
+          <a href="/login" className="nav-cta">Iniciar sesión</a>
+        </div>
+      </div>
+    )
+  }
 
   if (!orderId) {
     return (
@@ -46,55 +58,22 @@ export default async function SuccessPage({
   const isPaid = order.status === 'PAID'
 
   return (
-    <div>
-      <h1>{isPaid ? '¡Compra confirmada!' : 'Procesando pago...'}</h1>
-      <p className="text-dim">
-        {isPaid
-          ? `Tu orden se ha completado correctamente. Has ganado ${Math.floor(Number(order.total))} puntos.`
-          : 'Tu pago se está procesando. Esto puede tardar unos segundos.'}
-      </p>
-
-      <div className="admin-card" style={{ marginTop: '32px' }}>
-        <div className="admin-card-label">Evento</div>
-        <div className="admin-card-value">{order.event.title}</div>
-        <div className="text-dim" style={{ fontSize: '0.85rem', marginTop: '8px' }}>
-          {new Date(order.event.startDate).toLocaleDateString('es-ES', {
-            weekday: 'long',
-            day: 'numeric',
-            month: 'long',
-          })}
-          {' · '}
-          {order.tickets.length} {order.tickets.length === 1 ? 'entrada' : 'entradas'}
-        </div>
-      </div>
-
-      {isPaid && (
-        <>
-          <h2 style={{ fontSize: '1.1rem', marginTop: '32px', marginBottom: '16px' }}>
-            Tus entradas
-          </h2>
-          <div className="admin-list">
-            {order.tickets.map((ticket: typeof order.tickets[0]) => (
-              <div key={ticket.id} className="admin-list-item">
-                <div>
-                  <div>
-                    <strong>{ticket.ticketType.name}</strong>
-                  </div>
-                  <div className="text-dim" style={{ fontSize: '0.85rem' }}>
-                    Código: {ticket.code}
-                  </div>
-                </div>
-                <span className="admin-badge">Válida</span>
-              </div>
-            ))}
-          </div>
-        </>
-      )}
-
-      <div style={{ marginTop: '32px', display: 'flex', gap: '16px' }}>
-        <a href="/user/tickets" className="nav-cta">Ver mis entradas</a>
-        <a href="/user/events" className="admin-card-link">Seguir comprando →</a>
-      </div>
-    </div>
+    <SuccessPoller
+      orderId={order.id}
+      initialIsPaid={isPaid}
+      initialTickets={order.tickets.map((t: typeof order.tickets[0]) => ({
+        id: t.id,
+        code: t.code,
+        ticketType: { name: t.ticketType.name },
+      }))}
+      eventTitle={order.event.title}
+      eventDate={new Date(order.event.startDate).toLocaleDateString('es-ES', {
+        weekday: 'long',
+        day: 'numeric',
+        month: 'long',
+      })}
+      ticketCount={order.tickets.length}
+      total={order.total.toString()}
+    />
   )
 }

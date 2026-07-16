@@ -1,8 +1,12 @@
 import prisma from '@/lib/prisma'
 import { requireRole } from '@/lib/permissions'
+import { getCurrentUser } from '@/lib/auth'
+import RoleSelect from '@/app/components/admin/RoleSelect'
 
 export default async function AdminUsersPage() {
   await requireRole('ADMIN')
+  const currentUser = await getCurrentUser()
+  if (!currentUser) return null
 
   const users = await prisma.user.findMany({
     orderBy: { createdAt: 'desc' },
@@ -22,7 +26,7 @@ export default async function AdminUsersPage() {
                 {new Date(u.createdAt).toLocaleDateString('es-ES')}
               </div>
             </div>
-            <span className="admin-badge">{u.role}</span>
+            <RoleSelect user={u} currentUserId={currentUser.id} />
           </div>
         ))}
       </div>
