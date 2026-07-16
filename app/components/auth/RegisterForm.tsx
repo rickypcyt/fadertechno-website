@@ -10,11 +10,13 @@ export default function RegisterForm() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
+  const [loading, setLoading] = useState(false)
   const router = useRouter()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setError('')
+    setLoading(true)
 
     const signUpRes = await authClient.signUp.email({
       name,
@@ -24,6 +26,7 @@ export default function RegisterForm() {
 
     if (signUpRes.error) {
       setError(signUpRes.error.message ?? 'Error al crear la cuenta')
+      setLoading(false)
       return
     }
 
@@ -33,7 +36,8 @@ export default function RegisterForm() {
     })
 
     if (signInRes.error) {
-      setError(signInRes.error.message ?? 'Error al iniciar sesión')
+      setError('Cuenta creada pero no se pudo iniciar sesión automáticamente. Intenta iniciar sesión.')
+      setLoading(false)
       return
     }
 
@@ -66,8 +70,8 @@ export default function RegisterForm() {
         required
       />
       {error && <p className="auth-error">{error}</p>}
-      <button type="submit" className="btn btn-primary">
-        Crear cuenta
+      <button type="submit" className="btn btn-primary" disabled={loading}>
+        {loading ? 'Creando...' : 'Crear cuenta'}
       </button>
     </form>
   )

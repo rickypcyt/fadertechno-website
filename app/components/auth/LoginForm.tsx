@@ -9,11 +9,13 @@ export default function LoginForm() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
+  const [loading, setLoading] = useState(false)
   const router = useRouter()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setError('')
+    setLoading(true)
 
     const res = await authClient.signIn.email({
       email,
@@ -22,6 +24,7 @@ export default function LoginForm() {
 
     if (res.error) {
       setError(res.error.message ?? 'Error al iniciar sesión')
+      setLoading(false)
       return
     }
 
@@ -47,8 +50,8 @@ export default function LoginForm() {
         required
       />
       {error && <p className="auth-error">{error}</p>}
-      <button type="submit" className="btn btn-primary">
-        Iniciar sesión
+      <button type="submit" className="btn btn-primary" disabled={loading}>
+        {loading ? 'Iniciando...' : 'Iniciar sesión'}
       </button>
     </form>
   )
