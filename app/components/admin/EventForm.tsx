@@ -2,24 +2,19 @@
 
 import { useState } from 'react'
 
-type Venue = {
-  id: string
-  name: string
-}
-
 type TicketTypeInput = {
   name: string
   price: string
   stock: string
 }
 
-export default function EventForm({ venues }: { venues: Venue[] }) {
+export default function EventForm() {
   const [open, setOpen] = useState(false)
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
   const [startDate, setStartDate] = useState('')
   const [endDate, setEndDate] = useState('')
-  const [venueId, setVenueId] = useState('')
+  const [venueName, setVenueName] = useState('')
   const [coverUrl, setCoverUrl] = useState('')
   const [published, setPublished] = useState(false)
   const [ticketTypes, setTicketTypes] = useState<TicketTypeInput[]>([
@@ -46,7 +41,7 @@ export default function EventForm({ venues }: { venues: Venue[] }) {
     setDescription('')
     setStartDate('')
     setEndDate('')
-    setVenueId('')
+    setVenueName('')
     setCoverUrl('')
     setPublished(false)
     setTicketTypes([{ name: '', price: '', stock: '' }])
@@ -76,7 +71,7 @@ export default function EventForm({ venues }: { venues: Venue[] }) {
           description,
           startDate,
           endDate: endDate || undefined,
-          venueId,
+          venueName,
           published,
           coverUrl: coverUrl || undefined,
           ticketTypes: validTickets.map((tt) => ({
@@ -180,16 +175,13 @@ export default function EventForm({ venues }: { venues: Venue[] }) {
           <div className="form-row">
             <div className="form-field">
               <label>Sala *</label>
-              <select
-                value={venueId}
-                onChange={(e) => setVenueId(e.target.value)}
+              <input
+                type="text"
+                value={venueName}
+                onChange={(e) => setVenueName(e.target.value)}
+                placeholder="Ej: Sala Apolo"
                 required
-              >
-                <option value="">Selecciona una sala</option>
-                {venues.map((v) => (
-                  <option key={v.id} value={v.id}>{v.name}</option>
-                ))}
-              </select>
+              />
             </div>
             <div className="form-field">
               <label>URL del cartel</label>

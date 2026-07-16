@@ -5,16 +5,13 @@ import EventForm from '@/app/components/admin/EventForm'
 export default async function AdminEventsPage() {
   await requireRole('ADMIN')
 
-  const [events, venues] = await Promise.all([
-    prisma.event.findMany({
-      include: {
-        venue: true,
-        ticketTypes: { include: { tickets: true } },
-      },
-      orderBy: { startDate: 'desc' },
-    }),
-    prisma.venue.findMany({ orderBy: { name: 'asc' } }),
-  ])
+  const events = await prisma.event.findMany({
+    include: {
+      venue: true,
+      ticketTypes: { include: { tickets: true } },
+    },
+    orderBy: { startDate: 'desc' },
+  })
 
   return (
     <div className="admin-page">
@@ -23,7 +20,7 @@ export default async function AdminEventsPage() {
           <h1>Eventos</h1>
           <p className="text-dim">{events.length} eventos · {events.filter((e: typeof events[0]) => e.published).length} publicados</p>
         </div>
-        <EventForm venues={venues.map((v: typeof venues[0]) => ({ id: v.id, name: v.name }))} />
+        <EventForm />
       </div>
 
       <div className="admin-list" style={{ marginTop: '24px' }}>

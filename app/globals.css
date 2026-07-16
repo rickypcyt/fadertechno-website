@@ -1478,11 +1478,11 @@ img {
 }
 
 .admin-main {
-  padding: 48px 64px;
+  padding: 16px 64px 48px;
 }
 
 .admin-content {
-  padding: 48px 64px;
+  padding: 16px 64px 48px;
 }
 
 /* ===== STAFF LAYOUT ===== */
@@ -2737,11 +2737,11 @@ img {
   }
 
   .admin-main {
-    padding: 24px 16px;
+    padding: 8px 16px 24px;
   }
 
   .admin-content {
-    padding: 24px 16px;
+    padding: 8px 16px 24px;
   }
 
   .admin-list-item {

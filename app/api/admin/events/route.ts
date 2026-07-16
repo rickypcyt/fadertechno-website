@@ -8,11 +8,24 @@ export async function POST(request: Request) {
   }
 
   const body = await request.json()
-  const { title, description, startDate, endDate, venueId, published, coverUrl, ticketTypes } = body
+  const { title, description, startDate, endDate, venueName, published, coverUrl, ticketTypes } = body
 
-  if (!title || !description || !startDate || !venueId) {
+  if (!title || !description || !startDate || !venueName) {
     return Response.json({ error: 'Faltan campos obligatorios' }, { status: 400 })
   }
+
+  const venueSlug = venueName
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/(^-|-$)/g, '')
+
+  const venue = await prisma.venue.upsert({
+    where: { slug: venueSlug },
+    update: {},
+    create: { name: venueName, slug: venueSlug },
+  })
 
   if (!ticketTypes || ticketTypes.length === 0) {
     return Response.json({ error: 'Debe haber al menos un tipo de entrada' }, { status: 400 })
@@ -40,7 +53,7 @@ export async function POST(request: Request) {
       description,
       startDate: new Date(startDate),
       endDate: endDate ? new Date(endDate) : null,
-      venueId,
+      venueId: venue.id,
       published: published ?? false,
       coverImageId,
       ticketTypes: {

@@ -32,27 +32,27 @@ export default function LoginForm({ redirect }: { redirect?: string }) {
       }
 
       if (redirect) {
-        router.push(redirect)
+        router.replace(redirect)
         router.refresh()
         return
       }
 
       try {
-        const meRes = await fetch('/api/me')
+        const meRes = await fetch('/api/me', { credentials: 'include' })
         console.log('Me response status:', meRes.status)
         if (meRes.ok) {
           const me = await meRes.json()
           console.log('User role:', me.role)
           if (me.role === 'SUPER_ADMIN') {
-            router.push('/admin/superadmin')
+            router.replace('/admin/superadmin')
           } else if (me.role === 'ADMIN') {
-            router.push('/admin/dashboard')
+            router.replace('/admin/dashboard')
           } else if (me.role === 'STAFF') {
-            router.push('/staff/dashboard')
+            router.replace('/staff/dashboard')
           } else if (me.role === 'PROMOTER') {
-            router.push('/promoter')
+            router.replace('/promoter')
           } else {
-            router.push('/user/dashboard')
+            router.replace('/user/dashboard')
           }
           router.refresh()
           return
@@ -69,7 +69,7 @@ export default function LoginForm({ redirect }: { redirect?: string }) {
         return
       }
 
-      router.push('/user/dashboard')
+      router.replace('/user/dashboard')
       router.refresh()
     } catch (err) {
       console.error('Login error:', err)
