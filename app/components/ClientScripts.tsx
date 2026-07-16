@@ -1,9 +1,14 @@
 'use client'
 
 import { useEffect } from 'react'
+import { usePathname } from 'next/navigation'
 
 export default function ClientScripts() {
+  const pathname = usePathname()
+
   useEffect(() => {
+    document.documentElement.classList.add('js-ready')
+
     const nav = document.getElementById('nav')
     const onScroll = () => {
       if (!nav) return
@@ -21,6 +26,30 @@ export default function ClientScripts() {
       link.addEventListener('click', linkClick)
     )
 
+    const onHashChange = () => {
+      if (window.location.hash) {
+        const id = window.location.hash.slice(1)
+        const el = document.getElementById(id)
+        if (el) {
+          el.scrollIntoView({ behavior: 'smooth' })
+        }
+        history.replaceState(null, '', window.location.pathname)
+      }
+    }
+    window.addEventListener('hashchange', onHashChange)
+
+    if (window.location.hash) {
+      const id = window.location.hash.slice(1)
+      const el = document.getElementById(id)
+      if (el) {
+        requestAnimationFrame(() => {
+          window.scrollTo(0, 0)
+        })
+      }
+      history.replaceState(null, '', window.location.pathname)
+    }
+
+    const reveals = document.querySelectorAll('.reveal')
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -30,15 +59,15 @@ export default function ClientScripts() {
           }
         })
       },
-      { threshold: 0.05, rootMargin: '0px 0px -40px 0px' }
+      { threshold: 0.01, rootMargin: '0px' }
     )
-    document.querySelectorAll('.reveal').forEach((el) => observer.observe(el))
+    reveals.forEach((el) => observer.observe(el))
 
     const fallbackTimer = setTimeout(() => {
       document.querySelectorAll('.reveal:not(.visible)').forEach((el) => {
         el.classList.add('visible')
       })
-    }, 3000)
+    }, 800)
 
     return () => {
       window.removeEventListener('scroll', onScroll)
@@ -46,10 +75,11 @@ export default function ClientScripts() {
       navLinks?.querySelectorAll('a').forEach((link) =>
         link.removeEventListener('click', linkClick)
       )
+      window.removeEventListener('hashchange', onHashChange)
       observer.disconnect()
       clearTimeout(fallbackTimer)
     }
-  }, [])
+  }, [pathname])
 
   return null
 }

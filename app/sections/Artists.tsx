@@ -2,8 +2,8 @@ import Image from 'next/image'
 import Link from 'next/link'
 
 const artists = [
-  { name: 'CC', genre: 'Hypnotic Techno', image: '/cc.jpg', span: 'col-6' },
   { name: 'LITN', genre: 'Deep Techno', image: '/litn.jpg', span: 'col-6' },
+  { name: 'CC', genre: 'Hypnotic Techno', image: '/cc.jpg', span: 'col-6' },
 ]
 
 export default function Artists() {

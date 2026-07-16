@@ -16,10 +16,12 @@
     "@neondatabase/serverless": "0.10.4",
     "@prisma/adapter-neon": "5",
     "@prisma/client": "5",
+    "@stripe/stripe-js": "^9.10.0",
     "better-auth": "^1.6.23",
     "next": "^16.2.10",
     "react": "^19.2.7",
     "react-dom": "^19.2.7",
+    "stripe": "^22.3.2",
     "ws": "^8.21.1"
   },
   "devDependencies": {

@@ -2,6 +2,7 @@ import { redirect } from 'next/navigation'
 import { requireRole } from '@/lib/permissions'
 import { Role } from '@/lib/roles'
 import SignOutButton from '@/app/components/admin/SignOutButton'
+import MobileNav from '@/app/components/admin/MobileNav'
 
 const navLinks = [
   { href: '/user/dashboard', label: 'Dashboard' },
@@ -42,6 +43,11 @@ export default async function UserLayout({
           <SignOutButton />
         </div>
       </aside>
+      <MobileNav
+        brand="FADER"
+        navItems={navLinks}
+        userEmail={user.email}
+      />
       <main className="admin-content">{children}</main>
     </div>
   )

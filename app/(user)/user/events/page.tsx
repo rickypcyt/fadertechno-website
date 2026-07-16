@@ -70,7 +70,7 @@ export default async function UserEventsPage() {
                       <span className="admin-badge">
                         desde {minPrice}€
                       </span>
-                      <a href={`/user/tickets?event=${event.id}`} className="nav-cta">
+                      <a href={`/user/events/${event.id}`} className="nav-cta">
                         Comprar
                       </a>
                     </>
