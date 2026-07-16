@@ -28,9 +28,14 @@ export default function LoginForm() {
       return
     }
 
-    const redirectUrl = await getRedirectUrl()
-    router.push(redirectUrl)
-    router.refresh()
+    try {
+      const redirectUrl = await getRedirectUrl()
+      router.push(redirectUrl)
+      router.refresh()
+    } catch {
+      router.push('/user/dashboard')
+      router.refresh()
+    }
   }
 
   return (

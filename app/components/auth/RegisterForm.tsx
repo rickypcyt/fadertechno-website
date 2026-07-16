@@ -41,9 +41,14 @@ export default function RegisterForm() {
       return
     }
 
-    const redirectUrl = await getRedirectUrl()
-    router.push(redirectUrl)
-    router.refresh()
+    try {
+      const redirectUrl = await getRedirectUrl()
+      router.push(redirectUrl)
+      router.refresh()
+    } catch {
+      router.push('/user/dashboard')
+      router.refresh()
+    }
   }
 
   return (
