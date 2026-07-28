@@ -12,7 +12,7 @@ export default async function LoginPage({
   return (
     <section className="auth-page">
       <div className="auth-card">
-        <Link href="/" className="auth-back">← Volver</Link>
+        <Link href="/" className="auth-back">Volver</Link>
         <h1>Acceder</h1>
         <LoginForm redirect={redirect} />
         <p className="auth-switch">

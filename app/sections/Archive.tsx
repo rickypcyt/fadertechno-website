@@ -18,20 +18,20 @@ export default async function Archive() {
   })
 
   const fallbackImages = [
+    '/wonderfull.jpg',
     '/kalicanteultima.jpg',
     '/kalicanteoscuro.jpg',
     '/kalicantepenultima.jpg',
-    '/kalicanteultima.jpg',
   ]
 
   return (
-    <section id="archivo" className="sec sec-5 layout-wide" style={{ paddingTop: '80px' }}>
-      <div className="reveal" style={{ marginBottom: '56px' }}>
+    <section id="archivo" className="sec sec-5 layout-wide">
+      <div className="reveal reveal-right" style={{ marginBottom: '56px' }}>
         <div className="section-label">05 — Archivo</div>
-        <h2 className="section-title">Experiencias documentadas</h2>
+        <h2 className="section-title">Piezas de museo</h2>
       </div>
 
-      <div className="archive-grid reveal">
+      <div className="archive-grid reveal reveal-stagger">
         {pastEvents.length > 0 ? (
           pastEvents.map((event) => (
             <div key={event.id} className="archive-item">

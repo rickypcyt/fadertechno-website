@@ -20,7 +20,7 @@ export default async function AdminPromotersPage() {
             <div key={p.id} className="admin-list-item">
               <div>
                 <div><strong>{p.name ?? 'Sin nombre'}</strong></div>
-                <div className="text-dim" style={{ fontSize: '0.85rem' }}>{p.email}</div>
+                <div className="text-dim" style={{ fontSize: '1rem' }}>{p.email}</div>
               </div>
               <span className="admin-badge">Activo</span>
             </div>

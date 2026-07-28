@@ -45,10 +45,10 @@ export default async function AdminTicketsPage() {
             <div key={ticket.id} className="admin-list-item">
               <div>
                 <div><strong>{ticket.ticketType.event.title}</strong></div>
-                <div className="text-dim" style={{ fontSize: '0.85rem' }}>
+                <div className="text-dim" style={{ fontSize: '1rem' }}>
                   {ticket.ticketType.name} · {ticket.order.user.name ?? ticket.order.user.email}
                 </div>
-                <div className="text-dim" style={{ fontSize: '0.8rem' }}>
+                <div className="text-dim" style={{ fontSize: '1rem' }}>
                   Código: {ticket.code}
                   {ticket.checkedIn && ticket.checkedInAt && (
                     <> · {new Date(ticket.checkedInAt).toLocaleString('es-ES', {

@@ -21,8 +21,8 @@ export default async function AdminUsersPage() {
           <div key={u.id} className="admin-list-item">
             <div>
               <div><strong>{u.name ?? 'Sin nombre'}</strong></div>
-              <div className="text-dim" style={{ fontSize: '0.85rem' }}>{u.email}</div>
-              <div className="text-dim" style={{ fontSize: '0.8rem' }}>
+              <div className="text-dim" style={{ fontSize: '1rem' }}>{u.email}</div>
+              <div className="text-dim" style={{ fontSize: '1rem' }}>
                 {new Date(u.createdAt).toLocaleDateString('es-ES')}
               </div>
             </div>

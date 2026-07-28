@@ -1,4 +1,5 @@
 import Nav from './components/Nav'
+import IntroAnimation from './components/IntroAnimation'
 import Hero from './sections/Hero'
 import Manifesto from './sections/Manifesto'
 import Sessions from './sections/Sessions'
@@ -8,6 +9,7 @@ import Archive from './sections/Archive'
 import Editorial from './sections/Editorial'
 import Socials from './sections/Socials'
 import Footer from './sections/Footer'
+import Marquee from './components/layout/Marquee'
 import prisma from '@/lib/prisma'
 
 const siteUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'https://faderclub.com'
@@ -57,6 +59,7 @@ export default async function Home() {
 
   return (
     <>
+      <IntroAnimation />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(orgJsonLd) }}
@@ -79,6 +82,13 @@ export default async function Home() {
         <Editorial />
         <Socials />
       </main>
+      <div style={{ position: 'relative', overflow: 'hidden', height: '160px', borderTop: '1px solid var(--border)', borderBottom: '1px solid var(--border)' }}>
+        <Marquee
+          items={['FADER', 'MUSIC', 'CLUB']}
+          speed={50}
+          opacity={0.1}
+        />
+      </div>
       <Footer />
     </>
   )

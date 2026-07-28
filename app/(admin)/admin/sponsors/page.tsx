@@ -20,11 +20,11 @@ export default async function AdminSponsorsPage() {
             <div key={s.id} className="admin-list-item">
               <div>
                 <div><strong>{s.name}</strong></div>
-                <div className="text-dim" style={{ fontSize: '0.85rem' }}>
+                <div className="text-dim" style={{ fontSize: '1rem' }}>
                   {s.events.length} eventos patrocinados
                 </div>
                 {s.website && (
-                  <div className="text-dim" style={{ fontSize: '0.8rem' }}>{s.website}</div>
+                  <div className="text-dim" style={{ fontSize: '1rem' }}>{s.website}</div>
                 )}
               </div>
               <span className="admin-badge">{s.events.length} eventos</span>

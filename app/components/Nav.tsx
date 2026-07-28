@@ -1,8 +1,10 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
+import { authClient } from '@/lib/auth-client'
+import { getTicketsUrlForRole } from '@/lib/role-routes'
 
 const links = [
   { href: '#eventos', label: 'Eventos' },
@@ -13,12 +15,28 @@ const links = [
 ]
 
 export default function Nav() {
+  const [loggedIn, setLoggedIn] = useState(false)
+  const [ticketsUrl, setTicketsUrl] = useState('/user/tickets')
+
+  useEffect(() => {
+    authClient.getSession().then((res) => {
+      setLoggedIn(!!res.data)
+      if (res.data) {
+        fetch('/api/me', { credentials: 'include' })
+          .then((r) => (r.ok ? r.json() : null))
+          .then((me) => {
+            if (me?.role) setTicketsUrl(getTicketsUrlForRole(me.role))
+          })
+      }
+    })
+  }, [])
+
   return (
     <nav className="nav" id="nav">
       <div className="container">
         <Link href="/" className="nav-logo">
           <Image
-            src="/logo.jpeg"
+            src="/logofader.png"
             alt="Fader"
             width={56}
             height={56}
@@ -35,14 +53,27 @@ export default function Nav() {
           ))}
         </ul>
 
-        <Link href="/register" className="nav-cta nav-cta-desktop">
-          Registrarse
-        </Link>
-
-        <Link href="/register" className="nav-cta nav-cta-mobile">
-          Registrarse
-        </Link>
+        {loggedIn ? (
+          <>
+            <Link href={ticketsUrl} className="nav-cta nav-cta-desktop">
+              Ver entradas
+            </Link>
+            <Link href={ticketsUrl} className="nav-cta nav-cta-mobile">
+              Ver entradas
+            </Link>
+          </>
+        ) : (
+          <>
+            <Link href="/register" className="nav-cta nav-cta-desktop">
+              Registrarse
+            </Link>
+            <Link href="/register" className="nav-cta nav-cta-mobile">
+              Registrarse
+            </Link>
+          </>
+        )}
       </div>
+      <div className="scroll-progress" id="scroll-progress" />
     </nav>
   )
 }

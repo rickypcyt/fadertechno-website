@@ -68,7 +68,7 @@ export default async function UserTicketsPage() {
                 <div>
                   <strong>{ticket.ticketType.event.title}</strong>
                 </div>
-                <div className="text-dim" style={{ fontSize: '0.85rem' }}>
+                <div className="text-dim" style={{ fontSize: '1rem' }}>
                   {ticket.ticketType.name} ·{' '}
                   {ticket.checkedInAt &&
                     new Date(ticket.checkedInAt).toLocaleDateString('es-ES')}
@@ -78,6 +78,31 @@ export default async function UserTicketsPage() {
             </div>
           ))}
         </div>
+      )}
+
+      {/* Past events with QR */}
+      {usedTickets.length > 0 && (
+        <>
+          <h2 style={{ fontSize: '1.1rem', marginTop: '40px', marginBottom: '16px' }}>
+            Eventos pasados
+          </h2>
+          <div className="ticket-list">
+            {usedTickets.map((ticket: typeof usedTickets[0]) => (
+              <TicketQR
+                key={ticket.id}
+                code={ticket.code}
+                eventTitle={ticket.ticketType.event.title}
+                ticketType={ticket.ticketType.name}
+                eventDate={new Date(ticket.ticketType.event.startDate).toLocaleDateString('es-ES', {
+                  weekday: 'long',
+                  day: 'numeric',
+                  month: 'long',
+                })}
+                venue={ticket.ticketType.event.venue.name}
+              />
+            ))}
+          </div>
+        </>
       )}
 
       <div style={{ marginTop: '40px' }}>

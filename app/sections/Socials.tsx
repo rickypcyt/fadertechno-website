@@ -3,7 +3,7 @@ import Link from 'next/link'
 const socials = [
   {
     label: 'Instagram',
-    href: '#',
+    href: 'https://www.instagram.com/fader.music.club/',
     info: 'Fotos, reels y anuncios de próximos eventos.',
   },
   {
@@ -20,11 +20,11 @@ const socials = [
 
 export default function Socials() {
   return (
-    <section id="redes" className="sec sec-7 layout-narrow" style={{ paddingTop: '80px', paddingBottom: '80px' }}>
-      <div className="reveal" style={{ marginBottom: '40px' }}>
+    <section id="redes" className="sec sec-7 layout-narrow">
+      <div className="reveal reveal-left" style={{ marginBottom: '40px' }}>
         <div className="section-label">07 — Redes</div>
       </div>
-      <div className="socials-list reveal">
+      <div className="socials-list reveal reveal-stagger">
         {socials.map((social) => (
           <Link key={social.label} href={social.href} className="socials-row">
             <span className="socials-row-name">{social.label}</span>

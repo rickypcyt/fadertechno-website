@@ -40,7 +40,7 @@ export default async function AdminEventsPage() {
               <div key={event.id} className="admin-list-item">
                 <div>
                   <div><strong>{event.title}</strong></div>
-                  <div className="text-dim" style={{ fontSize: '0.85rem' }}>
+                  <div className="text-dim" style={{ fontSize: '1rem' }}>
                     {new Date(event.startDate).toLocaleDateString('es-ES', {
                       day: 'numeric',
                       month: 'short',
@@ -49,7 +49,7 @@ export default async function AdminEventsPage() {
                       minute: '2-digit',
                     })} · {event.venue.name}
                   </div>
-                  <div className="text-dim" style={{ fontSize: '0.8rem' }}>
+                  <div className="text-dim" style={{ fontSize: '1rem' }}>
                     {sold} / {totalStock} vendidas · {event.ticketTypes.length} tipos
                   </div>
                 </div>

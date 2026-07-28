@@ -1,7 +1,9 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
+import { authClient } from '@/lib/auth-client'
+import { getTicketsUrlForRole } from '@/lib/role-routes'
 
 interface RegisterModalProps {
   className?: string
@@ -9,6 +11,29 @@ interface RegisterModalProps {
 
 export default function RegisterModal({ className = 'btn btn-ghost' }: RegisterModalProps) {
   const [open, setOpen] = useState(false)
+  const [loggedIn, setLoggedIn] = useState(false)
+  const [ticketsUrl, setTicketsUrl] = useState('/user/tickets')
+
+  useEffect(() => {
+    authClient.getSession().then((res) => {
+      setLoggedIn(!!res.data)
+      if (res.data) {
+        fetch('/api/me', { credentials: 'include' })
+          .then((r) => (r.ok ? r.json() : null))
+          .then((me) => {
+            if (me?.role) setTicketsUrl(getTicketsUrlForRole(me.role))
+          })
+      }
+    })
+  }, [])
+
+  if (loggedIn) {
+    return (
+      <Link href={ticketsUrl} className={className}>
+        Ver entradas
+      </Link>
+    )
+  }
 
   return (
     <>

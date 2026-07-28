@@ -163,7 +163,7 @@ export default async function SuperAdminDashboard() {
                 <div key={order.id} className="admin-list-item">
                   <div>
                     <div><strong>{order.user.name ?? order.user.email}</strong></div>
-                    <div className="text-dim" style={{ fontSize: '0.85rem' }}>
+                    <div className="text-dim" style={{ fontSize: '1rem' }}>
                       {order.event.title} · {order.tickets.length} {order.tickets.length === 1 ? 'entrada' : 'entradas'}
                     </div>
                   </div>
@@ -184,12 +184,12 @@ export default async function SuperAdminDashboard() {
                 <div key={ticket.id} className="admin-list-item">
                   <div>
                     <div><strong>{ticket.order.user.name ?? ticket.order.user.email}</strong></div>
-                    <div className="text-dim" style={{ fontSize: '0.85rem' }}>
+                    <div className="text-dim" style={{ fontSize: '1rem' }}>
                       {ticket.ticketType.event.title} · {ticket.ticketType.name}
                     </div>
                   </div>
                   <div style={{ textAlign: 'right' }}>
-                    <div className="text-dim" style={{ fontSize: '0.8rem' }}>
+                    <div className="text-dim" style={{ fontSize: '1rem' }}>
                       {ticket.checkedInAt && new Date(ticket.checkedInAt).toLocaleTimeString('es-ES')}
                     </div>
                     <span className="admin-badge" style={{ background: 'rgba(74, 222, 128, 0.15)' }}>✓</span>

@@ -20,10 +20,10 @@ export default async function AdminGalleryPage() {
             <div key={img.id} className="admin-list-item">
               <div>
                 <div><strong>{img.event.title}</strong></div>
-                <div className="text-dim" style={{ fontSize: '0.85rem' }}>
+                <div className="text-dim" style={{ fontSize: '1rem' }}>
                   {img.mediaAsset.url}
                 </div>
-                <div className="text-dim" style={{ fontSize: '0.8rem' }}>
+                <div className="text-dim" style={{ fontSize: '1rem' }}>
                   {img.featured ? 'Destacada' : 'Normal'}
                 </div>
               </div>

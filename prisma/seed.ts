@@ -18,14 +18,14 @@ async function main() {
 
   // Crear evento TBA
   const event = await prisma.event.upsert({
-    where: { slug: 'fader-session-015' },
+    where: { slug: 'fadermusicclubdiscotecawilson' },
     update: {
       published: true,
       startDate: new Date('2026-09-27T22:00:00Z'),
     },
     create: {
-      title: 'FADER Session 015',
-      slug: 'fader-session-015',
+      title: 'FADER Music Club Discoteca Wilson',
+      slug: 'fadermusicclubdiscotecawilson',
       description:
         'Próximo evento de FADER. Pronto anunciaremos line-up y fecha definitiva. Una sesión centrada en el techno hipnótico y el dub techno, en un espacio diseñado desde el sonido y la luz.',
       startDate: new Date('2026-09-27T22:00:00Z'),

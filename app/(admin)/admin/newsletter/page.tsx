@@ -1,8 +1,9 @@
 import prisma from '@/lib/prisma'
 import { requireRole } from '@/lib/permissions'
+import NewsletterComposer from '@/app/components/admin/NewsletterComposer'
 
 export default async function AdminNewsletterPage() {
-  await requireRole('ADMIN')
+  const user = await requireRole('ADMIN')
 
   const subscribers = await prisma.newsletterSubscriber.findMany({
     orderBy: { createdAt: 'desc' },
@@ -14,7 +15,14 @@ export default async function AdminNewsletterPage() {
     <div className="admin-page">
       <h1>Newsletter</h1>
       <p className="text-dim">{activeCount} suscriptores activos · {subscribers.length} totales</p>
-      <div className="admin-list" style={{ marginTop: '24px' }}>
+
+      <NewsletterComposer
+        subscriberCount={activeCount}
+        adminEmail={user.email}
+      />
+
+      <h2 style={{ marginTop: '40px' }}>Suscriptores</h2>
+      <div className="admin-list" style={{ marginTop: '16px' }}>
         {subscribers.length === 0 ? (
           <p className="text-dim">No hay suscriptores.</p>
         ) : (
@@ -22,7 +30,7 @@ export default async function AdminNewsletterPage() {
             <div key={s.id} className="admin-list-item">
               <div>
                 <div><strong>{s.email}</strong></div>
-                <div className="text-dim" style={{ fontSize: '0.8rem' }}>
+                <div className="text-dim" style={{ fontSize: '1rem' }}>
                   {new Date(s.createdAt).toLocaleDateString('es-ES')}
                 </div>
               </div>

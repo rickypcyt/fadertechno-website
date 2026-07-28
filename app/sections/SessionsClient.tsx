@@ -28,11 +28,12 @@ export default function SessionsClient({
     })
 
   return (
-    <section id="eventos" className="sec sec-2 layout-wide" style={{ paddingTop: '80px', paddingBottom: '80px' }}>
+    <section id="eventos" className="sec sec-2 layout-wide">
       {/* Próximo evento */}
-      <div className="sessions-event sessions-event-upcoming reveal">
+      <div className="sessions-event sessions-event-upcoming reveal reveal-right">
         {upcoming ? (
           <>
+            <div className="section-label sessions-label">02 — Próximo evento</div>
             <div className="sessions-image">
               {upcoming.coverImage ? (
                 <Image
@@ -51,7 +52,6 @@ export default function SessionsClient({
               <div className="archive-overlay" />
             </div>
             <div className="sessions-info">
-              <div className="section-label">02 — Próximo evento</div>
               <h3>{upcoming.title}</h3>
               <p>{upcoming.description}</p>
               {upcoming.artists.length > 0 && (
@@ -78,7 +78,7 @@ export default function SessionsClient({
                 )}
               </div>
               <div className="sessions-actions">
-                <Link href="/user/events" className="nav-cta">
+                <Link href={`/evento/${upcoming.slug}`} className="nav-cta">
                   Comprar entradas
                 </Link>
               </div>
@@ -86,11 +86,11 @@ export default function SessionsClient({
           </>
         ) : (
           <>
+            <div className="section-label sessions-label">02 — Próximo evento</div>
             <div className="sessions-tba">
               <span className="sessions-tba-text">TBA</span>
             </div>
             <div className="sessions-info">
-              <div className="section-label">02 — Próximo evento</div>
               <h3>Próximamente</h3>
               <p>Pronto anunciaremos el próximo evento. Line-up y fecha por confirmar.</p>
               <div className="sessions-meta">
@@ -104,8 +104,8 @@ export default function SessionsClient({
                 </div>
               </div>
               <div className="sessions-actions">
-                <Link href="/user/events" className="nav-cta">
-                  Ver eventos disponibles
+                <Link href="#archivo" className="btn btn-ghost">
+                  Ver archivo
                 </Link>
               </div>
             </div>
@@ -115,7 +115,8 @@ export default function SessionsClient({
 
       {/* Último evento pasado */}
       {lastPast && (
-        <div className="sessions-event reveal" style={{ marginTop: '80px' }}>
+        <div className="sessions-event reveal reveal-left" style={{ marginTop: '80px' }}>
+          <div className="section-label sessions-label">Última experiencia</div>
           <div className="sessions-image">
             {lastPast.coverImage ? (
               <Image
@@ -134,7 +135,6 @@ export default function SessionsClient({
             <div className="archive-overlay" />
           </div>
           <div className="sessions-info">
-            <div className="section-label">Última experiencia</div>
             <h3>{lastPast.title}</h3>
             <p>{lastPast.description}</p>
             {lastPast.artists.length > 0 && (

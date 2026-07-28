@@ -1,5 +1,7 @@
 import { requireRole } from '@/lib/permissions'
 import prisma from '@/lib/prisma'
+import DashboardContainer from '@/app/components/DashboardContainer'
+import DashboardCard from '@/app/components/DashboardCard'
 
 export default async function DashboardPage() {
   await requireRole('ADMIN')
@@ -50,52 +52,32 @@ export default async function DashboardPage() {
   const upcomingEventCapacity = upcomingEvent?.venue?.capacity ?? 0
 
   return (
-    <div className="admin-page">
-      <h1>Dashboard</h1>
-      <div className="admin-grid">
-        <div className="admin-card">
-          <div className="admin-card-label">Próximo evento</div>
-          <div className="admin-card-value">
-            {upcomingEvent ? upcomingEvent.title : 'Sin eventos'}
-          </div>
-          <div className="admin-card-meta">
-            {upcomingEvent
-              ? new Date(upcomingEvent.startDate).toLocaleDateString('es-ES', {
-                  day: 'numeric',
-                  month: 'long',
-                })
-              : '—'}
-          </div>
-        </div>
-        <div className="admin-card">
-          <div className="admin-card-label">Entradas vendidas</div>
-          <div className="admin-card-value">
-            {upcomingEvent
-              ? `${upcomingEventSold} / ${upcomingEventCapacity || '∞'}`
-              : `${totalTicketsSold} total`}
-          </div>
-        </div>
-        <div className="admin-card">
-          <div className="admin-card-label">Ingresos</div>
-          <div className="admin-card-value">
-            {totalRevenue.toLocaleString('es-ES')} €
-          </div>
-        </div>
-        <div className="admin-card">
-          <div className="admin-card-label">RRPP activos</div>
-          <div className="admin-card-value">{activePromoters}</div>
-        </div>
-        <div className="admin-card">
-          <div className="admin-card-label">Newsletter</div>
-          <div className="admin-card-value">
-            {newsletterSubscribers.toLocaleString('es-ES')} suscriptores
-          </div>
-        </div>
-        <div className="admin-card">
-          <div className="admin-card-label">Eventos totales</div>
-          <div className="admin-card-value">{totalEvents}</div>
-        </div>
-      </div>
-    </div>
-  )
+    <DashboardContainer>
+      <DashboardCard
+        label="Próximo evento"
+        value={upcomingEvent ? upcomingEvent.title : 'Sin eventos'}
+        meta={upcomingEvent ? new Date(upcomingEvent.startDate).toLocaleDateString('es-ES', { day: 'numeric', month: 'long' }) : '—'}
+      />
+      <DashboardCard
+        label="Entradas vendidas"
+        value={upcomingEvent ? `${upcomingEventSold} / ${upcomingEventCapacity || '∞'}` : `${totalTicketsSold} total`}
+      />
+      <DashboardCard
+        label="Ingresos"
+        value={`${totalRevenue.toLocaleString('es-ES')} €`}
+      />
+      <DashboardCard
+        label="RRPP activos"
+        value={activePromoters}
+      />
+      <DashboardCard
+        label="Newsletter"
+        value={`${newsletterSubscribers.toLocaleString('es-ES')} suscriptores`}
+      />
+      <DashboardCard
+        label="Eventos totales"
+        value={totalEvents}
+      />
+    </DashboardContainer>
+  );
 }

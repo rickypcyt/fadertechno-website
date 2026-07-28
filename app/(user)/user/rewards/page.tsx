@@ -18,8 +18,8 @@ export default async function UserRewardsPage() {
   })
 
   return (
-    <div>
-      <h1>Canjear puntos</h1>
+    <div className="admin-page">
+      <h1 style={{ fontSize: '1.3rem' }}>Canjear puntos</h1>
       <p className="text-dim">Gasta tus créditos en recompensas</p>
 
       <div className="admin-card" style={{ marginTop: '32px', marginBottom: '32px' }}>
@@ -45,11 +45,11 @@ export default async function UserRewardsPage() {
                     <strong>{reward.name}</strong>
                   </div>
                   {reward.description && (
-                    <div className="text-dim" style={{ fontSize: '0.85rem' }}>
+                    <div className="text-dim" style={{ fontSize: '1rem' }}>
                       {reward.description}
                     </div>
                   )}
-                  <div className="text-dim" style={{ fontSize: '0.8rem' }}>
+                  <div className="text-dim" style={{ fontSize: '1rem' }}>
                     Coste: {reward.cost} créditos
                     {reward.stock !== null && ` · Stock: ${reward.stock}`}
                   </div>
@@ -85,11 +85,11 @@ export default async function UserRewardsPage() {
                   <strong>{tx.type}</strong>
                 </div>
                 {tx.description && (
-                  <div className="text-dim" style={{ fontSize: '0.85rem' }}>
+                  <div className="text-dim" style={{ fontSize: '1rem' }}>
                     {tx.description}
                   </div>
                 )}
-                <div className="text-dim" style={{ fontSize: '0.8rem' }}>
+                <div className="text-dim" style={{ fontSize: '1rem' }}>
                   {new Date(tx.createdAt).toLocaleDateString('es-ES')}
                 </div>
               </div>

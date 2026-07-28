@@ -8,11 +8,24 @@ export default function ClientScripts() {
 
   useEffect(() => {
     const nav = document.getElementById('nav')
+    const progressBar = document.getElementById('scroll-progress')
+    const glow = document.getElementById('cursor-glow')
+
     const onScroll = () => {
-      if (!nav) return
-      nav.style.padding = window.scrollY > 40 ? '10px 0' : '16px 0'
+      if (progressBar) {
+        const scrollTop = window.scrollY
+        const docHeight = document.documentElement.scrollHeight - window.innerHeight
+        const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0
+        progressBar.style.width = `${progress}%`
+      }
     }
     window.addEventListener('scroll', onScroll)
+
+    const onMouseMove = (e: MouseEvent) => {
+      if (!glow) return
+      glow.style.transform = `translate(${e.clientX}px, ${e.clientY}px)`
+    }
+    window.addEventListener('mousemove', onMouseMove)
 
     const onHashChange = () => {
       if (window.location.hash) {
@@ -37,9 +50,6 @@ export default function ClientScripts() {
       history.replaceState(null, '', window.location.pathname)
     }
 
-    const reveals = document.querySelectorAll('.reveal')
-    reveals.forEach((el) => el.classList.add('reveal-animate'))
-
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -49,18 +59,19 @@ export default function ClientScripts() {
           }
         })
       },
-      { threshold: 0.01, rootMargin: '0px' }
+      { threshold: 0.05, rootMargin: '0px 0px -40px 0px' }
     )
-    reveals.forEach((el) => observer.observe(el))
+    document.querySelectorAll('.reveal').forEach((el) => observer.observe(el))
 
     const fallbackTimer = setTimeout(() => {
-      document.querySelectorAll('.reveal-animate:not(.visible)').forEach((el) => {
+      document.querySelectorAll('.reveal:not(.visible)').forEach((el) => {
         el.classList.add('visible')
       })
-    }, 300)
+    }, 3000)
 
     return () => {
       window.removeEventListener('scroll', onScroll)
+      window.removeEventListener('mousemove', onMouseMove)
       window.removeEventListener('hashchange', onHashChange)
       observer.disconnect()
       clearTimeout(fallbackTimer)

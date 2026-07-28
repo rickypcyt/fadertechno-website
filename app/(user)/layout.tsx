@@ -29,27 +29,20 @@ export default async function UserLayout({
 
   return (
     <div className="admin-shell user-shell">
-      <aside className="admin-sidebar">
-        <div className="admin-sidebar-brand">
+      <header className="user-header">
+        <div className="user-header-brand">
           FA<span>DER</span>
         </div>
-        <nav className="admin-sidebar-nav">
+        <nav className="user-header-nav">
           {navLinks.map((link) => (
-            <a key={link.href} href={link.href}>
-              {link.label}
-            </a>
+            <a key={link.href} href={link.href}>{link.label}</a>
           ))}
         </nav>
-        <div className="admin-sidebar-footer">
-          <span className="admin-user">{user.email}</span>
+        <div className="user-header-footer">
+          <span className="user-email">{user.email}</span>
           <SignOutButton />
         </div>
-      </aside>
-      <MobileNav
-        brand="FADER"
-        navItems={navLinks}
-        userEmail={user.email}
-      />
+      </header>
       <main className="admin-content">{children}</main>
     </div>
   )

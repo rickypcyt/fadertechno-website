@@ -39,8 +39,8 @@ export default async function EventDetailPage({
   return (
     <div>
       <div style={{ marginBottom: '24px' }}>
-        <a href="/user/events" className="text-dim" style={{ fontSize: '0.85rem' }}>
-          ← Volver a eventos
+        <a href="/user/events" className="back-link">
+          Volver a eventos
         </a>
       </div>
 

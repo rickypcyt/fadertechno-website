@@ -20,9 +20,9 @@ export default async function AdminRewardsPage() {
               <div>
                 <div><strong>{r.name}</strong></div>
                 {r.description && (
-                  <div className="text-dim" style={{ fontSize: '0.85rem' }}>{r.description}</div>
+                  <div className="text-dim" style={{ fontSize: '1rem' }}>{r.description}</div>
                 )}
-                <div className="text-dim" style={{ fontSize: '0.8rem' }}>
+                <div className="text-dim" style={{ fontSize: '1rem' }}>
                   Coste: {r.cost} créditos · Stock: {r.stock ?? '∞'}
                 </div>
               </div>

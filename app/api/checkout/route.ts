@@ -81,11 +81,13 @@ export async function POST(request: NextRequest) {
   const appUrl =
     process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000'
 
+  const eventSlug = ticketTypes[0].event.slug
+
   const session = await getStripe().checkout.sessions.create({
     mode: 'payment',
     line_items: lineItems,
-    success_url: `${appUrl}/user/events/${ticketTypes[0].eventId}/success?order=${order.id}`,
-    cancel_url: `${appUrl}/user/events/${ticketTypes[0].eventId}?canceled=1`,
+    success_url: `${appUrl}/evento/${eventSlug}/success?order=${order.id}`,
+    cancel_url: `${appUrl}/evento/${eventSlug}?canceled=1`,
     metadata: {
       orderId: order.id,
       userId: user.id,

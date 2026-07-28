@@ -1,15 +1,13 @@
 export default function Manifesto() {
   return (
-    <section id="manifesto" className="manifesto sec sec-1">
-      <div className="manifesto-content reveal">
+    <section id="manifesto" className="manifesto sec sec-1 layout-narrow">
+      <div className="manifesto-inner">
+        <div className="manifesto-content reveal reveal-left">
         <span className="manifesto-tag">01 — Manifiesto</span>
         <p>
-          <strong>FADER</strong> nace con la intención de construir un espacio
-          donde el techno se presenta como una experiencia cultural y sonora.
-          Cada evento se diseña desde la selección musical, el sistema de
-          sonido y la relación entre artista, espacio y público. Sin
-          artificios. Sin concesiones.
+          En <strong>FADER</strong>, nuestros eventos se enfocan en la seleccion musical, sistema de sonido, arte visual y la conexion entre nuestro equipo y asistentes. Ofreciendo la mejor experiencia a nuestra comunidad. Presentamos diferentes formatos de experiencias, tanto en clubes como pubs y experiencias privadas (CSC).
         </p>
+        </div>
       </div>
     </section>
   )

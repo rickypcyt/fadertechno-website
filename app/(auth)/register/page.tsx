@@ -12,7 +12,7 @@ export default async function RegisterPage({
   return (
     <section className="auth-page">
       <div className="auth-card">
-        <Link href="/" className="auth-back">← Volver</Link>
+        <Link href="/" className="auth-back">Volver</Link>
         <h1>Crear cuenta</h1>
         <RegisterForm redirect={redirect} />
         <p className="auth-switch">

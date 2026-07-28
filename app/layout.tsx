@@ -13,7 +13,7 @@ const siteUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'https://faderclub.com'
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: 'FADER — Techno contemporáneo en Alicante',
+    default: 'FADER — Electrónica atemporal en Alicante',
     template: '%s · FADER',
   },
   description:
@@ -40,7 +40,7 @@ export const metadata: Metadata = {
     locale: 'es_ES',
     url: siteUrl,
     siteName: 'FADER',
-    title: 'FADER — Techno contemporáneo en Alicante',
+    title: 'FADER — Electrónica atemporal en Alicante',
     description:
       'Colectivo independiente dedicado al techno y la cultura de club en Alicante. Eventos, sesiones y experiencias sonoras.',
     images: [
@@ -54,7 +54,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'FADER — Techno contemporáneo en Alicante',
+    title: 'FADER — Electrónica atemporal en Alicante',
     description:
       'Colectivo independiente. Eventos centrados en el techno, el sonido y la cultura de club.',
     images: ['/logo.jpeg'],
@@ -80,6 +80,8 @@ export default function RootLayout({
   return (
     <html lang="es">
       <body className={inter.className}>
+        <div className="noise-overlay" />
+        <div className="cursor-glow" id="cursor-glow" />
         {children}
         <ClientScripts />
       </body>

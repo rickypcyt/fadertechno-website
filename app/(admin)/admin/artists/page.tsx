@@ -20,11 +20,11 @@ export default async function AdminArtistsPage() {
             <div key={artist.id} className="admin-list-item">
               <div>
                 <div><strong>{artist.name}</strong></div>
-                <div className="text-dim" style={{ fontSize: '0.85rem' }}>
+                <div className="text-dim" style={{ fontSize: '1rem' }}>
                   {artist.events.length} eventos · {artist.resident ? 'Residente' : 'Invitado'}
                 </div>
                 {artist.instagram && (
-                  <div className="text-dim" style={{ fontSize: '0.8rem' }}>
+                  <div className="text-dim" style={{ fontSize: '1rem' }}>
                     IG: {artist.instagram}
                   </div>
                 )}
