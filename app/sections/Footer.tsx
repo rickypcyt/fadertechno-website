@@ -31,7 +31,6 @@ export default function Footer() {
         <div className="footer-col">
           <h4>Contacto</h4>
           <ul>
-            <li><a href="#">hola@fader.club</a></li>
             <li><a href="https://www.instagram.com/fader.music.club/" target="_blank" rel="noopener noreferrer">Instagram</a></li>
             <li><a href="#">SoundCloud</a></li>
           </ul>

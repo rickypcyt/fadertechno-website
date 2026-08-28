@@ -163,71 +163,6 @@ body::before {
   100% { transform: translate(2px, -1px); }
 }
 
-/* ===== GLITCH ===== */
-.glitch {
-  position: relative;
-  display: inline-block;
-}
-
-.glitch::before,
-.glitch::after {
-  content: attr(data-text);
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  opacity: 0;
-}
-
-.glitch::before {
-  color: var(--baltic-blue);
-  clip-path: polygon(0 0, 100% 0, 100% 45%, 0 45%);
-}
-
-.glitch::after {
-  color: var(--powder-blue);
-  clip-path: polygon(0 55%, 100% 55%, 100% 100%, 0 100%);
-}
-
-.glitch:hover::before {
-  opacity: 0.5;
-  animation: glitch-anim-1 0.4s steps(2, end) infinite;
-}
-
-.glitch:hover::after {
-  opacity: 0.5;
-  animation: glitch-anim-2 0.4s steps(2, end) infinite;
-}
-
-@keyframes glitch-anim-1 {
-  0%   { transform: translate(0); }
-  10%  { transform: translate(-2px, 1px); }
-  20%  { transform: translate(-3px, 0); }
-  30%  { transform: translate(1px, 0); }
-  40%  { transform: translate(-1px, -1px); }
-  50%  { transform: translate(2px, 0); }
-  60%  { transform: translate(-1px, 1px); }
-  70%  { transform: translate(-2px, 0); }
-  80%  { transform: translate(1px, 0); }
-  90%  { transform: translate(0, -1px); }
-  100% { transform: translate(0); }
-}
-
-@keyframes glitch-anim-2 {
-  0%   { transform: translate(0); }
-  10%  { transform: translate(2px, -1px); }
-  20%  { transform: translate(3px, 0); }
-  30%  { transform: translate(-1px, 0); }
-  40%  { transform: translate(1px, 1px); }
-  50%  { transform: translate(-2px, 0); }
-  60%  { transform: translate(1px, -1px); }
-  70%  { transform: translate(2px, 0); }
-  80%  { transform: translate(-1px, 0); }
-  90%  { transform: translate(0, 1px); }
-  100% { transform: translate(0); }
-}
-
 a {
   color: inherit;
   text-decoration: none;
@@ -627,6 +562,8 @@ img {
   align-items: stretch;
   overflow: hidden;
   padding: 180px 24px 48px;
+  max-width: 1600px;
+  margin: 0 auto;
   background: var(--black);
 }
 
@@ -643,7 +580,7 @@ img {
 
 .hero-logo-shine {
   position: relative;
-  max-width: 25vw;
+  max-width: 18vw;
   line-height: 0;
   z-index: 1;
 }
@@ -652,12 +589,6 @@ img {
   width: 100%;
   height: auto;
   display: block;
-  animation: hero-shine 4s ease-in-out infinite;
-}
-
-@keyframes hero-shine {
-  0%, 100% { filter: brightness(1); }
-  50% { filter: brightness(1.12); }
 }
 
 .hero-content {
@@ -684,7 +615,7 @@ img {
 }
 
 .hero h1 {
-  font-size: clamp(3rem, 14vw, 16rem);
+  font-size: clamp(2.5rem, 8vw, 8rem);
   font-weight: 900;
   letter-spacing: -0.03em;
   line-height: 0.82;
@@ -984,6 +915,83 @@ img {
   margin-top: 8px;
 }
 
+/* ===== SESSIONS PAST (Última experiencia) ===== */
+.sessions-past {
+  margin-top: 80px;
+  padding-top: 48px;
+  border-top: 1px solid var(--border);
+}
+
+.sessions-past-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 32px;
+  flex-wrap: wrap;
+}
+
+.sessions-past-date {
+  font-size: 0.9rem;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  color: var(--text-dim);
+  font-variant-numeric: tabular-nums;
+}
+
+.sessions-past-body {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 32px;
+}
+
+@media (min-width: 861px) {
+  .sessions-past-body {
+    grid-template-columns: 1fr 1fr;
+    gap: 56px;
+    align-items: start;
+  }
+}
+
+.sessions-past-image {
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: 4 / 3;
+  background: var(--bg-elevated);
+}
+
+.sessions-past-image img {
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.sessions-past-image:hover img {
+  transform: scale(1.04);
+}
+
+.sessions-past-info {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.sessions-past-info h3 {
+  font-size: clamp(1.6rem, 3.5vw, 2.5rem);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.05;
+  text-transform: uppercase;
+}
+
+.sessions-past-info p {
+  color: var(--text-dim);
+  font-size: 1rem;
+  line-height: 1.7;
+}
+
+.sessions-past-info .sessions-meta {
+  margin-top: 8px;
+}
+
 /* ===== ARTISTS (Asymmetric) ===== */
 .artists-grid {
   display: grid;
@@ -1045,6 +1053,24 @@ img {
   color: var(--text-dim);
   font-weight: 500;
   letter-spacing: 0.05em;
+}
+
+.artist-card .artist-desc {
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: var(--text-dim);
+  margin-top: 12px;
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden;
+  transition: max-height 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+              opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+              margin-top 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.artist-card:hover .artist-desc {
+  max-height: 240px;
+  opacity: 1;
 }
 
 /* ===== HISTORIA (Sticky) ===== */
@@ -1427,48 +1453,6 @@ img {
   gap: 12px;
   justify-content: center;
   flex-wrap: wrap;
-}
-
-.artist-modal {
-  max-width: 480px;
-  padding: 0;
-  overflow: hidden;
-  text-align: left;
-}
-
-.artist-modal-image {
-  width: 100%;
-  aspect-ratio: 1;
-  overflow: hidden;
-  background: var(--bg-elevated);
-}
-
-.artist-modal-image img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.artist-modal h2 {
-  padding: 32px 32px 0;
-  margin-bottom: 8px;
-}
-
-.artist-modal-genre {
-  display: block;
-  padding: 0 32px;
-  font-size: 1rem;
-  font-weight: 600;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-  color: var(--accent);
-  margin-bottom: 20px;
-}
-
-.artist-modal p {
-  padding: 0 32px 32px;
-  margin-bottom: 0;
-  line-height: 1.7;
 }
 
 /* ===== ANIMATIONS ===== */
@@ -3464,7 +3448,7 @@ img {
   }
 
   .hero-logo-shine {
-    max-width: 45vw;
+    max-width: 35vw;
   }
 
   .footer-bottom {

@@ -13,7 +13,7 @@ const socials = [
   },
   {
     label: 'WhatsApp',
-    href: '#',
+    href: 'https://chat.whatsapp.com/C2gchb3EuRQCWLku9eWM4Q',
     info: 'Comunidad privada. Acceso prioritario y novedades.',
   },
 ]

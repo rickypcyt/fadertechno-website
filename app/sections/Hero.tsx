@@ -7,10 +7,7 @@ export default function Hero() {
   return (
     <header className="hero">
       <div className="hero-content">
-        <h1
-          className="glitch"
-          data-text="FADER"
-        >
+        <h1>
           <span>FA</span>
           <span>DER</span>
           <span className="sr-only"> — Electrónica atemporal en Alicante</span>

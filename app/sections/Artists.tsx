@@ -1,6 +1,3 @@
-'use client'
-
-import { useState, useEffect } from 'react'
 import Image from 'next/image'
 
 type Artist = {
@@ -36,17 +33,6 @@ const artists: Artist[] = [
 ]
 
 export default function Artists() {
-  const [selected, setSelected] = useState<Artist | null>(null)
-
-  useEffect(() => {
-    if (selected) {
-      document.body.style.overflow = 'hidden'
-    } else {
-      document.body.style.overflow = ''
-    }
-    return () => { document.body.style.overflow = '' }
-  }, [selected])
-
   return (
     <section id="artistas" className="sec sec-3 layout-wide">
       <div className="reveal reveal-scale" style={{ marginBottom: '56px' }}>
@@ -59,10 +45,6 @@ export default function Artists() {
           <div
             key={artist.name}
             className={`artist-card reveal reveal-scale ${artist.span}`}
-            onClick={() => setSelected(artist)}
-            role="button"
-            tabIndex={0}
-            onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') setSelected(artist) }}
           >
             <Image
               src={artist.image}
@@ -75,30 +57,11 @@ export default function Artists() {
             <div className="artist-overlay">
               <h4>{artist.name}</h4>
               <span className="artist-genre">{artist.genre}</span>
+              <p className="artist-desc">{artist.description}</p>
             </div>
           </div>
         ))}
       </div>
-
-      {selected && (
-        <div className="modal-overlay" onClick={() => setSelected(null)}>
-          <div className="modal artist-modal" onClick={(e) => e.stopPropagation()}>
-            <button className="modal-close" onClick={() => setSelected(null)} aria-label="Cerrar">×</button>
-            <div className="artist-modal-image">
-              <Image
-                src={selected.image}
-                alt={selected.name}
-                width={400}
-                height={400}
-                style={{ width: '100%', height: 'auto', display: 'block' }}
-              />
-            </div>
-            <h2>{selected.name}</h2>
-            <span className="artist-modal-genre">{selected.genre}</span>
-            <p>{selected.description}</p>
-          </div>
-        </div>
-      )}
     </section>
   )
 }

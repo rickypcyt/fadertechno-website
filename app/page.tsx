@@ -1,5 +1,4 @@
 import Nav from './components/Nav'
-import IntroAnimation from './components/IntroAnimation'
 import Hero from './sections/Hero'
 import Manifesto from './sections/Manifesto'
 import Sessions from './sections/Sessions'
@@ -59,7 +58,6 @@ export default async function Home() {
 
   return (
     <>
-      <IntroAnimation />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(orgJsonLd) }}

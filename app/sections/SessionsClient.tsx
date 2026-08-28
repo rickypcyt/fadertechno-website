@@ -96,7 +96,7 @@ export default function SessionsClient({
               <div className="sessions-meta">
                 <div className="sessions-meta-item">
                   <strong>Sala</strong>
-                  Kalicante — Alicante
+                  TBA
                 </div>
                 <div className="sessions-meta-item">
                   <strong>Acceso</strong>
@@ -115,49 +115,62 @@ export default function SessionsClient({
 
       {/* Último evento pasado */}
       {lastPast && (
-        <div className="sessions-event reveal reveal-left" style={{ marginTop: '80px' }}>
-          <div className="section-label sessions-label">Última experiencia</div>
-          <div className="sessions-image">
-            {lastPast.coverImage ? (
-              <Image
-                src={lastPast.coverImage.url}
-                alt={lastPast.coverImage.alt ?? lastPast.title}
-                width={400}
-                height={300}
-                sizes="(max-width: 860px) 100vw, 60vw"
-                style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
-              />
-            ) : (
-              <div className="sessions-tba">
-                <span className="sessions-tba-text">{lastPast.title}</span>
-              </div>
-            )}
-            <div className="archive-overlay" />
-          </div>
-          <div className="sessions-info">
-            <h3>{lastPast.title}</h3>
-            <p>{lastPast.description}</p>
-            {lastPast.artists.length > 0 && (
-              <div className="sessions-artists">
-                {lastPast.artists.map((a, i) => (
-                  <span key={i}>{a.artist.name}</span>
-                ))}
-              </div>
-            )}
-            <div className="sessions-meta">
-              <div className="sessions-meta-item">
-                <strong>Fecha</strong>
-                {formatDate(lastPast.startDate)}
-              </div>
-              <div className="sessions-meta-item">
-                <strong>Sala</strong>
-                {lastPast.venue.name}{lastPast.venue.city ? ` — ${lastPast.venue.city}` : ''}
-              </div>
+        <div className="sessions-past reveal reveal-left">
+          <div className="sessions-past-header">
+            <div className="section-label sessions-label">Última experiencia</div>
+            <div className="sessions-past-date">
+              {new Date(lastPast.startDate).toLocaleDateString('es-ES', {
+                day: '2-digit',
+                month: '2-digit',
+                year: '2-digit',
+              })}
             </div>
-            <div className="sessions-actions">
-              <Link href="#archivo" className="btn btn-ghost">
-                Ver archivo
-              </Link>
+          </div>
+
+          <div className="sessions-past-body">
+            <div className="sessions-past-image">
+              {lastPast.coverImage ? (
+                <Image
+                  src={lastPast.coverImage.url}
+                  alt={lastPast.coverImage.alt ?? lastPast.title}
+                  width={400}
+                  height={300}
+                  sizes="(max-width: 860px) 100vw, 50vw"
+                  style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+                />
+              ) : (
+                <div className="sessions-tba">
+                  <span className="sessions-tba-text">{lastPast.title}</span>
+                </div>
+              )}
+              <div className="archive-overlay" />
+            </div>
+
+            <div className="sessions-past-info">
+              <h3>{lastPast.title}</h3>
+              {lastPast.artists.length > 0 && (
+                <div className="sessions-artists">
+                  {lastPast.artists.map((a, i) => (
+                    <span key={i}>{a.artist.name}</span>
+                  ))}
+                </div>
+              )}
+              <p>{lastPast.description}</p>
+              <div className="sessions-meta">
+                <div className="sessions-meta-item">
+                  <strong>Fecha</strong>
+                  {formatDate(lastPast.startDate)}
+                </div>
+                <div className="sessions-meta-item">
+                  <strong>Sala</strong>
+                  {lastPast.venue.name}{lastPast.venue.city ? ` — ${lastPast.venue.city}` : ''}
+                </div>
+              </div>
+              <div className="sessions-actions">
+                <Link href="#archivo" className="btn btn-ghost">
+                  Ver archivo
+                </Link>
+              </div>
             </div>
           </div>
         </div>

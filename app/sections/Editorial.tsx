@@ -1,5 +1,4 @@
 import NewsletterForm from '@/app/components/NewsletterForm'
-import RegisterModal from '@/app/components/RegisterModal'
 
 export default function Editorial() {
   return (
@@ -12,17 +11,6 @@ export default function Editorial() {
           antes de su publicación.
         </p>
         <NewsletterForm />
-        <div className="newsletter-actions">
-          <RegisterModal />
-          <a
-            href="https://chat.whatsapp.com/"
-            className="btn btn-ghost"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Comunidad WhatsApp
-          </a>
-        </div>
       </div>
     </section>
   )

@@ -20,14 +20,26 @@ export async function subscribe(_prevState: unknown, formData: FormData) {
       create: { email },
     })
 
-    const ticketsUrl = await getNextEventTicketsUrl()
+    const settings = await prisma.siteSettings.findUnique({
+      where: { id: 'main' },
+    })
 
-    const html = await render(<WelcomeEmail ticketsUrl={ticketsUrl} />)
+    const fallbackTicketsUrl = await getNextEventTicketsUrl()
+
+    const html = await render(
+      <WelcomeEmail
+        subject={settings?.welcomeEmailSubject ?? undefined}
+        content={settings?.welcomeEmailContent ?? undefined}
+        ctaText={settings?.welcomeEmailCtaText ?? undefined}
+        ctaUrl={settings?.welcomeEmailCtaUrl ?? fallbackTicketsUrl}
+        image={settings?.welcomeEmailImage ?? undefined}
+      />
+    )
 
     await resend.emails.send({
       from: FROM_EMAIL,
       to: email,
-      subject: 'Bienvenido a FADER',
+      subject: settings?.welcomeEmailSubject ?? 'Bienvenido a FADER',
       html,
     })
 

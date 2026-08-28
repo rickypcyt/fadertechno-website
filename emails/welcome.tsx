@@ -13,11 +13,27 @@ import {
 
 const siteUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'https://faderclub.com'
 
-export default function WelcomeEmail({ ticketsUrl }: { ticketsUrl?: string | null }) {
+type WelcomeEmailProps = {
+  subject?: string
+  content?: string
+  ctaText?: string
+  ctaUrl?: string | null
+  image?: string | null
+}
+
+export default function WelcomeEmail({
+  subject = 'Bienvenido a FADER',
+  content = 'Estás dentro. A partir de ahora recibirás información sobre próximos eventos, preventas y anuncios antes que nadie.',
+  ctaText = 'Comprar entradas',
+  ctaUrl,
+  image,
+}: WelcomeEmailProps) {
+  const finalCtaUrl = ctaUrl || `${siteUrl}/user/events`
+
   return (
     <Html>
       <Head />
-      <Preview>Bienvenido a FADER — techno contemporáneo en Alicante</Preview>
+      <Preview>{subject}</Preview>
       <Body style={main}>
         <Container style={container}>
           <Img
@@ -27,14 +43,24 @@ export default function WelcomeEmail({ ticketsUrl }: { ticketsUrl?: string | nul
             height={80}
             style={logo}
           />
-          <Text style={subheading}>Bienvenido al colectivo.</Text>
-          <Text style={paragraph}>
-            Estás dentro. A partir de ahora recibirás información sobre próximos
-            eventos, preventas y anuncios antes que nadie.
-          </Text>
+          <Text style={subheading}>{subject}</Text>
+          <div style={contentStyle}>
+            {content.split('\n').map((line, i) => (
+              <Text key={i} style={paragraph}>
+                {line || '\u00A0'}
+              </Text>
+            ))}
+          </div>
+          {image && (
+            <Img
+              src={image}
+              alt={subject}
+              style={imageStyle}
+            />
+          )}
           <Section style={ctaSection}>
-            <Button style={button} href={ticketsUrl ?? `${siteUrl}/user/events`}>
-              Comprar entradas
+            <Button style={button} href={finalCtaUrl}>
+              {ctaText}
             </Button>
           </Section>
           <Hr style={hr} />
@@ -74,11 +100,15 @@ const subheading: React.CSSProperties = {
   margin: '0 0 24px',
 }
 
+const contentStyle: React.CSSProperties = {
+  margin: '24px 0',
+}
+
 const paragraph: React.CSSProperties = {
   color: '#aaaaaa',
   fontSize: '16px',
   lineHeight: '1.6',
-  margin: '0 0 32px',
+  margin: '0 0 16px',
 }
 
 const ctaSection: React.CSSProperties = {
@@ -106,4 +136,13 @@ const footer: React.CSSProperties = {
   color: '#666666',
   fontSize: '13px',
   textAlign: 'center',
+}
+
+const imageStyle: React.CSSProperties = {
+  width: '100%',
+  maxWidth: '520px',
+  height: 'auto',
+  display: 'block',
+  margin: '0 auto 24px',
+  borderRadius: '8px',
 }

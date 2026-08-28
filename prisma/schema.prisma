@@ -314,6 +314,12 @@ model SiteSettings {
   instagram       String?
   soundcloud      String?
   spotify         String?
+
+  welcomeEmailSubject  String? @default("Bienvenido a FADER")
+  welcomeEmailContent  String? @default("Estás dentro. A partir de ahora recibirás información sobre próximos eventos, preventas y anuncios antes que nadie.")
+  welcomeEmailCtaText  String? @default("Comprar entradas")
+  welcomeEmailCtaUrl   String?
+  welcomeEmailImage    String?
 }
 
 

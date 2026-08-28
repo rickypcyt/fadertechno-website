@@ -1,6 +1,8 @@
 import prisma from '@/lib/prisma'
 import { requireRole } from '@/lib/permissions'
 import NewsletterComposer from '@/app/components/admin/NewsletterComposer'
+import WelcomeEmailComposer from '@/app/components/admin/WelcomeEmailComposer'
+import { getWelcomeEmailConfig } from '@/app/actions/welcome-email'
 
 export default async function AdminNewsletterPage() {
   const user = await requireRole('ADMIN')
@@ -11,11 +13,26 @@ export default async function AdminNewsletterPage() {
 
   const activeCount = subscribers.filter((s: typeof subscribers[0]) => s.subscribed).length
 
+  const welcomeConfig = await getWelcomeEmailConfig()
+
   return (
     <div className="admin-page">
       <h1>Newsletter</h1>
       <p className="text-dim">{activeCount} suscriptores activos · {subscribers.length} totales</p>
 
+      <h2 style={{ marginTop: '40px' }}>Email de bienvenida</h2>
+      <p className="text-dim" style={{ marginBottom: '16px' }}>
+        Configura el email que recibe quien se suscribe.
+      </p>
+      <WelcomeEmailComposer
+        initialConfig={welcomeConfig}
+        adminEmail={user.email}
+      />
+
+      <h2 style={{ marginTop: '48px' }}>Componer newsletter</h2>
+      <p className="text-dim" style={{ marginBottom: '16px' }}>
+        Envía un email a todos los suscriptores activos.
+      </p>
       <NewsletterComposer
         subscriberCount={activeCount}
         adminEmail={user.email}
