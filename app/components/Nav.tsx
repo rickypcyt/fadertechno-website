@@ -42,7 +42,7 @@ export default function Nav() {
             height={56}
             priority
           />
-          FADER
+          <span className="nav-logo-text">FADER</span>
         </Link>
 
         <ul className="nav-links" id="navLinks">

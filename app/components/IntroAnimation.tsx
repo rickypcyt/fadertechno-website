@@ -9,7 +9,12 @@ export default function IntroAnimation() {
   useEffect(() => {
     document.body.style.overflow = 'hidden'
 
+    const fallback = setTimeout(() => {
+      setShow(false)
+    }, 3500)
+
     return () => {
+      clearTimeout(fallback)
       document.body.style.overflow = ''
     }
   }, [])

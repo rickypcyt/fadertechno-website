@@ -61,7 +61,19 @@ export default function ClientScripts() {
       },
       { threshold: 0.05, rootMargin: '0px 0px -40px 0px' }
     )
-    document.querySelectorAll('.reveal').forEach((el) => observer.observe(el))
+
+    const observeReveals = () => {
+      document.querySelectorAll('.reveal:not(.visible)').forEach((el) => {
+        observer.observe(el)
+      })
+    }
+
+    const initTimer = setTimeout(observeReveals, 100)
+
+    const mutationObserver = new MutationObserver(() => {
+      observeReveals()
+    })
+    mutationObserver.observe(document.body, { childList: true, subtree: true })
 
     const fallbackTimer = setTimeout(() => {
       document.querySelectorAll('.reveal:not(.visible)').forEach((el) => {
@@ -74,6 +86,8 @@ export default function ClientScripts() {
       window.removeEventListener('mousemove', onMouseMove)
       window.removeEventListener('hashchange', onHashChange)
       observer.disconnect()
+      mutationObserver.disconnect()
+      clearTimeout(initTimer)
       clearTimeout(fallbackTimer)
     }
   }, [pathname])

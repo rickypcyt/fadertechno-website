@@ -604,7 +604,7 @@ img {
   padding: 6px 16px;
   border: 1px solid var(--border-strong);
   border-radius: var(--radius);
-  font-size: 1rem;
+  font-size: 0.8rem;
   font-weight: 500;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -1457,53 +1457,51 @@ img {
 
 /* ===== ANIMATIONS ===== */
 .reveal {
-  opacity: 0;
-  transform: translateY(30px);
-  transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1),
-              transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  opacity: 1;
+  transform: none;
+  transition: none;
 }
 
 .reveal.visible {
   opacity: 1;
-  transform: translateY(0);
+  transform: none;
 }
 
 .reveal-left {
-  transform: translateX(-60px) scale(0.96);
-  clip-path: inset(0 100% 0 0);
+  transform: none;
+  clip-path: none;
 }
 .reveal-left.visible {
-  transform: translateX(0) scale(1);
-  clip-path: inset(0 0 0 0);
+  transform: none;
+  clip-path: none;
 }
 
 .reveal-right {
-  transform: translateX(60px) scale(0.96);
-  clip-path: inset(0 0 0 100%);
+  transform: none;
+  clip-path: none;
 }
 .reveal-right.visible {
-  transform: translateX(0) scale(1);
-  clip-path: inset(0 0 0 0);
+  transform: none;
+  clip-path: none;
 }
 
 .reveal-scale {
-  transform: scale(0.85);
-  clip-path: inset(20% 20% 20% 20%);
+  transform: none;
+  clip-path: none;
 }
 .reveal-scale.visible {
-  transform: scale(1);
-  clip-path: inset(0 0 0 0);
+  transform: none;
+  clip-path: none;
 }
 
 .reveal-stagger > * {
-  opacity: 0;
-  transform: translateY(20px);
-  transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1),
-              transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  opacity: 1;
+  transform: none;
+  transition: none;
 }
 .reveal-stagger.visible > * {
   opacity: 1;
-  transform: translateY(0);
+  transform: none;
 }
 .reveal-stagger.visible > *:nth-child(1) { transition-delay: 0ms; }
 .reveal-stagger.visible > *:nth-child(2) { transition-delay: 80ms; }
@@ -1512,33 +1510,33 @@ img {
 .reveal-stagger.visible > *:nth-child(5) { transition-delay: 320ms; }
 .reveal-stagger.visible > *:nth-child(6) { transition-delay: 400ms; }
 
-@media (max-width: 768px) {
+@media (max-width: 860px) {
   .reveal,
   .reveal-left,
   .reveal-right,
   .reveal-scale {
-    opacity: 0;
-    transform: translateY(24px);
+    opacity: 1;
+    transform: none;
     filter: none;
     clip-path: none;
-    transition: opacity 0.6s ease, transform 0.6s ease;
+    transition: none;
   }
   .reveal.visible,
   .reveal-left.visible,
   .reveal-right.visible,
   .reveal-scale.visible {
     opacity: 1;
-    transform: translateY(0);
+    transform: none;
   }
   .reveal-stagger > * {
-    opacity: 0;
-    transform: translateY(20px);
+    opacity: 1;
+    transform: none;
     filter: none;
-    transition: opacity 0.5s ease, transform 0.5s ease;
+    transition: none;
   }
   .reveal-stagger.visible > * {
     opacity: 1;
-    transform: translateY(0);
+    transform: none;
   }
 }
 
@@ -3431,24 +3429,60 @@ img {
     display: inline-flex;
   }
 
+  .nav-logo-text {
+    display: none;
+  }
+
+  .nav {
+    display: none;
+  }
+
   .nav-mobile-menu {
     display: none;
   }
 
-  .hero-content {
-    padding: 0;
+  .hero {
+    flex-direction: column;
+    padding: 110px 20px 40px;
+    gap: 32px;
   }
 
-  .hero {
-    padding-top: 120px;
+  .hero-content {
+    padding: 0;
+    flex: none;
   }
 
   .hero-bg {
-    padding-right: 0;
+    margin-left: 0;
+    justify-content: center;
+    width: 100%;
   }
 
   .hero-logo-shine {
-    max-width: 35vw;
+    max-width: 55vw;
+    margin: 0 auto;
+  }
+
+  .hero-tag {
+    font-size: 0.7rem;
+    padding: 4px 10px;
+    margin-top: 14px;
+    margin-bottom: 18px;
+  }
+
+  .hero-desc {
+    margin-bottom: 20px;
+  }
+
+  .hero-actions {
+    gap: 10px;
+  }
+
+  .hero-actions .btn {
+    flex: 1;
+    justify-content: center;
+    padding: 12px 16px;
+    font-size: 0.9rem;
   }
 
   .footer-bottom {
@@ -3499,6 +3533,62 @@ img {
 
   .manifesto {
     padding: 32px 24px;
+  }
+
+  .section-label {
+    font-size: 0.8rem;
+    letter-spacing: 0.14em;
+  }
+
+  .section-title {
+    font-size: clamp(2rem, 9vw, 3rem);
+  }
+
+  .manifesto-content p {
+    font-size: clamp(1.05rem, 4vw, 1.4rem);
+    line-height: 1.55;
+  }
+
+  .sessions-info h3 {
+    font-size: clamp(1.5rem, 6vw, 2.2rem);
+  }
+
+  .sessions-info p {
+    font-size: 0.95rem;
+    line-height: 1.6;
+  }
+
+  .sessions-meta {
+    gap: 20px;
+  }
+
+  .sessions-meta-item {
+    font-size: 0.9rem;
+  }
+
+  .sessions-meta-item strong {
+    font-size: 0.9rem;
+  }
+
+  .sessions-past-info h3 {
+    font-size: clamp(1.4rem, 5vw, 2rem);
+  }
+
+  .sessions-past-info p {
+    font-size: 0.95rem;
+  }
+
+  .sessions-artists span {
+    font-size: 0.9rem;
+  }
+
+  .sessions-past-date {
+    font-size: 0.8rem;
+  }
+
+  .hero-desc {
+    font-size: 0.95rem;
+    line-height: 1.6;
   }
 
   .container {
@@ -3692,6 +3782,42 @@ img {
     font-size: 1rem;
     color: var(--text-dim);
     word-break: break-all;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero {
+    padding: 100px 16px 32px;
+    gap: 24px;
+  }
+
+  .hero h1 {
+    font-size: clamp(2rem, 12vw, 3.5rem);
+  }
+
+  .hero-tag {
+    font-size: 0.65rem;
+    padding: 3px 8px;
+    letter-spacing: 0.1em;
+    white-space: nowrap;
+  }
+
+  .hero-desc {
+    font-size: 0.85rem;
+    line-height: 1.55;
+  }
+
+  .hero-actions {
+    flex-direction: row;
+  }
+
+  .hero-actions .btn {
+    width: auto;
+    padding: 14px 16px;
+  }
+
+  .hero-logo-shine {
+    max-width: 70vw;
   }
 }
 
