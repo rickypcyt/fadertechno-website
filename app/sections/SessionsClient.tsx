@@ -103,11 +103,6 @@ export default function SessionsClient({
                   +18
                 </div>
               </div>
-              <div className="sessions-actions">
-                <Link href="#archivo" className="btn btn-ghost">
-                  Ver archivo
-                </Link>
-              </div>
             </div>
           </>
         )}

@@ -101,7 +101,7 @@ body::after {
   inset: 0;
   z-index: -1;
   pointer-events: none;
-  background: linear-gradient(180deg, var(--black) 0%, var(--prussian-blue) 60%, var(--electric-blue) 100%);
+  background: var(--black);
 }
 
 body::before {
@@ -401,7 +401,7 @@ img {
 .marquee-track {
   display: flex;
   white-space: nowrap;
-  animation: marquee-scroll linear infinite;
+  animation: marquee-scroll 40s linear infinite;
   will-change: transform;
 }
 
@@ -805,20 +805,30 @@ img {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, var(--prussian-blue) 0%, var(--baltic-blue) 100%);
-  border: 1px solid var(--border-strong);
+  background: linear-gradient(160deg, #0a0a0f 0%, #12121a 50%, #0a0a0f 100%);
+  border: 1px solid rgba(255, 255, 255, 0.04);
   min-height: 300px;
+  position: relative;
+  overflow: hidden;
+}
+
+.sessions-tba::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at center, rgba(80, 80, 90, 0.08) 0%, transparent 70%);
+  pointer-events: none;
 }
 
 .sessions-tba-text {
   font-size: clamp(3rem, 8vw, 6rem);
   font-weight: 900;
-  letter-spacing: 0.1em;
-  background: var(--gradient-accent);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
+  letter-spacing: 0.15em;
+  color: #3a3a42;
   text-transform: uppercase;
+  text-shadow: 0 0 40px rgba(60, 60, 70, 0.15);
+  position: relative;
+  z-index: 1;
 }
 
 .sessions-info {
@@ -949,14 +959,15 @@ img {
   .sessions-past-body {
     grid-template-columns: 1fr 1fr;
     gap: 56px;
-    align-items: start;
+    align-items: stretch;
   }
 }
 
 .sessions-past-image {
   position: relative;
   overflow: hidden;
-  aspect-ratio: 4 / 3;
+  aspect-ratio: 3 / 4;
+  height: 100%;
   background: var(--bg-elevated);
 }
 
@@ -1073,6 +1084,13 @@ img {
   opacity: 1;
 }
 
+@media (max-width: 860px) {
+  .artist-card .artist-desc {
+    max-height: 240px;
+    opacity: 1;
+  }
+}
+
 /* ===== HISTORIA (Sticky) ===== */
 .historia-block {
   border-top: 1px solid var(--border-strong);
@@ -1115,6 +1133,44 @@ img {
   letter-spacing: -0.03em;
   line-height: 0.9;
   text-transform: uppercase;
+}
+
+@media (max-width: 860px) {
+  .historia-block {
+    border-top: 1px solid var(--border-strong);
+    padding: 20px 16px 24px;
+    margin-bottom: 0;
+  }
+
+  .historia-block:first-child {
+    border-top: none;
+    padding-top: 0;
+  }
+
+  .historia-block:last-child {
+    border-bottom: 1px solid var(--border-strong);
+    padding-bottom: 24px;
+  }
+
+  .historia-block h3 {
+    font-size: 0.85rem;
+    letter-spacing: 0.14em;
+    margin-bottom: 12px;
+  }
+
+  .historia-block p {
+    font-size: 0.95rem;
+    line-height: 1.65;
+  }
+
+  .historia-sticky-head {
+    position: relative;
+    top: auto;
+  }
+
+  .historia-sticky-head h2 {
+    font-size: clamp(2rem, 9vw, 3rem);
+  }
 }
 
 /* ===== ARCHIVE (Full-bleed asymmetric) ===== */
@@ -1307,6 +1363,24 @@ img {
   color: var(--slate-grey);
 }
 
+@media (max-width: 860px) {
+  .socials-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .socials-row-info {
+    text-align: left;
+    max-width: 100%;
+    font-size: 0.9rem;
+  }
+
+  .socials-row-arrow {
+    align-self: flex-end;
+  }
+}
+
 /* ===== FOOTER (Massive type) ===== */
 .footer {
   padding: 80px 24px 40px;
@@ -1382,7 +1456,7 @@ img {
   align-items: center;
   padding-top: 32px;
   border-top: 1px solid var(--border);
-  font-size: 1rem;
+  font-size: 0.8rem;
   color: var(--text-dim);
   letter-spacing: 0.05em;
 }
@@ -3430,10 +3504,6 @@ img {
   }
 
   .nav-logo-text {
-    display: none;
-  }
-
-  .nav {
     display: none;
   }
 
