@@ -18,7 +18,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="es" className={`${inter.variable} ${switzer.variable}`}>
-      <body className={inter.className}>
+      <body>
         <QueryProvider>
           {children}
           <RoleSwitcher />

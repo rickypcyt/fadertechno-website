@@ -44,9 +44,10 @@
   --gradient-radial: radial-gradient(ellipse at top, var(--prussian-blue) 0%, var(--black) 70%);
   --gradient-fade: linear-gradient(180deg, transparent 0%, var(--black) 100%);
 
-  --font-heading: 'Inter', system-ui, -apple-system, sans-serif;
-  --font-body: 'Inter', system-ui, -apple-system, sans-serif;
-  --font-display: var(--font-switzer, 'Switzer'), Arial, sans-serif;
+  --font-heading: var(--font-inter), system-ui, -apple-system, sans-serif;
+  --font-body: var(--font-inter), system-ui, -apple-system, sans-serif;
+  --font-display: var(--font-switzer), Arial, sans-serif;
+  --font-mono: ui-monospace, 'SFMono-Regular', 'Courier New', monospace;
 
   /* Type scale — all public sections use these */
   --fs-display: clamp(4rem, 20vw, 18rem);
@@ -58,6 +59,32 @@
   --fs-body: 1rem;
   --fs-small: 0.875rem;
   --fs-label: 0.75rem;
+
+  /* Typography tokens — line-height, weight, tracking per level */
+  --lh-display: 0.9;
+  --lh-h1: 0.95;
+  --lh-h2: 1.0;
+  --lh-h3: 1.1;
+  --lh-h4: 1.2;
+  --lh-lead: 1.4;
+  --lh-body: 1.6;
+  --lh-tight: 1.25;
+
+  --fw-heading: 800;
+  --fw-display: 900;
+  --fw-bold: 700;
+  --fw-semibold: 600;
+  --fw-medium: 500;
+  --fw-regular: 400;
+  --fw-light: 300;
+
+  --ls-display: -0.04em;
+  --ls-heading: -0.03em;
+  --ls-h3: -0.02em;
+  --ls-h4: -0.01em;
+  --ls-body: 0;
+  --ls-label: 0.04em;
+  --ls-mono: 0.05em;
 }
 
 html {
@@ -126,22 +153,24 @@ body {
 
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-heading);
-  font-weight: 800;
-  letter-spacing: -0.03em;
-  line-height: 0.95;
+  font-weight: var(--fw-heading);
+  letter-spacing: var(--ls-heading);
+  line-height: var(--lh-h1);
   text-transform: none;
+  text-wrap: balance;
 }
 
-h1 { font-size: var(--fs-h1); font-weight: 900; }
-h2 { font-size: var(--fs-h2); font-weight: 900; }
-h3 { font-size: var(--fs-h3); }
-h4 { font-size: var(--fs-h4); font-weight: 700; }
+h1 { font-size: var(--fs-h1); font-weight: var(--fw-display); line-height: var(--lh-h1); letter-spacing: var(--ls-heading); }
+h2 { font-size: var(--fs-h2); font-weight: var(--fw-display); line-height: var(--lh-h2); letter-spacing: var(--ls-heading); }
+h3 { font-size: var(--fs-h3); line-height: var(--lh-h3); letter-spacing: var(--ls-h3); }
+h4 { font-size: var(--fs-h4); font-weight: var(--fw-bold); line-height: var(--lh-h4); letter-spacing: var(--ls-h4); }
 
 p {
   font-family: var(--font-body);
   font-size: var(--fs-body);
-  line-height: 1.7;
+  line-height: var(--lh-body);
   color: var(--text-dim);
+  text-wrap: pretty;
 }
 
 body::after {
@@ -1366,7 +1395,6 @@ img {
 .historia-inner {
   margin: 0;
   max-width: 100%;
-  padding: 0 24px;
 }
 
 .historia-head {
@@ -1414,16 +1442,6 @@ img {
 }
 
 @media (max-width: 860px) {
-  .historia {
-    padding-left: 0;
-    padding-right: 0;
-  }
-
-  .historia-inner {
-    max-width: 100%;
-    padding: 0 20px;
-  }
-
   .historia-block {
     border-top: 1px solid var(--border-strong);
     padding: 20px 0 24px;
@@ -1858,15 +1876,16 @@ img {
 
 @media (min-width: 861px) {
   .footer-top {
-    grid-template-columns: 1.5fr 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr;
   }
 
-  .footer-col:first-of-type {
+  .footer-col {
     justify-self: center;
   }
 
   .footer-col:last-of-type {
-    justify-self: center;
+    justify-self: end;
+    margin-right: clamp(2.5rem, 9vw, 8rem);
   }
 }
 
@@ -1874,6 +1893,12 @@ img {
   color: var(--text);
   max-width: 320px;
   font-size: var(--fs-body);
+}
+
+@media (min-width: 861px) {
+  .footer-brand p {
+    margin-left: clamp(2.5rem, 9vw, 8rem);
+  }
 }
 
 .footer-brand-location {
@@ -3242,7 +3267,7 @@ img {
   background: var(--bg-elevated);
   color: var(--text);
   font-size: 1rem;
-  font-family: 'Courier New', monospace;
+  font-family: var(--font-mono);
   letter-spacing: 0.05em;
   text-transform: uppercase;
   outline: none;
@@ -3369,7 +3394,7 @@ img {
 }
 
 .verify-result-code {
-  font-family: 'Courier New', monospace;
+  font-family: var(--font-mono);
   font-size: 1rem;
   color: var(--text-dim);
   margin-top: 8px;
@@ -3430,7 +3455,7 @@ img {
 }
 
 .verify-recent-code {
-  font-family: 'Courier New', monospace;
+  font-family: var(--font-mono);
   font-size: 1rem;
   font-weight: 600;
 }
@@ -3856,7 +3881,7 @@ img {
 }
 
 .admin-ticket-qr-code {
-  font-family: 'Courier New', monospace;
+  font-family: var(--font-mono);
   font-size: 1.1rem;
   font-weight: 700;
   letter-spacing: 0.1em;
@@ -4388,7 +4413,7 @@ img {
 }
 
 .ticket-code {
-  font-family: 'Courier New', monospace;
+  font-family: var(--font-mono);
   font-size: 1.2rem;
   font-weight: 700;
   letter-spacing: 0.08em;
@@ -4627,11 +4652,6 @@ img {
 
   .sec {
     padding: 60px 24px;
-  }
-
-  .historia {
-    padding-left: 0;
-    padding-right: 0;
   }
 
   .manifesto {
@@ -4892,7 +4912,7 @@ img {
   font-size: 1rem;
   font-weight: 700;
   color: var(--text-mid);
-  font-family: 'Courier New', monospace;
+  font-family: var(--font-mono);
   flex-shrink: 0;
 }
 
