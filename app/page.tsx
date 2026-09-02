@@ -70,7 +70,7 @@ export default async function Home() {
         />
       ))}
       <Nav />
-      <main>
+      <main className="public-page">
         <Hero />
         <Manifesto />
         <Sessions />
@@ -84,7 +84,7 @@ export default async function Home() {
         <Marquee
           items={['FADER', 'MUSIC', 'CLUB']}
           speed={50}
-          opacity={0.1}
+          opacity={0.25}
         />
       </div>
       <Footer />

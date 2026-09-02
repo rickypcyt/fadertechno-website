@@ -1,5 +1,14 @@
 import Link from 'next/link'
 
+function ArrowUpRight({ size = 24 }: { size?: number }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M7 17L17 7" />
+      <path d="M7 7h10v10" />
+    </svg>
+  )
+}
+
 const socials = [
   {
     label: 'Instagram',
@@ -20,7 +29,7 @@ const socials = [
 
 export default function Socials() {
   return (
-    <section id="redes" className="sec sec-7 layout-narrow">
+    <section id="redes" className="sec sec-7 layout-wide">
       <div className="reveal reveal-left" style={{ marginBottom: '40px' }}>
         <div className="section-label">07 — Redes</div>
       </div>
@@ -29,7 +38,7 @@ export default function Socials() {
           <Link key={social.label} href={social.href} className="socials-row">
             <span className="socials-row-name">{social.label}</span>
             <span className="socials-row-info">{social.info}</span>
-            <span className="socials-row-arrow">→</span>
+            <span className="socials-row-arrow"><ArrowUpRight size={24} /></span>
           </Link>
         ))}
       </div>

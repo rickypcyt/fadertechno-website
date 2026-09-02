@@ -1,8 +1,6 @@
-'use client'
-
 export default function Hero() {
   return (
-    <header className="hero">
+    <header className="hero layout-full">
       <div className="hero-content">
         <span className="hero-tag">
           Electrónica atemporal · Alicante

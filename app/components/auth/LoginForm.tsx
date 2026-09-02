@@ -80,22 +80,32 @@ export default function LoginForm({ redirect }: { redirect?: string }) {
 
   return (
     <form onSubmit={handleSubmit} className="auth-form">
-      <input
-        type="email"
-        placeholder="Email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        required
-      />
-      <input
-        type="password"
-        placeholder="Contraseña"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        required
-      />
+      <div className="auth-field">
+        <label htmlFor="login-email" className="auth-label">Email</label>
+        <input
+          id="login-email"
+          type="email"
+          autoComplete="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          required
+          className="auth-input"
+        />
+      </div>
+      <div className="auth-field">
+        <label htmlFor="login-password" className="auth-label">Contraseña</label>
+        <input
+          id="login-password"
+          type="password"
+          autoComplete="current-password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          required
+          className="auth-input"
+        />
+      </div>
       {error && <p className="auth-error">{error}</p>}
-      <button type="submit" className="btn btn-primary" disabled={loading}>
+      <button type="submit" className="auth-submit" disabled={loading}>
         {loading ? 'Iniciando...' : 'Iniciar sesión'}
       </button>
     </form>

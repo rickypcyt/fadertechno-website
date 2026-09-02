@@ -7,21 +7,32 @@ export default function NewsletterForm() {
   const [state, formAction] = useActionState(subscribe, null)
 
   return (
-    <form action={formAction} className="newsletter-form" id="newsletterForm">
-      <input
-        type="email"
-        name="email"
-        placeholder="tu@email.com"
-        required
-      />
-      <button type="submit" className="nav-cta">
-        Suscribirse
-      </button>
+    <form action={formAction} className="newsletter-form-wix" id="newsletterForm">
+      <div className="newsletter-field">
+        <label htmlFor="newsletter-email" className="newsletter-label">
+          Email <span className="newsletter-required">*</span>
+        </label>
+        <input
+          id="newsletter-email"
+          type="email"
+          name="email"
+          required
+          aria-label="Email"
+          className="newsletter-input"
+        />
+      </div>
+
+      <div className="newsletter-submit-row">
+        <button type="submit" className="newsletter-submit">
+          Enviar
+        </button>
+      </div>
+
       {state?.success && (
         <div className="newsletter-success show">Estás dentro.</div>
       )}
       {state?.error && (
-        <div style={{ color: '#ff6b6b', width: '100%' }}>{state.error}</div>
+        <div className="newsletter-error">{state.error}</div>
       )}
     </form>
   )

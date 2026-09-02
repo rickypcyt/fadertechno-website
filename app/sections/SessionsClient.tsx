@@ -85,26 +85,35 @@ export default function SessionsClient({
             </div>
           </>
         ) : (
-          <>
-            <div className="section-label sessions-label">02 — Próximo evento</div>
-            <div className="sessions-tba">
-              <span className="sessions-tba-text">TBA</span>
+          <div className="sessions-past">
+            <div className="sessions-past-header">
+              <div className="section-label sessions-label">02 — Próximo evento</div>
+              <div className="sessions-past-date">TBA</div>
             </div>
-            <div className="sessions-info">
-              <h3>Próximamente</h3>
-              <p>Pronto anunciaremos el próximo evento. Line-up y fecha por confirmar.</p>
-              <div className="sessions-meta">
-                <div className="sessions-meta-item">
-                  <strong>Sala</strong>
-                  TBA
+
+            <div className="sessions-past-body">
+              <div className="sessions-past-image">
+                <div className="sessions-tba">
+                  <span className="sessions-tba-text">TBA</span>
                 </div>
-                <div className="sessions-meta-item">
-                  <strong>Acceso</strong>
-                  +18
+              </div>
+
+              <div className="sessions-past-info">
+                <h3>Próximamente</h3>
+                <p>Pronto anunciaremos el próximo evento. Line-up y fecha por confirmar.</p>
+                <div className="sessions-meta">
+                  <div className="sessions-meta-item">
+                    <strong>Sala</strong>
+                    TBA
+                  </div>
+                  <div className="sessions-meta-item">
+                    <strong>Acceso</strong>
+                    +18
+                  </div>
                 </div>
               </div>
             </div>
-          </>
+          </div>
         )}
       </div>
 

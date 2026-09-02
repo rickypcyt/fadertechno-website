@@ -1,6 +1,6 @@
 export default function Manifesto() {
   return (
-    <section id="manifesto" className="manifesto sec sec-1 layout-narrow">
+    <section id="manifesto" className="manifesto sec sec-1 layout-wide">
       <div className="manifesto-inner">
         <div className="manifesto-content reveal reveal-left">
         <span className="manifesto-tag">01 — Manifiesto</span>

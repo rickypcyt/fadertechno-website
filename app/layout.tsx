@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import './globals.css'
 import ClientScripts from './components/ClientScripts'
+import VideoBg from './components/VideoBg'
 
 const inter = Inter({
   subsets: ['latin'],
@@ -80,6 +81,8 @@ export default function RootLayout({
   return (
     <html lang="es">
       <body className={inter.className}>
+        <VideoBg />
+        <div className="video-bg-overlay" />
         <div className="noise-overlay" />
         <div className="cursor-glow" id="cursor-glow" />
         {children}

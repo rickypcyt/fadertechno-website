@@ -52,29 +52,44 @@ export default function RegisterForm({ redirect }: { redirect?: string }) {
 
   return (
     <form onSubmit={handleSubmit} className="auth-form">
-      <input
-        type="text"
-        placeholder="Nombre"
-        value={name}
-        onChange={(e) => setName(e.target.value)}
-        required
-      />
-      <input
-        type="email"
-        placeholder="Email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        required
-      />
-      <input
-        type="password"
-        placeholder="Contraseña"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        required
-      />
+      <div className="auth-field">
+        <label htmlFor="register-name" className="auth-label">Nombre</label>
+        <input
+          id="register-name"
+          type="text"
+          autoComplete="name"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          required
+          className="auth-input"
+        />
+      </div>
+      <div className="auth-field">
+        <label htmlFor="register-email" className="auth-label">Email</label>
+        <input
+          id="register-email"
+          type="email"
+          autoComplete="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          required
+          className="auth-input"
+        />
+      </div>
+      <div className="auth-field">
+        <label htmlFor="register-password" className="auth-label">Contraseña</label>
+        <input
+          id="register-password"
+          type="password"
+          autoComplete="new-password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          required
+          className="auth-input"
+        />
+      </div>
       {error && <p className="auth-error">{error}</p>}
-      <button type="submit" className="btn btn-primary" disabled={loading}>
+      <button type="submit" className="auth-submit" disabled={loading}>
         {loading ? 'Creando...' : 'Crear cuenta'}
       </button>
     </form>
