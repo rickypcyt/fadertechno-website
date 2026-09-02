@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
+import { inter, switzer } from '../fonts'
 import '../globals.css'
 import ClientScripts from '../components/ClientScripts'
 import VideoBg from '../components/VideoBg'
@@ -7,11 +7,6 @@ import QueryProvider from '../components/QueryProvider'
 import { I18nProvider } from '@/lib/i18n/I18nProvider'
 import { getDictionary, hasLocale, locales, defaultLocale } from '@/lib/i18n/dictionaries'
 import { notFound } from 'next/navigation'
-
-const inter = Inter({
-  subsets: ['latin'],
-  weight: ['300', '400', '500', '600', '700', '800', '900'],
-})
 
 const siteUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'https://faderclub.com'
 
@@ -94,7 +89,7 @@ export default async function LangLayout({
   const dict = await getDictionary(lang)
 
   return (
-    <html lang={lang}>
+    <html lang={lang} className={`${inter.variable} ${switzer.variable}`}>
       <body className={inter.className}>
         <QueryProvider>
           <I18nProvider dict={dict}>

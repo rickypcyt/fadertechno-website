@@ -3,6 +3,9 @@ import { getCurrentUser } from '@/lib/auth'
 import { roleHierarchy } from '@/lib/roles'
 import SidePanel from '@/app/components/SidePanel'
 import MobileNav from '@/app/components/admin/MobileNav'
+import { inter, switzer } from '../fonts'
+import '../globals.css'
+import QueryProvider from '../components/QueryProvider'
 
 export default async function AdminLayout({
   children,
@@ -17,20 +20,24 @@ export default async function AdminLayout({
 
   const isAdmin = (roleHierarchy[user.role] ?? 0) >= roleHierarchy['ADMIN']
 
-  if (!isAdmin) {
-    return (
-      <div className="admin-unauthorized">
-        <h1>403</h1>
-        <p>No tienes permisos para acceder al panel.</p>
-      </div>
-    )
-  }
-
   return (
-    <div className="admin-shell">
-      <SidePanel userRole={user.role} />
-      <MobileNav brand="FADER" userRole={user.role} userEmail={user.email} />
-      <main className="admin-main">{children}</main>
-    </div>
+    <html lang="es" className={`${inter.variable} ${switzer.variable}`}>
+      <body className={inter.className}>
+        <QueryProvider>
+          {isAdmin ? (
+            <div className="admin-shell">
+              <SidePanel userRole={user.role} />
+              <MobileNav brand="FADER" userRole={user.role} userEmail={user.email} />
+              <main className="admin-main">{children}</main>
+            </div>
+          ) : (
+            <div className="admin-unauthorized">
+              <h1>403</h1>
+              <p>No tienes permisos para acceder al panel.</p>
+            </div>
+          )}
+        </QueryProvider>
+      </body>
+    </html>
   )
 }

@@ -1,16 +1,13 @@
-import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import localFont from 'next/font/local'
-import './globals.css'
-import QueryProvider from './components/QueryProvider'
 
-const inter = Inter({
+export const inter = Inter({
   subsets: ['latin'],
   weight: ['300', '400', '500', '600', '700', '800', '900'],
   variable: '--font-inter',
 })
 
-const switzer = localFont({
+export const switzer = localFont({
   src: [
     { path: './fonts/switzer/Switzer-Extralight.woff', weight: '200', style: 'normal' },
     { path: './fonts/switzer/Switzer-ExtralightItalic.woff', weight: '200', style: 'italic' },
@@ -32,22 +29,3 @@ const switzer = localFont({
   variable: '--font-switzer',
   display: 'swap',
 })
-
-export const metadata: Metadata = {
-  title: 'FADER',
-  description: 'FADER — Electrónica atemporal en Alicante',
-}
-
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode
-}) {
-  return (
-    <html lang="es" className={`${inter.variable} ${switzer.variable}`}>
-      <body className={inter.className}>
-        <QueryProvider>{children}</QueryProvider>
-      </body>
-    </html>
-  )
-}
