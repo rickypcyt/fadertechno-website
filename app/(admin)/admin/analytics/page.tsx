@@ -97,15 +97,17 @@ export default async function AdminAnalyticsPage() {
     }),
   ])
 
-  const totalRevenue = allTickets.reduce(
-    (sum: number, t: typeof allTickets[0]) => sum + Number(t.ticketType.price),
+  const totalRevenueCents = allTickets.reduce(
+    (sum: number, t: typeof allTickets[0]) => sum + t.ticketType.priceCents,
     0
   )
+  const totalRevenue = totalRevenueCents / 100
 
-  const revenue30d = recentOrders.reduce(
-    (sum: number, o: typeof recentOrders[0]) => sum + Number(o.total),
+  const revenue30dCents = recentOrders.reduce(
+    (sum: number, o: typeof recentOrders[0]) => sum + o.totalCents,
     0
   )
+  const revenue30d = revenue30dCents / 100
 
   const checkedIn = allTickets.filter((t: typeof allTickets[0]) => t.checkedIn).length
   const checkInRate = totalTickets > 0 ? Math.round((checkedIn / totalTickets) * 100) : 0
@@ -122,9 +124,9 @@ export default async function AdminAnalyticsPage() {
         0
       )
       const revenue = e.ticketTypes.reduce(
-        (s: number, tt: typeof e.ticketTypes[0]) => s + tt.tickets.length * Number(tt.price),
+        (s: number, tt: typeof e.ticketTypes[0]) => s + tt.tickets.length * tt.priceCents,
         0
-      )
+      ) / 100
       const capacity = e.venue?.capacity ?? 0
       return {
         id: e.id,
@@ -147,7 +149,7 @@ export default async function AdminAnalyticsPage() {
     const name = t.ticketType.name
     const entry = ticketsByType.get(name) ?? { count: 0, revenue: 0 }
     entry.count += 1
-    entry.revenue += Number(t.ticketType.price)
+    entry.revenue += t.ticketType.priceCents
     ticketsByType.set(name, entry)
   }
   const ticketTypeStats = Array.from(ticketsByType.entries())
@@ -245,7 +247,7 @@ export default async function AdminAnalyticsPage() {
                 label={tt.name}
                 value={tt.count}
                 max={maxTicketTypeCount}
-                right={`${tt.count} · ${tt.revenue.toLocaleString('es-ES')} €`}
+                right={`${tt.count} · ${(tt.revenue / 100).toLocaleString('es-ES')} €`}
               />
             ))}
           </div>
@@ -271,7 +273,7 @@ export default async function AdminAnalyticsPage() {
                     {new Date(order.createdAt).toLocaleDateString('es-ES', { day: 'numeric', month: 'short' })}
                   </div>
                 </div>
-                <span className="admin-badge">{Number(order.total).toFixed(0)}€</span>
+                <span className="admin-badge">{(order.totalCents / 100).toFixed(0)}€</span>
               </div>
             ))}
           </div>

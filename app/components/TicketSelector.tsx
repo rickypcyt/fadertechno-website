@@ -6,7 +6,7 @@ import type { Dictionary } from '@/lib/i18n/dictionaries'
 type TicketType = {
   id: string
   name: string
-  price: string
+  priceCents: number
   stock: number
 }
 
@@ -22,10 +22,11 @@ export default function TicketSelector({ ticketTypes, eventId, dict }: Props) {
   const [error, setError] = useState<string | null>(null)
   const [resuming, setResuming] = useState(false)
 
-  const total = ticketTypes.reduce((sum, tt) => {
+  const totalCents = ticketTypes.reduce((sum, tt) => {
     const qty = quantities[tt.id] ?? 0
-    return sum + qty * Number(tt.price)
+    return sum + qty * tt.priceCents
   }, 0)
+  const total = totalCents / 100
 
   const totalItems = Object.values(quantities).reduce((s, q) => s + q, 0)
 
@@ -151,7 +152,7 @@ export default function TicketSelector({ ticketTypes, eventId, dict }: Props) {
                   )}
                 </div>
                 <div className="text-dim" style={{ fontSize: '1rem' }}>
-                  {Number(tt.price).toFixed(2)}€ · {dict.ticket.stock}: {tt.stock}
+                  {(tt.priceCents / 100).toFixed(2)}€ · {dict.ticket.stock}: {tt.stock}
                 </div>
               </div>
               <div className="admin-actions">

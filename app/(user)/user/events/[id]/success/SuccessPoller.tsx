@@ -13,7 +13,8 @@ type Props = {
   eventTitle: string
   eventDate: string
   ticketCount: number
-  total: string
+  totalCents: number
+  pointsEarned: number
 }
 
 export default function SuccessPoller(props: Props) {

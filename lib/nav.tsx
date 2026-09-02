@@ -10,6 +10,7 @@ import {
   Users,
   Mail,
   BarChart3,
+  AlertCircle,
   type LucideIcon,
 } from 'lucide-react'
 import { Role, roleHierarchy } from '@/lib/roles'
@@ -107,6 +108,15 @@ export const allNavItems: NavItem[] = [
     group: 'staff',
     minRole: Role.STAFF,
   },
+  {
+    href: '/staff/bar',
+    label: 'Canje bar',
+    labelKey: 'barRedeem',
+    icon: Gift,
+    color: 'linear-gradient(135deg, #F472B6 0%, #DB2777 100%)',
+    group: 'staff',
+    minRole: Role.STAFF,
+  },
 
   // ===== ADMIN =====
   {
@@ -169,6 +179,15 @@ export const allNavItems: NavItem[] = [
     labelKey: 'analytics',
     icon: BarChart3,
     color: 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)',
+    group: 'admin',
+    minRole: Role.ADMIN,
+  },
+  {
+    href: '/admin/incidents',
+    label: 'Incidencias',
+    labelKey: 'incidents',
+    icon: AlertCircle,
+    color: 'linear-gradient(135deg, #EF4444 0%, #DC2626 100%)',
     group: 'admin',
     minRole: Role.ADMIN,
   },

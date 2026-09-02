@@ -25,14 +25,14 @@ export async function POST(request: Request) {
     return Response.json({ status: 'not_found', message: 'Código no encontrado' })
   }
 
-  if (ticket.checkedIn) {
+  if (ticket.status === 'USED') {
     return Response.json({
       status: 'already',
       message: 'Entrada ya validada',
       ticket: {
         id: ticket.id,
         code: ticket.code,
-        checkedIn: ticket.checkedIn,
+        checkedIn: true,
         checkedInAt: ticket.checkedInAt?.toISOString() ?? null,
         ticketType: { name: ticket.ticketType.name },
         order: {
@@ -49,13 +49,47 @@ export async function POST(request: Request) {
     })
   }
 
-  await prisma.ticket.update({
-    where: { id: ticket.id },
+  if (ticket.status === 'CANCELLED' || ticket.status === 'REFUNDED') {
+    return Response.json({
+      status: 'error',
+      message: `Entrada ${ticket.status === 'CANCELLED' ? 'cancelada' : 'reembolsada'}`,
+    })
+  }
+
+  // Atomic flip: VALID → USED. Only one concurrent scan can succeed.
+  const result = await prisma.ticket.updateMany({
+    where: { id: ticket.id, status: 'VALID' },
     data: {
+      status: 'USED',
       checkedIn: true,
       checkedInAt: new Date(),
     },
   })
+
+  if (result.count === 0) {
+    // Another scan won the race.
+    return Response.json({
+      status: 'already',
+      message: 'Entrada ya validada',
+      ticket: {
+        id: ticket.id,
+        code: ticket.code,
+        checkedIn: true,
+        checkedInAt: ticket.checkedInAt?.toISOString() ?? null,
+        ticketType: { name: ticket.ticketType.name },
+        order: {
+          user: {
+            name: ticket.order.user.name,
+            email: ticket.order.user.email,
+          },
+        },
+        ticketTypeEvent: {
+          title: ticket.ticketType.event.title,
+          startDate: ticket.ticketType.event.startDate.toISOString(),
+        },
+      },
+    })
+  }
 
   return Response.json({
     status: 'valid',

@@ -16,9 +16,28 @@ enum Role {
 
 enum OrderStatus {
   PENDING
+  PROCESSING
   PAID
+  PARTIALLY_REFUNDED
   REFUNDED
+  PAYMENT_FAILED
   CANCELLED
+  FULFILLMENT_ERROR
+}
+
+enum FulfillmentStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  ERROR
+}
+
+enum TicketStatus {
+  ISSUED
+  VALID
+  USED
+  CANCELLED
+  REFUNDED
 }
 
 enum MediaType {
@@ -34,10 +53,11 @@ model User {
   image         String?
   role          Role    @default(USER)
 
-  sessions     Session[]
-  accounts     Account[]
-  orders       Order[]
-  transactions CreditTransaction[]
+  sessions         Session[]
+  accounts         Account[]
+  orders           Order[]
+  pointTransactions PointTransaction[]
+  rewardRedemptions RewardRedemption[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -93,31 +113,93 @@ model Verification {
   @@map("verification")
 }
 
-enum CreditType {
-  EARN
-  SPEND
+enum PointTransactionType {
+  PURCHASE
   BONUS
+  REWARD_REDEMPTION
   REFUND
+  EXPIRATION
+  ADMIN_ADJUSTMENT
 }
 
-model CreditTransaction {
-  id          String     @id @default(cuid())
+model PointTransaction {
+  id          String               @id @default(cuid())
   userId      String
-  amount      Int
-  type        CreditType
+  points      Int
+  type        PointTransactionType
+  referenceId String?
   description String?
-  createdAt   DateTime   @default(now())
+  createdAt   DateTime             @default(now())
 
   user User @relation(fields: [userId], references: [id])
+
+  @@index([userId, createdAt])
+  // Idempotency: a given (type, referenceId) pair can only produce one movement.
+  // referenceId is nullable for admin adjustments / manual bonuses, which are
+  // not deduplicated.
+  @@unique([type, referenceId])
+}
+
+enum RedemptionStatus {
+  PENDING
+  REDEEMED
+  EXPIRED
+  CANCELLED
 }
 
 model Reward {
-  id          String  @id @default(cuid())
-  name        String
-  description String?
-  cost        Int
-  stock       Int?
-  active      Boolean @default(true)
+  id             String   @id @default(cuid())
+  name           String
+  description    String?
+
+  pointsCost     Int
+
+  salePriceCents Int?
+  realCostCents  Int?
+
+  active         Boolean  @default(true)
+
+  stock          Int?
+  maxPerUser     Int?
+  maxPerEvent    Int?
+
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  redemptions RewardRedemption[]
+}
+
+model RewardRedemption {
+  id          String           @id @default(cuid())
+  userId      String
+  rewardId    String
+
+  pointsSpent Int
+
+  token       String           @unique
+
+  status      RedemptionStatus @default(PENDING)
+
+  expiresAt   DateTime
+  redeemedAt  DateTime?
+
+  createdAt   DateTime         @default(now())
+
+  user   User   @relation(fields: [userId], references: [id])
+  reward Reward @relation(fields: [rewardId], references: [id])
+
+  @@index([userId, createdAt])
+  @@index([rewardId, status])
+}
+
+// Single-row configuration table (id = "main"). Lets the admin change loyalty
+// rules (points per euro, QR validity window) without touching code.
+model LoyaltyConfig {
+  id                String  @id @default("main")
+  pointsPerEuro     Int     @default(10)
+  qrValiditySeconds Int     @default(90)
+
+  updatedAt         DateTime @updatedAt
 }
 
 model Venue {
@@ -252,25 +334,36 @@ model EventArtist {
 }
 
 model TicketType {
-  id    String  @id @default(cuid())
-  name  String
-  price Decimal
-  stock Int
+  id         String  @id @default(cuid())
+  name       String
+  priceCents Int
+  stock      Int
 
   eventId String
   event   Event  @relation(fields: [eventId], references: [id], onDelete: Cascade)
 
   tickets Ticket[]
+  orderItems OrderItem[]
 
   @@unique([eventId, name])
 }
 
 model Order {
-  id     String      @id @default(cuid())
-  total  Decimal
-  status OrderStatus
+  id              String           @id @default(cuid())
+  status          OrderStatus      @default(PENDING)
+  fulfillmentStatus FulfillmentStatus @default(PENDING)
 
-  stripeId String? @unique
+  currency        String           @default("eur")
+  subtotalCents   Int
+  totalCents      Int
+
+  stripeCheckoutId String?         @unique
+  stripePaymentId  String?
+  stripeCustomerId String?
+
+  paidAt          DateTime?
+  fulfilledAt     DateTime?
+  fulfillmentError String?
 
   userId String
   user   User   @relation(fields: [userId], references: [id])
@@ -278,22 +371,72 @@ model Order {
   eventId String
   event   Event  @relation(fields: [eventId], references: [id])
 
+  items   OrderItem[]
   tickets Ticket[]
 
   createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId, createdAt])
+  @@index([status])
+  @@index([fulfillmentStatus])
+}
+
+model OrderItem {
+  id            String @id @default(cuid())
+
+  orderId       String
+  order         Order  @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  ticketTypeId  String?
+  ticketType    TicketType? @relation(fields: [ticketTypeId], references: [id])
+
+  nameSnapshot  String
+  priceCents    Int
+  quantity      Int
+
+  pointsAwarded Int @default(0)
+
+  @@index([orderId])
 }
 
 model Ticket {
-  id          String    @id @default(cuid())
-  code        String    @unique
-  checkedIn   Boolean   @default(false)
+  id          String       @id @default(cuid())
+  code        String       @unique
+  status      TicketStatus @default(VALID)
+  checkedIn   Boolean      @default(false)
   checkedInAt DateTime?
+
+  // Snapshot of the ticket type name + price at issuance time, so historical
+  // tickets don't change if the TicketType is edited later.
+  nameSnapshot String
+  priceCents   Int
 
   orderId String
   order   Order  @relation(fields: [orderId], references: [id])
 
   ticketTypeId String
   ticketType   TicketType @relation(fields: [ticketTypeId], references: [id])
+
+  @@index([orderId])
+  @@index([ticketTypeId])
+}
+
+model StripeWebhookEvent {
+  id             String   @id @default(cuid())
+
+  stripeEventId  String   @unique
+  type           String
+
+  processed      Boolean  @default(false)
+  attempts       Int      @default(0)
+
+  error          String?
+
+  createdAt      DateTime @default(now())
+  processedAt    DateTime?
+
+  @@index([processed])
 }
 
 model NewsletterSubscriber {

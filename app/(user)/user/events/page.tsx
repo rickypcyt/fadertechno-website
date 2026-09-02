@@ -44,7 +44,7 @@ export default async function EventsPage() {
         ) : (
           events.map((event) => {
             const hasTicket = userEventIds.has(event.id);
-            const minPrice = Math.min(...event.ticketTypes.map(t => Number(t.price)));
+            const minPrice = Math.min(...event.ticketTypes.map(t => t.priceCents / 100));
             return (
               <div key={event.id} className="admin-card">
                 <h3>{event.title}</h3>

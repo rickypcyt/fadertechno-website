@@ -4,7 +4,7 @@ import type { Dictionary } from '@/lib/i18n/dictionaries'
 type TicketType = {
   id: string
   name: string
-  price: string
+  priceCents: number
   stock: number
 }
 

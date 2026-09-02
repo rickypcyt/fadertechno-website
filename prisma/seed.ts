@@ -55,12 +55,12 @@ async function main() {
     where: { id: 'early-bird-015' },
     update: {
       name: 'Early Bird',
-      price: 12,
+      priceCents: 1200,
     },
     create: {
       id: 'early-bird-015',
       name: 'Early Bird',
-      price: 12,
+      priceCents: 1200,
       stock: 50,
       eventId: event.id,
     },
@@ -70,12 +70,12 @@ async function main() {
     where: { id: 'presale-015' },
     update: {
       name: 'Preventa',
-      price: 18,
+      priceCents: 1800,
     },
     create: {
       id: 'presale-015',
       name: 'Preventa',
-      price: 18,
+      priceCents: 1800,
       stock: 100,
       eventId: event.id,
     },
@@ -85,12 +85,12 @@ async function main() {
     where: { id: 'door-015' },
     update: {
       name: 'Taquilla',
-      price: 25,
+      priceCents: 2500,
     },
     create: {
       id: 'door-015',
       name: 'Taquilla',
-      price: 25,
+      priceCents: 2500,
       stock: 50,
       eventId: event.id,
     },

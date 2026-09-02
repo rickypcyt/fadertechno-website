@@ -53,7 +53,7 @@ export default async function Sessions({ dict, lang }: { dict: Dictionary; lang:
               ticketTypes: upcomingEvent.ticketTypes.map((tt) => ({
                 id: tt.id,
                 name: tt.name,
-                price: tt.price.toString(),
+                priceCents: tt.priceCents,
               })),
               artists: upcomingEvent.artists.map((a) => ({ artist: { name: a.artist.name } })),
             }

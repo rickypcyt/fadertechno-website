@@ -43,7 +43,7 @@ export async function POST(request: NextRequest) {
     if (tt.stock < item.quantity) {
       return Response.json(
         { error: `Not enough stock for ${tt.name}` },
-        { status: 400 }
+        { status: 400 },
       )
     }
   }
@@ -57,24 +57,39 @@ export async function POST(request: NextRequest) {
           product_data: {
             name: `${tt.event.title} — ${tt.name}`,
           },
-          unit_amount: Math.round(Number(tt.price) * 100),
+          unit_amount: tt.priceCents,
         },
         quantity: item.quantity,
       }
     }
   )
 
-  const total = items.reduce((sum: number, item: { ticketTypeId: string; quantity: number }) => {
+  const totalCents = items.reduce((sum: number, item: { ticketTypeId: string; quantity: number }) => {
     const tt = ticketTypes.find((t: typeof ticketTypes[0]) => t.id === item.ticketTypeId)!
-    return sum + Number(tt.price) * item.quantity
+    return sum + tt.priceCents * item.quantity
   }, 0)
 
+  // Create the order with line items (snapshots of name + price).
   const order = await prisma.order.create({
     data: {
-      total: total,
       status: 'PENDING',
+      fulfillmentStatus: 'PENDING',
+      currency: 'eur',
+      subtotalCents: totalCents,
+      totalCents,
       userId: user.id,
       eventId: ticketTypes[0].eventId,
+      items: {
+        create: items.map((item: { ticketTypeId: string; quantity: number }) => {
+          const tt = ticketTypes.find((t: typeof ticketTypes[0]) => t.id === item.ticketTypeId)!
+          return {
+            ticketTypeId: tt.id,
+            nameSnapshot: `${tt.event.title} — ${tt.name}`,
+            priceCents: tt.priceCents,
+            quantity: item.quantity,
+          }
+        }),
+      },
     },
   })
 
@@ -91,13 +106,12 @@ export async function POST(request: NextRequest) {
     metadata: {
       orderId: order.id,
       userId: user.id,
-      items: JSON.stringify(items),
     },
   })
 
   await prisma.order.update({
     where: { id: order.id },
-    data: { stripeId: session.id },
+    data: { stripeCheckoutId: session.id },
   })
 
   return Response.json({ url: session.url })

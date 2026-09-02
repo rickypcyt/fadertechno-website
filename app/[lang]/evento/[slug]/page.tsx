@@ -21,7 +21,7 @@ export default async function EventPage({
     where: { slug },
     include: {
       venue: true,
-      ticketTypes: { orderBy: { price: 'asc' } },
+      ticketTypes: { orderBy: { priceCents: 'asc' } },
       artists: { include: { artist: true } },
       coverImage: true,
     },
@@ -151,7 +151,7 @@ export default async function EventPage({
               <div className="event-section-label">{dict.event.tickets}</div>
               {event.ticketTypes.length > 0 && (
                 <div className="event-tickets-from">
-                  {dict.event.from} {Math.min(...event.ticketTypes.map((t) => Number(t.price)))}€
+                  {dict.event.from} {Math.min(...event.ticketTypes.map((t) => t.priceCents / 100))}€
                 </div>
               )}
             </div>
@@ -160,7 +160,7 @@ export default async function EventPage({
               ticketTypes={event.ticketTypes.map((tt) => ({
                 id: tt.id,
                 name: tt.name,
-                price: tt.price.toString(),
+                priceCents: tt.priceCents,
                 stock: tt.stock,
               }))}
               eventId={event.id}

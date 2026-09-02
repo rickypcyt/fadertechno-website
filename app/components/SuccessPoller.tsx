@@ -15,7 +15,8 @@ type Props = {
   eventTitle: string
   eventDate: string
   ticketCount: number
-  total: string
+  totalCents: number
+  pointsEarned: number
   eventSlug?: string
 }
 
@@ -26,7 +27,8 @@ export default function SuccessPoller({
   eventTitle,
   eventDate,
   ticketCount,
-  total,
+  totalCents,
+  pointsEarned,
   eventSlug,
 }: Props) {
   const [isPaid, setIsPaid] = useState(initialIsPaid)
@@ -63,9 +65,14 @@ export default function SuccessPoller({
       <h1>{isPaid ? '¡Compra confirmada!' : 'Procesando pago...'}</h1>
       <p className="text-dim">
         {isPaid
-          ? `Tu orden se ha completado correctamente. Has ganado ${Math.floor(Number(total))} puntos.`
+          ? `Tu orden se ha completado correctamente. Has ganado ${pointsEarned} puntos.`
           : 'Tu pago se está procesando. Esto puede tardar unos segundos.'}
       </p>
+
+      <div className="admin-card" style={{ marginTop: '24px' }}>
+        <div className="admin-card-label">Total</div>
+        <div className="admin-card-value">{(totalCents / 100).toFixed(2)} €</div>
+      </div>
 
       <div className="admin-card" style={{ marginTop: '32px' }}>
         <div className="admin-card-label">Evento</div>

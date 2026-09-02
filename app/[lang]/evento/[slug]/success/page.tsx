@@ -1,5 +1,6 @@
 import prisma from '@/lib/prisma'
 import { getCurrentUser } from '@/lib/auth'
+import { getLoyaltyConfig, calculatePurchasePoints } from '@/lib/loyalty'
 import SuccessPoller from '@/app/components/SuccessPoller'
 
 export default async function EventSuccessPage({
@@ -59,6 +60,8 @@ export default async function EventSuccessPage({
   }
 
   const isPaid = order.status === 'PAID'
+  const { pointsPerEuro } = await getLoyaltyConfig()
+  const pointsEarned = calculatePurchasePoints(order.totalCents, pointsPerEuro)
 
   return (
     <div className="container" style={{ paddingTop: '120px', paddingBottom: '80px' }}>
@@ -77,7 +80,8 @@ export default async function EventSuccessPage({
           month: 'long',
         })}
         ticketCount={order.tickets.length}
-        total={order.total.toString()}
+        totalCents={order.totalCents}
+        pointsEarned={pointsEarned}
         eventSlug={slug}
       />
     </div>

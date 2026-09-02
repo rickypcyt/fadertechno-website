@@ -13,7 +13,7 @@ type EventData = {
   startDate: Date
   venue: { name: string; city: string | null }
   coverImage: { url: string; alt: string | null } | null
-  ticketTypes: { id: string; name: string; price: string }[]
+  ticketTypes: { id: string; name: string; priceCents: number }[]
   artists: { artist: { name: string } }[]
 } | null
 
@@ -74,7 +74,7 @@ export default function SessionsClient({
               {upcoming.ticketTypes.length > 0 && (
                 <div className="sessions-meta-item">
                   <strong>{dict.sessions.from}</strong>
-                  {Math.min(...upcoming.ticketTypes.map((t) => Number(t.price)))}€
+                  {Math.min(...upcoming.ticketTypes.map((t) => t.priceCents / 100))}€
                 </div>
               )}
             </div>

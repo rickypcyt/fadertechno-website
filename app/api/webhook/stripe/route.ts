@@ -1,7 +1,8 @@
 import { getStripe } from '@/lib/stripe'
-import prisma, { Prisma } from '@/lib/prisma'
+import prisma from '@/lib/prisma'
+import { inngest } from '@/lib/inngest'
+import { refundOrder } from '@/lib/payments/fulfillment'
 import type { Stripe } from 'stripe'
-import { sendTicketEmail } from '@/lib/send-ticket-email'
 
 export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
@@ -20,7 +21,7 @@ export async function POST(request: Request) {
     event = getStripe().webhooks.constructEvent(
       body,
       signature,
-      process.env.STRIPE_WEBHOOK_SECRET!
+      process.env.STRIPE_WEBHOOK_SECRET!,
     )
   } catch (err) {
     const message = err instanceof Error ? err.message : 'Unknown error'
@@ -29,110 +30,100 @@ export async function POST(request: Request) {
     })
   }
 
-  if (event.type === 'checkout.session.completed') {
-    const session = event.data.object as Stripe.Checkout.Session
-    const orderId = session.metadata?.orderId
-    const itemsJson = session.metadata?.items
+  // Idempotency layer 1: check if we've already processed this Stripe event.
+  const existing = await prisma.stripeWebhookEvent.findUnique({
+    where: { stripeEventId: event.id },
+  })
 
-    if (!orderId || !itemsJson) {
-      return new Response('Missing metadata', { status: 400 })
-    }
+  if (existing?.processed) {
+    // Already processed — acknowledge and exit.
+    return new Response('OK', { status: 200 })
+  }
 
-    const items: { ticketTypeId: string; quantity: number }[] =
-      JSON.parse(itemsJson)
+  // Record the event (or update attempts if it exists but wasn't processed).
+  await prisma.stripeWebhookEvent.upsert({
+    where: { stripeEventId: event.id },
+    update: { attempts: { increment: 1 } },
+    create: {
+      stripeEventId: event.id,
+      type: event.type,
+      attempts: 1,
+    },
+  })
 
-    const createdTickets: { code: string; ticketTypeName: string }[] = []
-
-    await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
-      const order = await tx.order.findUnique({
-        where: { id: orderId },
-        include: {
-          user: true,
-          event: { include: { venue: true } },
-        },
-      })
-
-      if (!order || order.status === 'PAID') return
-
-      for (const item of items) {
-        const tt = await tx.ticketType.findUnique({
-          where: { id: item.ticketTypeId },
-        })
-        if (!tt) continue
-
-        await tx.ticketType.update({
-          where: { id: item.ticketTypeId },
-          data: { stock: { decrement: item.quantity } },
-        })
-
-        for (let i = 0; i < item.quantity; i++) {
-          const code = generateTicketCode()
-          await tx.ticket.create({
-            data: {
-              code,
-              orderId: order.id,
-              ticketTypeId: item.ticketTypeId,
-            },
-          })
-          createdTickets.push({ code, ticketTypeName: tt.name })
-        }
-      }
-
-      await tx.order.update({
-        where: { id: orderId },
-        data: { status: 'PAID' },
-      })
-
-      const totalPaid = Number(order.total)
-      const pointsToEarn = Math.floor(totalPaid)
-
-      // Staff and admins do not earn points for ticket purchases
-      if (pointsToEarn > 0 && order.user.role === 'USER') {
-        await tx.creditTransaction.create({
-          data: {
-            userId: order.userId,
-            amount: pointsToEarn,
-            type: 'EARN',
-            description: `Puntos por compra de entradas (Order ${order.id.slice(-6)})`,
-          },
-        })
-      }
-
-      // Send ticket emails with QR after successful payment
-      if (createdTickets.length > 0 && order.user.email) {
-        const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000'
-        const { event, user, venue } = { event: order.event, user: order.user, venue: order.event.venue }
-
-        for (const ticket of createdTickets) {
-          const verifyUrl = `${appUrl}/staff/verify?code=${ticket.code}`
-          try {
-            await sendTicketEmail({
-              to: user.email,
-              eventTitle: event.title,
-              ticketType: ticket.ticketTypeName,
-              eventDate: event.startDate,
-              venue: venue.name,
-              city: venue.city,
-              code: ticket.code,
-              verifyUrl,
-              userName: user.name,
-            })
-          } catch (err) {
-            console.error(`Failed to send ticket email for ${ticket.code}:`, err)
-          }
-        }
-      }
+  try {
+    await processEvent(event)
+    await prisma.stripeWebhookEvent.update({
+      where: { stripeEventId: event.id },
+      data: { processed: true, processedAt: new Date() },
     })
+  } catch (err) {
+    const message = err instanceof Error ? err.message : 'Processing error'
+    await prisma.stripeWebhookEvent.update({
+      where: { stripeEventId: event.id },
+      data: { error: message },
+    })
+    // Return 500 so Stripe retries.
+    return new Response(`Processing error: ${message}`, { status: 500 })
   }
 
   return new Response('OK', { status: 200 })
 }
 
-function generateTicketCode(): string {
-  const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'
-  let code = ''
-  for (let i = 0; i < 8; i++) {
-    code += chars[Math.floor(Math.random() * chars.length)]
+async function processEvent(event: Stripe.Event): Promise<void> {
+  switch (event.type) {
+    case 'checkout.session.completed':
+    case 'checkout.session.async_payment_succeeded': {
+      const session = event.data.object as Stripe.Checkout.Session
+      const orderId = session.metadata?.orderId
+      if (!orderId) return
+
+      // Enqueue the fulfillment job — the webhook stays fast.
+      await inngest.send({ name: 'order/fulfill', data: { orderId } })
+      break
+    }
+
+    case 'checkout.session.async_payment_failed':
+    case 'checkout.session.expired': {
+      const session = event.data.object as Stripe.Checkout.Session
+      const orderId = session.metadata?.orderId
+      if (!orderId) return
+
+      await prisma.order.update({
+        where: { id: orderId },
+        data: { status: 'PAYMENT_FAILED' },
+      })
+      break
+    }
+
+    case 'charge.refunded': {
+      const charge = event.data.object as Stripe.Charge
+      const orderId = charge.metadata?.orderId
+      if (!orderId) return
+
+      const order = await prisma.order.findUnique({ where: { id: orderId } })
+      if (!order) return
+
+      // Calculate points to revoke based on refund amount.
+      const refundCents = charge.amount_refunded
+      const { getLoyaltyConfig, calculatePurchasePoints } = await import('@/lib/loyalty')
+      const { pointsPerEuro } = await getLoyaltyConfig()
+      const pointsToRevoke = calculatePurchasePoints(refundCents, pointsPerEuro)
+
+      await refundOrder(orderId, pointsToRevoke)
+
+      // Update order status for partial refunds.
+      if (charge.amount_refunded < charge.amount) {
+        await prisma.order.update({
+          where: { id: orderId },
+          data: { status: 'PARTIALLY_REFUNDED' },
+        })
+      }
+      break
+    }
+
+    default:
+      // Unhandled event type — acknowledge but don't process.
+      break
   }
-  return `FC-${code}`
 }

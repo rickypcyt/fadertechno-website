@@ -59,7 +59,7 @@ export async function POST(request: Request) {
       ticketTypes: {
         create: ticketTypes.map((tt: { name: string; price: string; stock: number }) => ({
           name: tt.name,
-          price: parseFloat(tt.price),
+          priceCents: Math.round(parseFloat(tt.price) * 100),
           stock: parseInt(String(tt.stock)) || 0,
         })),
       },

@@ -17,7 +17,7 @@ export default async function EventDetailPage({
     where: { id },
     include: {
       venue: true,
-      ticketTypes: { orderBy: { price: 'asc' } },
+      ticketTypes: { orderBy: { priceCents: 'asc' } },
       artists: { include: { artist: true } },
       coverImage: true,
     },
@@ -98,7 +98,7 @@ export default async function EventDetailPage({
         ticketTypes={event.ticketTypes.map((tt: typeof event.ticketTypes[0]) => ({
           id: tt.id,
           name: tt.name,
-          price: tt.price.toString(),
+          priceCents: tt.priceCents,
           stock: tt.stock,
         }))}
         eventId={event.id}

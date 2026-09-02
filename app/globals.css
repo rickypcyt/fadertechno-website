@@ -1700,8 +1700,15 @@ img {
   color: var(--text);
   font-family: inherit;
   font-size: var(--fs-body);
+  width: 50%;
   outline: none;
   transition: border-color 0.2s, background 0.2s;
+}
+
+@media (max-width: 860px) {
+  .newsletter-input {
+    width: 100%;
+  }
 }
 
 .newsletter-input:focus {
@@ -1750,7 +1757,7 @@ img {
   color: var(--bg);
   font-family: inherit;
   font-weight: 500;
-  font-size: var(--fs-small);
+  font-size: var(--fs-body);
   letter-spacing: 0.08em;
   text-transform: uppercase;
   border: none;
@@ -1818,6 +1825,13 @@ img {
   color: var(--text-dim);
   white-space: normal;
   word-break: break-word;
+}
+
+@media (min-width: 861px) {
+  .socials-row-info {
+    font-size: var(--fs-lead);
+    line-height: 1.55;
+  }
 }
 
 .socials-list > *:last-child .socials-row {
