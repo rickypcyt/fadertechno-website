@@ -1,4 +1,6 @@
 import type { Metadata } from 'next'
+import { Analytics } from '@vercel/analytics/next'
+import { SpeedInsights } from '@vercel/speed-insights/next'
 import { inter, switzer } from './fonts'
 import './globals.css'
 import QueryProvider from './components/QueryProvider'
@@ -21,6 +23,8 @@ export default function RootLayout({
           {children}
           <RoleSwitcher />
         </QueryProvider>
+        <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   )
