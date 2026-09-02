@@ -12,7 +12,7 @@ export default function Footer({ dict }: { dict: Dictionary }) {
 
   return (
     <footer className="footer">
-      <div className="footer-top">
+      <div className="footer-top layout-wide">
         <div className="footer-brand">
           <p>
             {dict.footer.brand}

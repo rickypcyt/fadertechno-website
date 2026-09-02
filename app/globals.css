@@ -1399,10 +1399,12 @@ img {
 
 .historia-head {
   margin-bottom: 32px;
+  text-align: left;
 }
 
 .historia-head .section-label {
   margin-bottom: 24px;
+  text-align: right;
 }
 
 .historia-head h2 {
@@ -1418,6 +1420,7 @@ img {
   border-top: 1px solid var(--border-strong);
   padding-top: 20px;
   margin-bottom: 40px;
+  text-align: left;
 }
 
 .historia-block:last-child {
@@ -1439,6 +1442,13 @@ img {
   font-size: var(--fs-lead);
   font-weight: 300;
   max-width: 65ch;
+}
+
+@media (min-width: 861px) {
+  .historia-inner {
+    width: 58%;
+    margin-left: auto;
+  }
 }
 
 @media (max-width: 860px) {
@@ -1872,20 +1882,25 @@ img {
   grid-template-columns: 1fr;
   gap: 48px;
   margin-bottom: 48px;
+  padding: 0 24px;
 }
 
 @media (min-width: 861px) {
   .footer-top {
     grid-template-columns: 1fr 1fr 1fr;
+    align-items: start;
   }
 
-  .footer-col {
-    justify-self: center;
+  .footer-brand {
+    text-align: left;
   }
 
-  .footer-col:last-of-type {
-    justify-self: end;
-    margin-right: clamp(2.5rem, 9vw, 8rem);
+  .footer-col:nth-child(2) {
+    text-align: center;
+  }
+
+  .footer-col:nth-child(3) {
+    text-align: right;
   }
 }
 
@@ -1893,12 +1908,6 @@ img {
   color: var(--text);
   max-width: 320px;
   font-size: var(--fs-body);
-}
-
-@media (min-width: 861px) {
-  .footer-brand p {
-    margin-left: clamp(2.5rem, 9vw, 8rem);
-  }
 }
 
 .footer-brand-location {

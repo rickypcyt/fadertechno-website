@@ -6,7 +6,7 @@ export default function Editorial({ dict }: { dict: Dictionary }) {
   return (
     <section id="editorial" className="editorial sec sec-6 layout-wide">
       <Reveal>
-        <div className="section-label" style={{ marginBottom: '40px' }}>{dict.editorial.label}</div>
+        <div className="section-label" style={{ marginBottom: '40px', textAlign: 'right' }}>{dict.editorial.label}</div>
         <h2>{dict.editorial.title}</h2>
         <p>
           {dict.editorial.intro}
