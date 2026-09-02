@@ -18,10 +18,11 @@ export default function Marquee({
   useEffect(() => {
     const el = ref.current
     if (!el) return
-    el.style.animationDuration = `${speed}s`
+    el.style.setProperty('--marquee-duration', `${speed}s`)
   }, [speed])
 
-  const content = [...items, ...items, ...items, ...items, ...items, ...items]
+  // Dos copias exactas para un loop seamless de 0 -> -50%
+  const content = [...items, ...items]
 
   return (
     <div className="marquee" style={{ opacity }}>

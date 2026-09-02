@@ -96,10 +96,36 @@ async function main() {
     },
   })
 
+  // Artistas invitados del evento Discoteca Wilson.
+  // Los residentes (LITN, Cristian Camilo, RUISUK) se muestran en la home;
+  // estos son invitados internacionales que aparecen en el line-up del evento.
+  const guestArtistNames = ['Audio Units', 'Hexxe', 'Linear System']
+  for (const name of guestArtistNames) {
+    const slug = name.toLowerCase().replace(/\s+/g, '-')
+    const artist = await prisma.artist.upsert({
+      where: { slug },
+      update: {},
+      create: {
+        name,
+        slug,
+        resident: false,
+      },
+    })
+    await prisma.eventArtist.upsert({
+      where: { eventId_artistId: { eventId: event.id, artistId: artist.id } },
+      update: {},
+      create: {
+        eventId: event.id,
+        artistId: artist.id,
+      },
+    })
+  }
+
   console.log('Seed completado:')
   console.log(`  Venue: ${venue.name}`)
   console.log(`  Event: ${event.title} (${event.id})`)
   console.log(`  Tickets: ${earlyBird.name} (${earlyBird.stock}), ${presale.name} (${presale.stock}), ${door.name} (${door.stock})`)
+  console.log(`  Artistas invitados: ${guestArtistNames.join(', ')}`)
 }
 
 main()

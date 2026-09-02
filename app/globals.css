@@ -68,8 +68,7 @@ html {
 }
 
 body {
-  background: var(--gradient-main);
-  background-attachment: fixed;
+  background: var(--black);
   color: var(--text);
   font-family: var(--font-body);
   font-size: var(--fs-body);
@@ -476,7 +475,9 @@ img {
   display: flex;
   white-space: nowrap;
   animation: marquee-scroll 50s linear infinite;
+  animation-duration: var(--marquee-duration, 50s);
   will-change: transform;
+  backface-visibility: hidden;
 }
 
 .marquee-item {
@@ -492,8 +493,8 @@ img {
 }
 
 @keyframes marquee-scroll {
-  from { transform: translateX(-16.666%); }
-  to { transform: translateX(0); }
+  from { transform: translate3d(0, 0, 0); }
+  to { transform: translate3d(-50%, 0, 0); }
 }
 
 @media (max-width: 768px) {
@@ -807,7 +808,8 @@ img {
 .hero {
   position: relative;
   width: 100%;
-  min-height: calc(50vh - 74px);
+  aspect-ratio: 21 / 9;
+  min-height: 320px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1743,7 +1745,7 @@ img {
 }
 
 .socials-row-info {
-  font-size: var(--fs-body);
+  font-size: var(--fs-small);
   color: var(--text-dim);
   white-space: nowrap;
 }
@@ -4187,7 +4189,8 @@ img {
 
   .hero {
     margin-top: 74px;
-    min-height: calc(50vh - 74px);
+    aspect-ratio: 16 / 9;
+    min-height: 280px;
   }
 
   .hero-content {
@@ -4270,7 +4273,8 @@ img {
 @media (max-width: 480px) {
   .hero {
     margin-top: 74px;
-    min-height: calc(40vh - 74px);
+    aspect-ratio: 4 / 3;
+    min-height: 240px;
   }
 
   .hero-content {

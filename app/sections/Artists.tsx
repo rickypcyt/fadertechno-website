@@ -7,7 +7,7 @@ type Artist = {
   genre: string
   image: string
   span: string
-  descKey: 'LITN' | 'Cristian Camilo' | 'RUISUK' | 'Audio Units' | 'Hexxe' | 'Linear System'
+  descKey: 'LITN' | 'Cristian Camilo' | 'RUISUK'
 }
 
 const artists: Artist[] = [
@@ -31,27 +31,6 @@ const artists: Artist[] = [
     image: '/ruisuk.jpeg',
     span: 'col-4',
     descKey: 'RUISUK',
-  },
-  {
-    name: 'Audio Units',
-    genre: 'Techno',
-    image: '',
-    span: 'col-4',
-    descKey: 'Audio Units',
-  },
-  {
-    name: 'Hexxe',
-    genre: 'Techno',
-    image: '',
-    span: 'col-4',
-    descKey: 'Hexxe',
-  },
-  {
-    name: 'Linear System',
-    genre: 'Techno',
-    image: '',
-    span: 'col-4',
-    descKey: 'Linear System',
   },
 ]
 
