@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import type { Dictionary } from '@/lib/i18n/dictionaries'
 
 type TicketType = {
   id: string
@@ -12,9 +13,10 @@ type TicketType = {
 type Props = {
   ticketTypes: TicketType[]
   eventId: string
+  dict: Dictionary
 }
 
-export default function TicketSelector({ ticketTypes, eventId }: Props) {
+export default function TicketSelector({ ticketTypes, eventId, dict }: Props) {
   const [quantities, setQuantities] = useState<Record<string, number>>({})
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -60,7 +62,7 @@ export default function TicketSelector({ ticketTypes, eventId }: Props) {
       }
 
       if (!res.ok) {
-        setError(data.error ?? 'Error al procesar la compra')
+        setError(data.error ?? dict.ticket.errorPurchase)
         return
       }
 
@@ -69,7 +71,7 @@ export default function TicketSelector({ ticketTypes, eventId }: Props) {
         window.location.href = data.url
       }
     } catch {
-      setError('Error de conexión. Inténtalo de nuevo.')
+      setError(dict.ticket.errorConnection)
     } finally {
       setLoading(false)
     }
@@ -116,7 +118,7 @@ export default function TicketSelector({ ticketTypes, eventId }: Props) {
     <div>
       {resuming && (
         <p style={{ color: 'var(--accent)', marginBottom: '16px', fontSize: '1rem' }}>
-          Continuando con tu compra...
+          {dict.ticket.resuming}
         </p>
       )}
       <div className="admin-list">
@@ -139,24 +141,24 @@ export default function TicketSelector({ ticketTypes, eventId }: Props) {
                   <strong>{tt.name}</strong>
                   {soldOut && (
                     <span className="admin-badge muted" style={{ marginLeft: '8px' }}>
-                      Agotado
+                      {dict.ticket.soldOut}
                     </span>
                   )}
                   {locked && !soldOut && (
                     <span className="admin-badge muted" style={{ marginLeft: '8px' }}>
-                      Próximamente
+                      {dict.ticket.comingSoon}
                     </span>
                   )}
                 </div>
                 <div className="text-dim" style={{ fontSize: '1rem' }}>
-                  {Number(tt.price).toFixed(2)}€ · Stock: {tt.stock}
+                  {Number(tt.price).toFixed(2)}€ · {dict.ticket.stock}: {tt.stock}
                 </div>
               </div>
               <div className="admin-actions">
                 {soldOut ? (
-                  <span className="admin-badge muted">Agotado</span>
+                  <span className="admin-badge muted">{dict.ticket.soldOut}</span>
                 ) : locked ? (
-                  <span className="text-dim" style={{ fontSize: '1rem' }}>Bloqueado</span>
+                  <span className="text-dim" style={{ fontSize: '1rem' }}>{dict.ticket.locked}</span>
                 ) : (
                   <div style={{ display: 'flex', alignItems: 'center', gap: '12px', userSelect: 'none', WebkitUserSelect: 'none' }}>
                     <button
@@ -164,7 +166,7 @@ export default function TicketSelector({ ticketTypes, eventId }: Props) {
                       className="qty-btn"
                       onPointerDown={(e) => { e.preventDefault(); handleQtyChange(tt.id, -1, tt.stock) }}
                       disabled={qty === 0}
-                      aria-label="Restar"
+                      aria-label="−"
                     >
                       −
                     </button>
@@ -176,7 +178,7 @@ export default function TicketSelector({ ticketTypes, eventId }: Props) {
                       className="qty-btn"
                       onPointerDown={(e) => { e.preventDefault(); handleQtyChange(tt.id, 1, tt.stock) }}
                       disabled={qty >= tt.stock || qty >= 10}
-                      aria-label="Sumar"
+                      aria-label="+"
                     >
                       +
                     </button>
@@ -203,10 +205,10 @@ export default function TicketSelector({ ticketTypes, eventId }: Props) {
         }}
       >
         <div>
-          <strong>Total: {total.toFixed(2)}€</strong>
+          <strong>{dict.ticket.total}: {total.toFixed(2)}€</strong>
           {totalItems > 0 && (
             <span className="text-dim" style={{ fontSize: '1rem', marginLeft: '8px' }}>
-              ({totalItems} {totalItems === 1 ? 'entrada' : 'entradas'})
+              ({totalItems} {totalItems === 1 ? dict.ticket.ticketSingle : dict.ticket.ticketPlural})
             </span>
           )}
         </div>
@@ -217,7 +219,7 @@ export default function TicketSelector({ ticketTypes, eventId }: Props) {
           disabled={totalItems === 0 || loading}
           style={{ opacity: totalItems === 0 || loading ? 0.5 : 1 }}
         >
-          {loading ? 'Procesando...' : 'Comprar'}
+          {loading ? dict.ticket.processing : dict.ticket.buy}
         </button>
       </div>
     </div>

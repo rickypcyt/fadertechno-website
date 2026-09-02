@@ -1,24 +1,26 @@
-const navLinks = [
-  { href: '#eventos', label: 'Eventos' },
-  { href: '#artistas', label: 'Artistas' },
-  { href: '#historia', label: 'Historia' },
-  { href: '#archivo', label: 'Archivo' },
-  { href: '#editorial', label: 'Editorial' },
-]
+import Link from 'next/link'
+import type { Dictionary } from '@/lib/i18n/dictionaries'
 
-export default function Footer() {
+export default function Footer({ dict }: { dict: Dictionary }) {
+  const navLinks = [
+    { href: '#eventos', label: dict.nav.eventos },
+    { href: '#artistas', label: dict.nav.artistas },
+    { href: '#historia', label: dict.nav.historia },
+    { href: '#archivo', label: dict.nav.archivo },
+    { href: '#editorial', label: dict.nav.editorial },
+  ]
+
   return (
     <footer className="footer">
       <div className="footer-top">
         <div className="footer-brand">
           <p>
-            Colectivo independiente dedicado a la promoción del
-            techno y la cultura de club en Alicante.
+            {dict.footer.brand}
           </p>
         </div>
 
         <div className="footer-col">
-          <h4>Navegación</h4>
+          <h4>{dict.footer.nav}</h4>
           <ul>
             {navLinks.map((link) => (
               <li key={link.href}>
@@ -29,17 +31,17 @@ export default function Footer() {
         </div>
 
         <div className="footer-col">
-          <h4>Contacto</h4>
+          <h4>{dict.footer.contact}</h4>
           <ul>
-            <li><a href="https://www.instagram.com/fader.music.club/" target="_blank" rel="noopener noreferrer">Instagram</a></li>
-            <li><a href="#">SoundCloud</a></li>
+            <li><a href="https://www.instagram.com/fader.music.club/" target="_blank" rel="noopener noreferrer">{dict.nav.instagram}</a></li>
+            <li><a href="https://chat.whatsapp.com/C2gchb3EuRQCWLku9eWM4Q" target="_blank" rel="noopener noreferrer">WhatsApp</a></li>
           </ul>
         </div>
       </div>
 
       <div className="footer-bottom">
-        <span>© 2026 FADER Colectivo. Todos los derechos reservados.</span>
-        <span>Alicante, España</span>
+        <span>{dict.footer.location}</span>
+        <span>{dict.footer.rights}</span>
       </div>
     </footer>
   )

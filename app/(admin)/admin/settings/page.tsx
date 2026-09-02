@@ -18,7 +18,6 @@ export default async function AdminSettingsPage() {
             <div className="admin-card-value">{settings.heroTitle}</div>
             <div className="admin-card-meta">{settings.heroDescription}</div>
             {settings.instagram && <p>Instagram: {settings.instagram}</p>}
-            {settings.soundcloud && <p>SoundCloud: {settings.soundcloud}</p>}
             {settings.spotify && <p>Spotify: {settings.spotify}</p>}
           </>
         ) : (

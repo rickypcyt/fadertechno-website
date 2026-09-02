@@ -1,0 +1,233 @@
+import {
+  Home,
+  Calendar,
+  Ticket,
+  Gift,
+  UserCircle,
+  ShieldCheck,
+  ScanLine,
+  LayoutDashboard,
+  Zap,
+  Mic2,
+  Megaphone,
+  Users,
+  Images,
+  Mail,
+  Handshake,
+  BarChart3,
+  Settings,
+  type LucideIcon,
+} from 'lucide-react'
+import { Role, roleHierarchy } from '@/lib/roles'
+
+export type NavGroup = 'user' | 'staff' | 'admin'
+
+export type NavItem = {
+  href: string
+  label: string
+  icon: LucideIcon
+  color: string
+  group: NavGroup
+  minRole: Role
+  superAdminOnly?: boolean
+}
+
+export const navGroupLabels: Record<NavGroup, string> = {
+  user: 'Mi cuenta',
+  staff: 'Staff',
+  admin: 'Administración',
+}
+
+// All navigation items across the app, ordered by group then relevance.
+// `color` is a CSS gradient used as the iOS-style icon tile background.
+export const allNavItems: NavItem[] = [
+  // ===== USER =====
+  {
+    href: '/user/dashboard',
+    label: 'Inicio',
+    icon: Home,
+    color: 'linear-gradient(135deg, #346181 0%, #91AAC6 100%)',
+    group: 'user',
+    minRole: Role.USER,
+  },
+  {
+    href: '/user/events',
+    label: 'Eventos',
+    icon: Calendar,
+    color: 'linear-gradient(135deg, #EF4444 0%, #F97316 100%)',
+    group: 'user',
+    minRole: Role.USER,
+  },
+  {
+    href: '/user/tickets',
+    label: 'Mis entradas',
+    icon: Ticket,
+    color: 'linear-gradient(135deg, #8B5CF6 0%, #6366F1 100%)',
+    group: 'user',
+    minRole: Role.USER,
+  },
+  {
+    href: '/user/rewards',
+    label: 'Canjear puntos',
+    icon: Gift,
+    color: 'linear-gradient(135deg, #F472B6 0%, #DB2777 100%)',
+    group: 'user',
+    minRole: Role.USER,
+  },
+  {
+    href: '/user/profile',
+    label: 'Perfil',
+    icon: UserCircle,
+    color: 'linear-gradient(135deg, #64748B 0%, #475569 100%)',
+    group: 'user',
+    minRole: Role.USER,
+  },
+
+  // ===== STAFF =====
+  {
+    href: '/staff/dashboard',
+    label: 'Staff',
+    icon: ShieldCheck,
+    color: 'linear-gradient(135deg, #10B981 0%, #059669 100%)',
+    group: 'staff',
+    minRole: Role.STAFF,
+  },
+  {
+    href: '/staff/verify',
+    label: 'Escanear QR',
+    icon: ScanLine,
+    color: 'linear-gradient(135deg, #14B8A6 0%, #0D9488 100%)',
+    group: 'staff',
+    minRole: Role.STAFF,
+  },
+
+  // ===== ADMIN =====
+  {
+    href: '/admin/dashboard',
+    label: 'Dashboard',
+    icon: LayoutDashboard,
+    color: 'linear-gradient(135deg, #3B82F6 0%, #2563EB 100%)',
+    group: 'admin',
+    minRole: Role.ADMIN,
+  },
+  {
+    href: '/admin/superadmin',
+    label: 'Super Admin',
+    icon: Zap,
+    color: 'linear-gradient(135deg, #F59E0B 0%, #FBBF24 100%)',
+    group: 'admin',
+    minRole: Role.ADMIN,
+    superAdminOnly: true,
+  },
+  {
+    href: '/admin/events',
+    label: 'Eventos',
+    icon: Calendar,
+    color: 'linear-gradient(135deg, #EF4444 0%, #F97316 100%)',
+    group: 'admin',
+    minRole: Role.ADMIN,
+  },
+  {
+    href: '/admin/tickets',
+    label: 'Entradas',
+    icon: Ticket,
+    color: 'linear-gradient(135deg, #8B5CF6 0%, #6366F1 100%)',
+    group: 'admin',
+    minRole: Role.ADMIN,
+  },
+  {
+    href: '/admin/artists',
+    label: 'Artistas',
+    icon: Mic2,
+    color: 'linear-gradient(135deg, #EC4899 0%, #F43F5E 100%)',
+    group: 'admin',
+    minRole: Role.ADMIN,
+  },
+  {
+    href: '/admin/promoters',
+    label: 'RRPP',
+    icon: Megaphone,
+    color: 'linear-gradient(135deg, #10B981 0%, #059669 100%)',
+    group: 'admin',
+    minRole: Role.ADMIN,
+  },
+  {
+    href: '/admin/users',
+    label: 'Usuarios',
+    icon: Users,
+    color: 'linear-gradient(135deg, #3B82F6 0%, #2563EB 100%)',
+    group: 'admin',
+    minRole: Role.ADMIN,
+  },
+  {
+    href: '/admin/gallery',
+    label: 'Galería',
+    icon: Images,
+    color: 'linear-gradient(135deg, #14B8A6 0%, #0D9488 100%)',
+    group: 'admin',
+    minRole: Role.ADMIN,
+  },
+  {
+    href: '/admin/newsletter',
+    label: 'Newsletter',
+    icon: Mail,
+    color: 'linear-gradient(135deg, #06B6D4 0%, #0891B2 100%)',
+    group: 'admin',
+    minRole: Role.ADMIN,
+  },
+  {
+    href: '/admin/rewards',
+    label: 'Recompensas',
+    icon: Gift,
+    color: 'linear-gradient(135deg, #F472B6 0%, #DB2777 100%)',
+    group: 'admin',
+    minRole: Role.ADMIN,
+  },
+  {
+    href: '/admin/sponsors',
+    label: 'Patrocinadores',
+    icon: Handshake,
+    color: 'linear-gradient(135deg, #A855F7 0%, #7C3AED 100%)',
+    group: 'admin',
+    minRole: Role.ADMIN,
+  },
+  {
+    href: '/admin/analytics',
+    label: 'Analytics',
+    icon: BarChart3,
+    color: 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)',
+    group: 'admin',
+    minRole: Role.ADMIN,
+  },
+  {
+    href: '/admin/settings',
+    label: 'Ajustes',
+    icon: Settings,
+    color: 'linear-gradient(135deg, #64748B 0%, #475569 100%)',
+    group: 'admin',
+    minRole: Role.ADMIN,
+  },
+]
+
+export type NavGrouped = { group: NavGroup; label: string; items: NavItem[] }
+
+export function getNavGrouped(role: string): NavGrouped[] {
+  const level = roleHierarchy[role] ?? 0
+  const visible = allNavItems.filter((item) => {
+    if (item.superAdminOnly && role !== 'SUPER_ADMIN') return false
+    return level >= roleHierarchy[item.minRole]
+  })
+
+  const groups: NavGroup[] = ['user', 'staff', 'admin']
+  return groups
+    .map((group) => ({
+      group,
+      label: navGroupLabels[group],
+      items: visible.filter((i) => i.group === group),
+    }))
+    .filter((g) => g.items.length > 0)
+}
+
+export function getNavItemsFlat(role: string): NavItem[] {
+  return getNavGrouped(role).flatMap((g) => g.items)
+}

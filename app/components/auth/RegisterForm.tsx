@@ -1,42 +1,43 @@
 'use client'
 
-import { useState } from 'react'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
 import { useRouter } from 'next/navigation'
 import { authClient } from '@/lib/auth-client'
+import { makeRegisterSchema, type RegisterValues } from '@/lib/schemas'
+import type { Dictionary } from '@/lib/i18n/dictionaries'
 
-export default function RegisterForm({ redirect }: { redirect?: string }) {
-  const [name, setName] = useState('')
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [error, setError] = useState('')
-  const [loading, setLoading] = useState(false)
+export default function RegisterForm({ redirect, dict }: { redirect?: string; dict: Dictionary }) {
   const router = useRouter()
+  const {
+    register,
+    handleSubmit,
+    setError,
+    formState: { errors, isSubmitting },
+  } = useForm<RegisterValues>({
+    resolver: zodResolver(makeRegisterSchema(dict.auth.errors)),
+    defaultValues: { name: '', email: '', password: '' },
+  })
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setError('')
-    setLoading(true)
-
+  const onSubmit = async (values: RegisterValues) => {
     const signUpRes = await authClient.signUp.email({
-      name,
-      email,
-      password,
+      name: values.name,
+      email: values.email,
+      password: values.password,
     })
 
     if (signUpRes.error) {
-      setError(signUpRes.error.message ?? 'Error al crear la cuenta')
-      setLoading(false)
+      setError('root', { message: signUpRes.error.message ?? dict.auth.errors.registerFailed })
       return
     }
 
     const signInRes = await authClient.signIn.email({
-      email,
-      password,
+      email: values.email,
+      password: values.password,
     })
 
     if (signInRes.error) {
-      setError('Cuenta creada pero no se pudo iniciar sesión automáticamente. Intenta iniciar sesión.')
-      setLoading(false)
+      setError('root', { message: dict.auth.errors.autoSignInFailed })
       return
     }
 
@@ -51,46 +52,43 @@ export default function RegisterForm({ redirect }: { redirect?: string }) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="auth-form">
+    <form onSubmit={handleSubmit(onSubmit)} method="post" className="auth-form">
       <div className="auth-field">
-        <label htmlFor="register-name" className="auth-label">Nombre</label>
+        <label htmlFor="register-name" className="auth-label">{dict.auth.register.name}</label>
         <input
           id="register-name"
           type="text"
           autoComplete="name"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          required
           className="auth-input"
+          {...register('name')}
         />
+        {errors.name && <span className="auth-error">{errors.name.message}</span>}
       </div>
       <div className="auth-field">
-        <label htmlFor="register-email" className="auth-label">Email</label>
+        <label htmlFor="register-email" className="auth-label">{dict.auth.register.email}</label>
         <input
           id="register-email"
           type="email"
           autoComplete="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
           className="auth-input"
+          {...register('email')}
         />
+        {errors.email && <span className="auth-error">{errors.email.message}</span>}
       </div>
       <div className="auth-field">
-        <label htmlFor="register-password" className="auth-label">Contraseña</label>
+        <label htmlFor="register-password" className="auth-label">{dict.auth.register.password}</label>
         <input
           id="register-password"
           type="password"
           autoComplete="new-password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
           className="auth-input"
+          {...register('password')}
         />
+        {errors.password && <span className="auth-error">{errors.password.message}</span>}
       </div>
-      {error && <p className="auth-error">{error}</p>}
-      <button type="submit" className="auth-submit" disabled={loading}>
-        {loading ? 'Creando...' : 'Crear cuenta'}
+      {errors.root && <span className="auth-error">{errors.root.message}</span>}
+      <button type="submit" className="auth-submit" disabled={isSubmitting}>
+        {isSubmitting ? dict.auth.register.submitting : dict.auth.register.submit}
       </button>
     </form>
   )

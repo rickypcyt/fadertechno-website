@@ -10,20 +10,27 @@
     "db:generate": "prisma generate",
     "db:migrate": "prisma migrate dev",
     "db:push": "prisma db push",
-    "db:studio": "prisma studio"
+    "db:studio": "prisma studio",
+    "optimize-images": "bun run scripts/optimize-images.ts"
   },
   "dependencies": {
+    "@formatjs/intl-localematcher": "^0.8.13",
+    "@hookform/resolvers": "^5.9.1",
     "@neondatabase/serverless": "0.10.4",
     "@prisma/adapter-neon": "5",
     "@prisma/client": "5",
     "@react-email/components": "^1.0.12",
     "@stripe/stripe-js": "^9.10.0",
     "@tanstack/react-query": "^5.102.8",
+    "@types/qrcode": "^1.5.6",
     "better-auth": "^1.6.23",
     "date-fns": "^4.4.0",
     "lucide": "^1.39.0",
+    "lucide-react": "^1.39.0",
+    "negotiator": "^1.1.0",
     "next": "^16.2.10",
     "qr-scanner": "^1.4.2",
+    "qrcode": "^1.5.4",
     "qrcode.react": "^4.2.0",
     "react": "^19.2.7",
     "react-dom": "^19.2.7",
@@ -33,6 +40,7 @@
     "sharp": "^0.35.4",
     "stripe": "^22.3.2",
     "ws": "^8.21.1",
+    "zod": "^4.5.4",
     "zustand": "^5.0.15"
   },
   "devDependencies": {

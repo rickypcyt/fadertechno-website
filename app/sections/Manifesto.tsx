@@ -1,11 +1,13 @@
-export default function Manifesto() {
+import type { Dictionary } from '@/lib/i18n/dictionaries'
+
+export default function Manifesto({ dict }: { dict: Dictionary }) {
   return (
     <section id="manifesto" className="manifesto sec sec-1 layout-wide">
       <div className="manifesto-inner">
         <div className="manifesto-content reveal reveal-left">
-        <span className="manifesto-tag">01 — Manifiesto</span>
+        <div className="section-label">{dict.manifesto.label}</div>
         <p>
-          En <strong>FADER</strong>, nuestros eventos se enfocan en la seleccion musical, sistema de sonido, arte visual y la conexion entre nuestro equipo y asistentes. Ofreciendo la mejor experiencia a nuestra comunidad. Presentamos diferentes formatos de experiencias, tanto en clubes como pubs y experiencias privadas (CSC).
+          {dict.manifesto.body}
         </p>
         </div>
       </div>

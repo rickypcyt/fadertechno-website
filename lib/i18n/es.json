@@ -1,0 +1,158 @@
+{
+  "nav": {
+    "eventos": "Eventos",
+    "artistas": "Artistas",
+    "historia": "Historia",
+    "archivo": "Archivo",
+    "editorial": "Editorial",
+    "registrarse": "Registrarse",
+    "verEntradas": "Ver entradas",
+    "instagram": "Instagram"
+  },
+  "hero": {
+    "tag": "Electrónica atemporal · Alicante",
+    "desc": "Colectivo independiente. Centrado en la cultura de club y la atmósfera. Sonido serio sin etiquetas."
+  },
+  "manifesto": {
+    "label": "01 — Manifesto",
+    "title": "Música como ritual",
+    "body": "FADER nace como un colectivo dedicado a la electrónica underground en Alicante. No perseguimos tendencias ni etiquetas. Buscamos la atmósfera, la tensión progresiva y el sonido que transforma.",
+    "points": [
+      "Programación curada, no impulsiva",
+      "Artistas residentes y invitados internacionales",
+      "Cultura de club como espacio de comunidad"
+    ]
+  },
+  "sessions": {
+    "nextLabel": "02 — Próximo evento",
+    "lastLabel": "Última experiencia",
+    "tba": "TBA",
+    "comingSoon": "Próximamente",
+    "comingSoonDesc": "Pronto anunciaremos el próximo evento. Line-up y fecha por confirmar.",
+    "venue": "Sala",
+    "access": "Acceso",
+    "date": "Fecha",
+    "from": "Desde",
+    "buyTickets": "Comprar entradas",
+    "viewArchive": "Ver archivo"
+  },
+  "artists": {
+    "label": "03 — Artistas",
+    "title": "Residentes",
+    "resident": "Residente",
+    "descriptions": {
+      "LITN": "LITN es un proyecto centrado en el deep techno, con selecciones que transitan entre lo hipnótico y lo oscuro. Su sonido se caracteriza por capas atmosféricas, bajos profundos y una narrativa musical que construye tensión progresiva. Residente habitual en los eventos de FADER.",
+      "Cristian Camilo": "Cristian Camilo explora el hypnotic techno con una aproximación minimalista y envolvente. Sus sets combinan ritmos subterráneos, texturas densas y progresiones que mantienen al público en un estado de trance. Parte fundamental del colectivo FADER.",
+      "RUISUK": "RUISUK es un proyecto centrado en el techno con una selección que mezcla lo industrial y lo hipnótico. Residente de FADER, sus sets se caracterizan por ritmos contundentes y atmósferas densas que construyen un viaje sonoro sin concesiones."
+    }
+  },
+  "historia": {
+    "label": "04 — Historia",
+    "title": "Nuestra historia",
+    "blocks": {
+      "origen": {
+        "title": "Origen",
+        "body": "Desde nuestros inicios hemos apostado por buscar una experiencia intima y crear una propuesta solida para nuestra comunidad."
+      },
+      "enfoque": {
+        "title": "Enfoque musical",
+        "body": "Nuestra identidad nace del techno y el minimal, explorando distintas ramas del house sin perder nuestra esencia. Nos atraen los sonidos hipnóticos, profundos y elegantes, siempre impulsados por un groove sólido que conecte con la pista."
+      },
+      "experiencia": {
+        "title": "Experiencia de club",
+        "body": "Cada evento se diseña desde cero. Las luces, los visuales, los horarios y la atmósfera se piensan como parte de una misma experiencia, donde la música es el eje que conecta todo. Entendemos la pista de baile como un espacio de encuentro, en el que el sonido, la oscuridad y el entorno favorecen una conexión real entre quienes la comparten."
+      },
+      "comunidad": {
+        "title": "Comunidad",
+        "body": "FADER no es solo un colectivo de musica sino una comunidad en la que combinamos gustos por el arte y sonido en busca de conectar entre personas"
+      }
+    }
+  },
+  "archive": {
+    "label": "05 — Archivo",
+    "title": "Piezas de museo"
+  },
+  "event": {
+    "back": "Volver",
+    "lineup": "Line-up",
+    "info": "Info",
+    "venue": "Venue",
+    "capacity": "Capacidad",
+    "tickets": "Entradas",
+    "from": "Desde",
+    "hasTicket": "Ya tienes entrada",
+    "ticketSingle": "entrada",
+    "ticketPlural": "entradas",
+    "viewTickets": "Ver mis entradas",
+    "resident": "Residente"
+  },
+  "ticket": {
+    "soldOut": "Agotado",
+    "comingSoon": "Próximamente",
+    "locked": "Bloqueado",
+    "stock": "Stock",
+    "total": "Total",
+    "ticketSingle": "entrada",
+    "ticketPlural": "entradas",
+    "buy": "Comprar",
+    "processing": "Procesando...",
+    "resuming": "Continuando con tu compra...",
+    "errorPurchase": "Error al procesar la compra",
+    "errorConnection": "Error de conexión. Inténtalo de nuevo."
+  },
+  "editorial": {
+    "label": "06 — Newsletter",
+    "title": "Newsletter",
+    "intro": "Recibe información sobre próximos eventos, lanzamientos y contenido exclusivo.",
+    "emailLabel": "Email",
+    "required": "*",
+    "submit": "Enviar",
+    "success": "Estás dentro.",
+    "error": "Error al suscribirse. Inténtalo de nuevo."
+  },
+  "socials": {
+    "label": "07 — Redes",
+    "instagram": "Fotos, reels y anuncios de próximos eventos.",
+    "whatsapp": "Comunidad privada. Acceso prioritario y novedades."
+  },
+  "footer": {
+    "brand": "Colectivo independiente dedicado a la promoción del techno y la cultura de club en Alicante.",
+    "nav": "Navegación",
+    "contact": "Contacto",
+    "rights": "© 2026 FADER Colectivo. Todos los derechos reservados.",
+    "location": "Alicante, España"
+  },
+  "auth": {
+    "back": "Volver",
+    "login": {
+      "title": "Iniciar sesión",
+      "email": "Email",
+      "password": "Contraseña",
+      "submit": "Iniciar sesión",
+      "submitting": "Iniciando...",
+      "switch": "¿No tienes cuenta?",
+      "switchLink": "Regístrate"
+    },
+    "register": {
+      "title": "Crear cuenta",
+      "name": "Nombre",
+      "email": "Email",
+      "password": "Contraseña",
+      "submit": "Crear cuenta",
+      "submitting": "Creando...",
+      "switch": "¿Ya tienes cuenta?",
+      "switchLink": "Inicia sesión"
+    },
+    "errors": {
+      "emailInvalid": "Email no válido",
+      "passwordShort": "La contraseña debe tener al menos 8 caracteres",
+      "nameShort": "El nombre es demasiado corto",
+      "loginFailed": "Error al iniciar sesión",
+      "invalidCredentials": "Email o contraseña incorrectos",
+      "userNotFound": "No existe una cuenta con ese email",
+      "registerFailed": "Error al crear la cuenta",
+      "autoSignInFailed": "Cuenta creada pero no se pudo iniciar sesión automáticamente. Intenta iniciar sesión.",
+      "connectionError": "Error de conexión al servidor"
+    }
+  }
+}

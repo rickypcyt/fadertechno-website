@@ -1,41 +1,66 @@
-// Generic side panel component used for admin and user navigation
-import Link from 'next/link';
+'use client'
 
-interface NavItem {
-  href: string;
-  label: string;
-  icon: string;
-  // optional visibility control
-  adminOnly?: boolean;
-  userOnly?: boolean;
-}
+import Link from 'next/link'
+import { usePathname } from 'next/navigation'
+import { Home, LogOut } from 'lucide-react'
+import { getNavGrouped } from '@/lib/nav'
+import { roleHierarchy, Role } from '@/lib/roles'
+import SignOutButton from './admin/SignOutButton'
 
 interface SidePanelProps {
-  navItems: NavItem[];
-  userRole?: string;
+  userRole: string
 }
 
-export default function SidePanel({ navItems, userRole }: SidePanelProps) {
-  const visibleItems = navItems.filter((item) => {
-    if (item.adminOnly && userRole !== 'ADMIN' && userRole !== 'SUPER_ADMIN') return false;
-    if (item.userOnly && userRole !== 'USER') return false;
-    return true;
-  });
+function getDashboardHref(role: string): string {
+  const level = roleHierarchy[role] ?? 0
+  if (level >= roleHierarchy[Role.ADMIN]) return '/admin/dashboard'
+  if (level >= roleHierarchy[Role.STAFF]) return '/staff/dashboard'
+  return '/user/dashboard'
+}
+
+export default function SidePanel({ userRole }: SidePanelProps) {
+  const pathname = usePathname()
+  const navGroups = getNavGrouped(userRole)
+  const dashboardHref = getDashboardHref(userRole)
 
   return (
     <aside className="admin-sidebar">
-      <Link href="/" className="admin-sidebar-brand">
+      <Link href={dashboardHref} className="admin-sidebar-brand">
         <div className="admin-sidebar-logo" />
         <span className="admin-sidebar-name">FADER</span>
       </Link>
       <nav className="admin-sidebar-nav">
-        {visibleItems.map((item) => (
-          <Link key={item.href} href={item.href} className="admin-nav-link">
-            <span className="admin-nav-icon">{item.icon}</span>
-            <span className="admin-nav-label">{item.label}</span>
-          </Link>
+        {navGroups.map((group, gi) => (
+          <div key={group.group} className="admin-nav-group">
+            {gi > 0 && <div className="admin-nav-group-label">{group.label}</div>}
+            {group.items.map((item) => {
+              const Icon = item.icon
+              const active = pathname === item.href
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className={`admin-nav-link ${active ? 'active' : ''}`}
+                >
+                  <span className="admin-nav-tile">
+                    <Icon size={20} strokeWidth={1.8} />
+                  </span>
+                  <span className="admin-nav-label">{item.label}</span>
+                </Link>
+              )
+            })}
+          </div>
         ))}
       </nav>
+      <div className="admin-sidebar-footer">
+        <Link href="/" className="admin-nav-link admin-nav-link-back">
+          <span className="admin-nav-tile">
+            <Home size={20} strokeWidth={1.8} />
+          </span>
+          <span className="admin-nav-label">Volver al inicio</span>
+        </Link>
+        <SignOutButton />
+      </div>
     </aside>
-  );
+  )
 }

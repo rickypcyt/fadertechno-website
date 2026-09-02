@@ -1,112 +1,101 @@
 'use client'
 
-import { useState } from 'react'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
 import { useRouter } from 'next/navigation'
 import { authClient } from '@/lib/auth-client'
+import { makeLoginSchema, type LoginValues } from '@/lib/schemas'
+import type { Dictionary } from '@/lib/i18n/dictionaries'
 
-export default function LoginForm({ redirect }: { redirect?: string }) {
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [error, setError] = useState('')
-  const [loading, setLoading] = useState(false)
+export default function LoginForm({ redirect, dict }: { redirect?: string; dict: Dictionary }) {
   const router = useRouter()
+  const {
+    register,
+    handleSubmit,
+    setError,
+    formState: { errors, isSubmitting },
+  } = useForm<LoginValues>({
+    resolver: zodResolver(makeLoginSchema(dict.auth.errors)),
+    defaultValues: { email: '', password: '' },
+  })
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setError('')
-    setLoading(true)
+  const onSubmit = async (values: LoginValues) => {
+    const res = await authClient.signIn.email({
+      email: values.email,
+      password: values.password,
+    })
 
-    try {
-      const res = await authClient.signIn.email({
-        email,
-        password,
-      })
+    if (res.error || !res.data) {
+      console.log('[login response]', JSON.stringify(res))
+      const err = res.error as { code?: string; message?: string } | null
+      const code = err?.code ?? ''
+      const msg = err?.message ?? ''
+      let message = dict.auth.errors.loginFailed
 
-      console.log('Login response:', res)
-
-      if (res.error) {
-        console.error('Login error:', res.error)
-        setError(res.error.message ?? 'Error al iniciar sesión')
-        setLoading(false)
-        return
+      if (code === 'INVALID_PASSWORD' || code === 'INVALID_EMAIL' || /password|credential|invalid/i.test(msg)) {
+        message = dict.auth.errors.invalidCredentials
+      } else if (code === 'USER_NOT_FOUND' || /not found|no user/i.test(msg)) {
+        message = dict.auth.errors.userNotFound
       }
 
-      if (redirect) {
-        router.replace(redirect)
+      setError('root', { message })
+      return
+    }
+
+    if (redirect) {
+      router.replace(redirect)
+      router.refresh()
+      return
+    }
+
+    try {
+      const meRes = await fetch('/api/me', { credentials: 'include' })
+      if (meRes.ok) {
+        const me = await meRes.json()
+        if (me.role === 'SUPER_ADMIN') router.replace('/admin/superadmin')
+        else if (me.role === 'ADMIN') router.replace('/admin/dashboard')
+        else if (me.role === 'STAFF') router.replace('/staff/dashboard')
+        else if (me.role === 'PROMOTER') router.replace('/promoter')
+        else router.replace('/user/dashboard')
         router.refresh()
         return
       }
-
-      try {
-        const meRes = await fetch('/api/me', { credentials: 'include' })
-        console.log('Me response status:', meRes.status)
-        if (meRes.ok) {
-          const me = await meRes.json()
-          console.log('User role:', me.role)
-          if (me.role === 'SUPER_ADMIN') {
-            router.replace('/admin/superadmin')
-          } else if (me.role === 'ADMIN') {
-            router.replace('/admin/dashboard')
-          } else if (me.role === 'STAFF') {
-            router.replace('/staff/dashboard')
-          } else if (me.role === 'PROMOTER') {
-            router.replace('/promoter')
-          } else {
-            router.replace('/user/dashboard')
-          }
-          router.refresh()
-          return
-        } else {
-          console.error('Me fetch failed:', meRes.status)
-          setError('Error al obtener datos de usuario')
-          setLoading(false)
-          return
-        }
-      } catch (err) {
-        console.error('Me fetch error:', err)
-        setError('Error de conexión al servidor')
-        setLoading(false)
-        return
-      }
-
-      router.replace('/user/dashboard')
-      router.refresh()
-    } catch (err) {
-      console.error('Login error:', err)
-      setError('Error inesperado. Revisa la consola.')
-      setLoading(false)
+    } catch {
+      setError('root', { message: dict.auth.errors.connectionError })
+      return
     }
+
+    router.replace('/user/dashboard')
+    router.refresh()
   }
 
   return (
-    <form onSubmit={handleSubmit} className="auth-form">
+    <form onSubmit={handleSubmit(onSubmit)} method="post" className="auth-form">
       <div className="auth-field">
-        <label htmlFor="login-email" className="auth-label">Email</label>
+        <label htmlFor="login-email" className="auth-label">{dict.auth.login.email}</label>
         <input
           id="login-email"
           type="email"
           autoComplete="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
           className="auth-input"
+          {...register('email')}
         />
+        {errors.email && <span className="auth-error">{errors.email.message}</span>}
       </div>
       <div className="auth-field">
-        <label htmlFor="login-password" className="auth-label">Contraseña</label>
+        <label htmlFor="login-password" className="auth-label">{dict.auth.login.password}</label>
         <input
           id="login-password"
           type="password"
           autoComplete="current-password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
           className="auth-input"
+          {...register('password')}
         />
+        {errors.password && <span className="auth-error">{errors.password.message}</span>}
       </div>
-      {error && <p className="auth-error">{error}</p>}
-      <button type="submit" className="auth-submit" disabled={loading}>
-        {loading ? 'Iniciando...' : 'Iniciar sesión'}
+      {errors.root && <span className="auth-error">{errors.root.message}</span>}
+      <button type="submit" className="auth-submit" disabled={isSubmitting}>
+        {isSubmitting ? dict.auth.login.submitting : dict.auth.login.submit}
       </button>
     </form>
   )

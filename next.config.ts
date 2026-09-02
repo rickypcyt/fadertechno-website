@@ -4,7 +4,7 @@ const nextConfig: NextConfig = {
   images: {
     unoptimized: true,
   },
-  serverExternalPackages: ['stripe', 'resend'],
+  serverExternalPackages: ['stripe', 'resend', 'sharp'],
   async headers() {
     return [
       {

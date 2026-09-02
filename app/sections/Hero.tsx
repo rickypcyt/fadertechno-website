@@ -1,12 +1,14 @@
-export default function Hero() {
+import type { Dictionary } from '@/lib/i18n/dictionaries'
+
+export default function Hero({ dict }: { dict: Dictionary }) {
   return (
     <header className="hero layout-full">
       <div className="hero-content">
         <span className="hero-tag">
-          Electrónica atemporal · Alicante
+          {dict.hero.tag}
         </span>
         <p className="hero-desc">
-          Colectivo independiente. Centrado en la cultura de club centrado en la atmosfera. Sonido serio sin etiquetas.
+          {dict.hero.desc}
         </p>
       </div>
     </header>

@@ -28,43 +28,8 @@ export default async function AdminLayout({
 
   return (
     <div className="admin-shell">
-      <SidePanel
-        navItems={[
-          { href: '/admin/dashboard', label: 'Dashboard', icon: '▤' },
-          ...(user.role === 'SUPER_ADMIN' ? [{ href: '/admin/superadmin', label: 'Super Admin', icon: '⚡' }] : []),
-          { href: '/admin/events', label: 'Eventos', icon: '♪' },
-          { href: '/admin/tickets', label: 'Entradas', icon: '🎫' },
-          { href: '/admin/artists', label: 'Artistas', icon: '★' },
-          { href: '/admin/promoters', label: 'RRPP', icon: '◉' },
-          { href: '/admin/users', label: 'Usuarios', icon: '◐' },
-          { href: '/admin/gallery', label: 'Galería', icon: '◇' },
-          { href: '/admin/newsletter', label: 'Newsletter', icon: '✉' },
-          { href: '/admin/rewards', label: 'Recompensas', icon: '◆' },
-          { href: '/admin/sponsors', label: 'Patrocinadores', icon: '◈' },
-          { href: '/admin/analytics', label: 'Analytics', icon: '▦' },
-          { href: '/admin/settings', label: 'Configuración', icon: '⚙' },
-        ]}
-        userRole={user.role}
-      />
-      <MobileNav
-        brand="FADER ADMIN"
-        navItems={[
-          { href: '/admin/dashboard', label: 'Dashboard', icon: '▤' },
-          ...(user.role === 'SUPER_ADMIN' ? [{ href: '/admin/superadmin', label: 'Super Admin', icon: '⚡' }] : []),
-          { href: '/admin/events', label: 'Eventos', icon: '♪' },
-          { href: '/admin/tickets', label: 'Entradas', icon: '🎫' },
-          { href: '/admin/artists', label: 'Artistas', icon: '★' },
-          { href: '/admin/promoters', label: 'RRPP', icon: '◉' },
-          { href: '/admin/users', label: 'Usuarios', icon: '◐' },
-          { href: '/admin/gallery', label: 'Galería', icon: '◇' },
-          { href: '/admin/newsletter', label: 'Newsletter', icon: '✉' },
-          { href: '/admin/rewards', label: 'Recompensas', icon: '◆' },
-          { href: '/admin/sponsors', label: 'Patrocinadores', icon: '◈' },
-          { href: '/admin/analytics', label: 'Analytics', icon: '▦' },
-          { href: '/admin/settings', label: 'Configuración', icon: '⚙' },
-        ]}
-        userEmail={user.email}
-      />
+      <SidePanel userRole={user.role} />
+      <MobileNav brand="FADER" userRole={user.role} userEmail={user.email} />
       <main className="admin-main">{children}</main>
     </div>
   )

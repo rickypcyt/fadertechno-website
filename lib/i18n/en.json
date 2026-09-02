@@ -1,0 +1,158 @@
+{
+  "nav": {
+    "eventos": "Events",
+    "artistas": "Artists",
+    "historia": "History",
+    "archivo": "Archive",
+    "editorial": "Editorial",
+    "registrarse": "Sign up",
+    "verEntradas": "Get tickets",
+    "instagram": "Instagram"
+  },
+  "hero": {
+    "tag": "Timeless electronic · Alicante",
+    "desc": "Independent collective. Focused on club culture and atmosphere. Serious sound without labels."
+  },
+  "manifesto": {
+    "label": "01 — Manifesto",
+    "title": "Music as ritual",
+    "body": "FADER is born as a collective dedicated to underground electronic music in Alicante. We don't chase trends or labels. We seek atmosphere, progressive tension and sound that transforms.",
+    "points": [
+      "Curated programming, not impulsive",
+      "Resident artists and international guests",
+      "Club culture as a space for community"
+    ]
+  },
+  "sessions": {
+    "nextLabel": "02 — Next event",
+    "lastLabel": "Last experience",
+    "tba": "TBA",
+    "comingSoon": "Coming soon",
+    "comingSoonDesc": "We'll announce the next event soon. Line-up and date to be confirmed.",
+    "venue": "Venue",
+    "access": "Access",
+    "date": "Date",
+    "from": "From",
+    "buyTickets": "Get tickets",
+    "viewArchive": "View archive"
+  },
+  "artists": {
+    "label": "03 — Artists",
+    "title": "Residents",
+    "resident": "Resident",
+    "descriptions": {
+      "LITN": "LITN is a project centered on deep techno, with selections that move between the hypnotic and the dark. Its sound is characterized by atmospheric layers, deep bass and a musical narrative that builds progressive tension. A regular resident at FADER events.",
+      "Cristian Camilo": "Cristian Camilo explores hypnotic techno with a minimalist and immersive approach. His sets combine underground rhythms, dense textures and progressions that keep the audience in a trance state. A fundamental part of the FADER collective.",
+      "RUISUK": "RUISUK is a project centered on techno with a selection that mixes the industrial and the hypnotic. FADER resident, his sets are characterized by punchy rhythms and dense atmospheres that build a sonic journey without concessions."
+    }
+  },
+  "historia": {
+    "label": "04 — History",
+    "title": "Our story",
+    "blocks": {
+      "origen": {
+        "title": "Origins",
+        "body": "From our beginnings we have strived to create an intimate experience and build a solid proposal for our community."
+      },
+      "enfoque": {
+        "title": "Musical focus",
+        "body": "Our identity is born from techno and minimal, exploring different branches of house without losing our essence. We are drawn to hypnotic, deep and elegant sounds, always driven by a solid groove that connects with the dancefloor."
+      },
+      "experiencia": {
+        "title": "Club experience",
+        "body": "Every event is designed from scratch. Lights, visuals, schedules and atmosphere are conceived as part of a single experience, where music is the axis that connects everything. We understand the dancefloor as a meeting space, where sound, darkness and the environment favor a real connection between those who share it."
+      },
+      "comunidad": {
+        "title": "Community",
+        "body": "FADER is not just a music collective but a community where we combine tastes for art and sound seeking to connect people."
+      }
+    }
+  },
+  "archive": {
+    "label": "05 — Archive",
+    "title": "Museum pieces"
+  },
+  "event": {
+    "back": "Back",
+    "lineup": "Line-up",
+    "info": "Info",
+    "venue": "Venue",
+    "capacity": "Capacity",
+    "tickets": "Tickets",
+    "from": "From",
+    "hasTicket": "You already have a ticket",
+    "ticketSingle": "ticket",
+    "ticketPlural": "tickets",
+    "viewTickets": "View my tickets",
+    "resident": "Resident"
+  },
+  "ticket": {
+    "soldOut": "Sold out",
+    "comingSoon": "Coming soon",
+    "locked": "Locked",
+    "stock": "Stock",
+    "total": "Total",
+    "ticketSingle": "ticket",
+    "ticketPlural": "tickets",
+    "buy": "Buy",
+    "processing": "Processing...",
+    "resuming": "Continuing your purchase...",
+    "errorPurchase": "Error processing purchase",
+    "errorConnection": "Connection error. Try again."
+  },
+  "editorial": {
+    "label": "06 — Newsletter",
+    "title": "Newsletter",
+    "intro": "Get info about upcoming events, releases and exclusive content.",
+    "emailLabel": "Email",
+    "required": "*",
+    "submit": "Submit",
+    "success": "You're in.",
+    "error": "Subscription failed. Try again."
+  },
+  "socials": {
+    "label": "07 — Socials",
+    "instagram": "Photos, reels and announcements of upcoming events.",
+    "whatsapp": "Private community. Priority access and news."
+  },
+  "footer": {
+    "brand": "Independent collective dedicated to the promotion of techno and club culture in Alicante.",
+    "nav": "Navigation",
+    "contact": "Contact",
+    "rights": "© 2026 FADER Collective. All rights reserved.",
+    "location": "Alicante, Spain"
+  },
+  "auth": {
+    "back": "Back",
+    "login": {
+      "title": "Sign in",
+      "email": "Email",
+      "password": "Password",
+      "submit": "Sign in",
+      "submitting": "Signing in...",
+      "switch": "Don't have an account?",
+      "switchLink": "Sign up"
+    },
+    "register": {
+      "title": "Create account",
+      "name": "Name",
+      "email": "Email",
+      "password": "Password",
+      "submit": "Create account",
+      "submitting": "Creating...",
+      "switch": "Already have an account?",
+      "switchLink": "Sign in"
+    },
+    "errors": {
+      "emailInvalid": "Invalid email",
+      "passwordShort": "Password must be at least 8 characters",
+      "nameShort": "Name is too short",
+      "loginFailed": "Sign in failed",
+      "invalidCredentials": "Invalid email or password",
+      "userNotFound": "No account found with that email",
+      "registerFailed": "Account creation failed",
+      "autoSignInFailed": "Account created but couldn't sign in automatically. Try signing in.",
+      "connectionError": "Connection error"
+    }
+  }
+}

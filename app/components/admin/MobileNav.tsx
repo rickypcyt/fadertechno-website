@@ -4,23 +4,29 @@ import { useState, useEffect } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import { X, Home } from 'lucide-react'
 import SignOutButton from './SignOutButton'
-
-type NavItem = {
-  href: string
-  label: string
-  icon?: string
-}
+import { getNavGrouped } from '@/lib/nav'
+import { roleHierarchy, Role } from '@/lib/roles'
 
 type Props = {
   brand: string
-  navItems: NavItem[]
+  userRole: string
   userEmail?: string
 }
 
-export default function MobileNav({ brand, navItems, userEmail }: Props) {
+function getDashboardHref(role: string): string {
+  const level = roleHierarchy[role] ?? 0
+  if (level >= roleHierarchy[Role.ADMIN]) return '/admin/dashboard'
+  if (level >= roleHierarchy[Role.STAFF]) return '/staff/dashboard'
+  return '/user/dashboard'
+}
+
+export default function MobileNav({ brand, userRole, userEmail }: Props) {
   const [open, setOpen] = useState(false)
   const pathname = usePathname()
+  const navGroups = getNavGrouped(userRole)
+  const dashboardHref = getDashboardHref(userRole)
 
   useEffect(() => {
     setOpen(false)
@@ -40,14 +46,17 @@ export default function MobileNav({ brand, navItems, userEmail }: Props) {
   return (
     <div className="mobile-nav">
       <div className="mobile-nav-bar">
-        <Link href="/admin/dashboard" className="mobile-nav-brand">
-          <Image
-            src="/logofader.png"
-            alt="FADER"
-            width={28}
-            height={28}
-            priority
-          />
+        <Link href={dashboardHref} className="mobile-nav-brand">
+          <span className="nav-logo-shine mobile-nav-logo-shine">
+            <Image
+              src="/logofader.png"
+              alt="FADER"
+              width={28}
+              height={28}
+              priority
+            />
+            <span className="nav-logo-shine-overlay" aria-hidden="true" />
+          </span>
           <span>{brand}</span>
         </Link>
         <button
@@ -74,26 +83,41 @@ export default function MobileNav({ brand, navItems, userEmail }: Props) {
             onClick={() => setOpen(false)}
             aria-label="Cerrar"
           >
-            ×
+            <X size={22} />
           </button>
         </div>
         <div className="mobile-nav-drawer-items">
-          {navItems.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className={`mobile-nav-link ${pathname === item.href ? 'active' : ''}`}
-            >
-              {item.icon && <span className="mobile-nav-icon">{item.icon}</span>}
-              <span>{item.label}</span>
-            </Link>
+          {navGroups.map((group, gi) => (
+            <div key={group.group} className="mobile-nav-group">
+              {gi > 0 && (
+                <div className="mobile-nav-group-label">{group.label}</div>
+              )}
+              {group.items.map((item) => {
+                const Icon = item.icon
+                const active = pathname === item.href
+                return (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    className={`mobile-nav-link ${active ? 'active' : ''}`}
+                  >
+                    <span className="mobile-nav-tile">
+                      <Icon size={20} strokeWidth={1.8} />
+                    </span>
+                    <span>{item.label}</span>
+                  </Link>
+                )
+              })}
+            </div>
           ))}
         </div>
         {userEmail && (
           <div className="mobile-nav-footer">
             <span className="mobile-nav-user">{userEmail}</span>
             <Link href="/" className="mobile-nav-link">
-              <span className="mobile-nav-icon">←</span>
+              <span className="mobile-nav-tile mobile-nav-tile-back">
+                <Home size={20} strokeWidth={1.8} />
+              </span>
               <span>Volver al inicio</span>
             </Link>
             <SignOutButton />

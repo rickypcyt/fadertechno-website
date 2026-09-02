@@ -1,11 +1,12 @@
 import Image from 'next/image'
+import type { Dictionary } from '@/lib/i18n/dictionaries'
 
 type Artist = {
   name: string
   genre: string
   image: string
   span: string
-  description: string
+  descKey: 'LITN' | 'Cristian Camilo' | 'RUISUK'
 }
 
 const artists: Artist[] = [
@@ -14,30 +15,30 @@ const artists: Artist[] = [
     genre: 'Deep Techno',
     image: '/litn.jpg',
     span: 'col-4',
-    description: 'LITN es un proyecto centrado en el deep techno, con selecciones que transitan entre lo hipnótico y lo oscuro. Su sonido se caracteriza por capas atmosféricas, bajos profundos y una narrativa musical que construye tensión progresiva. Residente habitual en los eventos de FADER.',
+    descKey: 'LITN',
   },
   {
     name: 'Cristian Camilo',
     genre: 'Hypnotic Techno',
     image: '/cc.jpg',
     span: 'col-4',
-    description: 'Cristian Camilo explora el hypnotic techno con una aproximación minimalista y envolvente. Sus sets combinan ritmos subterráneos, texturas densas y progresiones que mantienen al público en un estado de trance. Parte fundamental del colectivo FADER.',
+    descKey: 'Cristian Camilo',
   },
   {
     name: 'RUISUK',
     genre: 'Techno',
     image: '/ruisuk.jpeg',
     span: 'col-4',
-    description: 'RUISUK es un proyecto centrado en el techno con una selección que mezcla lo industrial y lo hipnótico. Residente de FADER, sus sets se caracterizan por ritmos contundentes y atmósferas densas que construyen un viaje sonoro sin concesiones.',
+    descKey: 'RUISUK',
   },
 ]
 
-export default function Artists() {
+export default function Artists({ dict }: { dict: Dictionary }) {
   return (
     <section id="artistas" className="sec sec-3 layout-wide">
       <div className="reveal reveal-scale" style={{ marginBottom: '56px' }}>
-        <div className="section-label">03 — Artistas</div>
-        <h2 className="section-title">Equipo</h2>
+        <div className="section-label">{dict.artists.label}</div>
+        <h2 className="section-title">{dict.artists.title}</h2>
       </div>
 
       <div className="artists-grid">
@@ -56,8 +57,6 @@ export default function Artists() {
             />
             <div className="artist-overlay">
               <h4>{artist.name}</h4>
-              <span className="artist-genre">{artist.genre}</span>
-              <p className="artist-desc">{artist.description}</p>
             </div>
           </div>
         ))}

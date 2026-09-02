@@ -1,5 +1,6 @@
 import prisma from '@/lib/prisma'
 import { requireRole } from '@/lib/permissions'
+import AdminTicketPreview from '@/app/components/admin/AdminTicketPreview'
 
 export default async function AdminTicketsPage() {
   await requireRole('ADMIN')
@@ -43,7 +44,7 @@ export default async function AdminTicketsPage() {
         ) : (
           tickets.map((ticket: typeof tickets[0]) => (
             <div key={ticket.id} className="admin-list-item">
-              <div>
+              <div className="admin-ticket-info">
                 <div><strong>{ticket.ticketType.event.title}</strong></div>
                 <div className="text-dim" style={{ fontSize: '1rem' }}>
                   {ticket.ticketType.name} · {ticket.order.user.name ?? ticket.order.user.email}
@@ -59,6 +60,13 @@ export default async function AdminTicketsPage() {
                     })}</>
                   )}
                 </div>
+                <AdminTicketPreview
+                  code={ticket.code}
+                  eventTitle={ticket.ticketType.event.title}
+                  ticketType={ticket.ticketType.name}
+                  userName={ticket.order.user.name ?? ticket.order.user.email}
+                  checkedIn={ticket.checkedIn}
+                />
               </div>
               <span className={`admin-badge${ticket.checkedIn ? '' : ' muted'}`}>
                 {ticket.checkedIn ? '✓ Asistió' : 'Pendiente'}

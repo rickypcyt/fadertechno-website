@@ -1,5 +1,8 @@
 import Image from 'next/image'
 import Link from 'next/link'
+import { formatEventDate, formatShortDate } from '@/lib/dates'
+import type { Dictionary } from '@/lib/i18n/dictionaries'
+import type { Locale } from '@/lib/i18n/config'
 
 type EventData = {
   id: string
@@ -14,18 +17,17 @@ type EventData = {
 } | null
 
 export default function SessionsClient({
+  dict,
+  lang,
   upcoming,
   lastPast,
 }: {
+  dict: Dictionary
+  lang: Locale
   upcoming: EventData
   lastPast: EventData
 }) {
-  const formatDate = (date: Date) =>
-    new Date(date).toLocaleDateString('es-ES', {
-      day: 'numeric',
-      month: 'long',
-      year: 'numeric',
-    })
+  const formatDate = (date: Date) => formatEventDate(date, lang)
 
   return (
     <section id="eventos" className="sec sec-2 layout-wide">
@@ -33,7 +35,7 @@ export default function SessionsClient({
       <div className="sessions-event sessions-event-upcoming reveal reveal-right">
         {upcoming ? (
           <>
-            <div className="section-label sessions-label">02 — Próximo evento</div>
+            <div className="section-label sessions-label">{dict.sessions.nextLabel}</div>
             <div className="sessions-image">
               {upcoming.coverImage ? (
                 <Image
@@ -53,7 +55,6 @@ export default function SessionsClient({
             </div>
             <div className="sessions-info">
               <h3>{upcoming.title}</h3>
-              <p>{upcoming.description}</p>
               {upcoming.artists.length > 0 && (
                 <div className="sessions-artists">
                   {upcoming.artists.map((a, i) => (
@@ -63,23 +64,23 @@ export default function SessionsClient({
               )}
               <div className="sessions-meta">
                 <div className="sessions-meta-item">
-                  <strong>Fecha</strong>
+                  <strong>{dict.sessions.date}</strong>
                   {formatDate(upcoming.startDate)}
                 </div>
                 <div className="sessions-meta-item">
-                  <strong>Sala</strong>
+                  <strong>{dict.sessions.venue}</strong>
                   {upcoming.venue.name}{upcoming.venue.city ? ` — ${upcoming.venue.city}` : ''}
                 </div>
                 {upcoming.ticketTypes.length > 0 && (
                   <div className="sessions-meta-item">
-                    <strong>Desde</strong>
+                    <strong>{dict.sessions.from}</strong>
                     {Math.min(...upcoming.ticketTypes.map((t) => Number(t.price)))}€
                   </div>
                 )}
               </div>
               <div className="sessions-actions">
                 <Link href={`/evento/${upcoming.slug}`} className="nav-cta">
-                  Comprar entradas
+                  {dict.sessions.buyTickets}
                 </Link>
               </div>
             </div>
@@ -87,27 +88,26 @@ export default function SessionsClient({
         ) : (
           <div className="sessions-past">
             <div className="sessions-past-header">
-              <div className="section-label sessions-label">02 — Próximo evento</div>
-              <div className="sessions-past-date">TBA</div>
+              <div className="section-label sessions-label">{dict.sessions.nextLabel}</div>
             </div>
 
             <div className="sessions-past-body">
               <div className="sessions-past-image">
                 <div className="sessions-tba">
-                  <span className="sessions-tba-text">TBA</span>
+                  <span className="sessions-tba-text">{dict.sessions.tba}</span>
                 </div>
               </div>
 
               <div className="sessions-past-info">
-                <h3>Próximamente</h3>
-                <p>Pronto anunciaremos el próximo evento. Line-up y fecha por confirmar.</p>
+                <h3>{dict.sessions.comingSoon}</h3>
+                <p>{dict.sessions.comingSoonDesc}</p>
                 <div className="sessions-meta">
                   <div className="sessions-meta-item">
-                    <strong>Sala</strong>
-                    TBA
+                    <strong>{dict.sessions.venue}</strong>
+                    {dict.sessions.tba}
                   </div>
                   <div className="sessions-meta-item">
-                    <strong>Acceso</strong>
+                    <strong>{dict.sessions.access}</strong>
                     +18
                   </div>
                 </div>
@@ -121,13 +121,9 @@ export default function SessionsClient({
       {lastPast && (
         <div className="sessions-past reveal reveal-left">
           <div className="sessions-past-header">
-            <div className="section-label sessions-label">Última experiencia</div>
+            <div className="section-label sessions-label">{dict.sessions.lastLabel}</div>
             <div className="sessions-past-date">
-              {new Date(lastPast.startDate).toLocaleDateString('es-ES', {
-                day: '2-digit',
-                month: '2-digit',
-                year: '2-digit',
-              })}
+              {formatShortDate(lastPast.startDate, lang)}
             </div>
           </div>
 
@@ -162,18 +158,13 @@ export default function SessionsClient({
               <p>{lastPast.description}</p>
               <div className="sessions-meta">
                 <div className="sessions-meta-item">
-                  <strong>Fecha</strong>
+                  <strong>{dict.sessions.date}</strong>
                   {formatDate(lastPast.startDate)}
                 </div>
                 <div className="sessions-meta-item">
-                  <strong>Sala</strong>
+                  <strong>{dict.sessions.venue}</strong>
                   {lastPast.venue.name}{lastPast.venue.city ? ` — ${lastPast.venue.city}` : ''}
                 </div>
-              </div>
-              <div className="sessions-actions">
-                <Link href="#archivo" className="btn btn-ghost">
-                  Ver archivo
-                </Link>
               </div>
             </div>
           </div>

@@ -1,7 +1,9 @@
 import prisma from '@/lib/prisma'
 import SessionsClient from './SessionsClient'
+import type { Dictionary } from '@/lib/i18n/dictionaries'
+import type { Locale } from '@/lib/i18n/config'
 
-export default async function Sessions() {
+export default async function Sessions({ dict, lang }: { dict: Dictionary; lang: Locale }) {
   const now = new Date()
 
   const [upcomingEvent, lastPastEvent] = await Promise.all([
@@ -34,6 +36,8 @@ export default async function Sessions() {
 
   return (
     <SessionsClient
+      dict={dict}
+      lang={lang}
       upcoming={
         upcomingEvent
           ? {

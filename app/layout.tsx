@@ -1,76 +1,41 @@
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
+import localFont from 'next/font/local'
 import './globals.css'
-import ClientScripts from './components/ClientScripts'
-import VideoBg from './components/VideoBg'
+import QueryProvider from './components/QueryProvider'
 
 const inter = Inter({
   subsets: ['latin'],
   weight: ['300', '400', '500', '600', '700', '800', '900'],
+  variable: '--font-inter',
 })
 
-const siteUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'https://faderclub.com'
+const switzer = localFont({
+  src: [
+    { path: './fonts/switzer/Switzer-Extralight.woff', weight: '200', style: 'normal' },
+    { path: './fonts/switzer/Switzer-ExtralightItalic.woff', weight: '200', style: 'italic' },
+    { path: './fonts/switzer/Switzer-Light.woff', weight: '300', style: 'normal' },
+    { path: './fonts/switzer/Switzer-LightItalic.woff', weight: '300', style: 'italic' },
+    { path: './fonts/switzer/Switzer-Regular.woff', weight: '400', style: 'normal' },
+    { path: './fonts/switzer/Switzer-Italic.woff', weight: '400', style: 'italic' },
+    { path: './fonts/switzer/Switzer-Medium.woff', weight: '500', style: 'normal' },
+    { path: './fonts/switzer/Switzer-MediumItalic.woff', weight: '500', style: 'italic' },
+    { path: './fonts/switzer/Switzer-Semibold.woff', weight: '600', style: 'normal' },
+    { path: './fonts/switzer/Switzer-SemiboldItalic.woff', weight: '600', style: 'italic' },
+    { path: './fonts/switzer/Switzer-Bold.woff', weight: '700', style: 'normal' },
+    { path: './fonts/switzer/Switzer-BoldItalic.woff', weight: '700', style: 'italic' },
+    { path: './fonts/switzer/Switzer-Extrabold.woff', weight: '800', style: 'normal' },
+    { path: './fonts/switzer/Switzer-ExtraboldItalic.woff', weight: '800', style: 'italic' },
+    { path: './fonts/switzer/Switzer-Black.woff', weight: '900', style: 'normal' },
+    { path: './fonts/switzer/Switzer-BlackItalic.woff', weight: '900', style: 'italic' },
+  ],
+  variable: '--font-switzer',
+  display: 'swap',
+})
 
 export const metadata: Metadata = {
-  metadataBase: new URL(siteUrl),
-  title: {
-    default: 'FADER — Electrónica atemporal en Alicante',
-    template: '%s · FADER',
-  },
-  description:
-    'FADER es un colectivo independiente dedicado al techno y la cultura de club en Alicante. Eventos, sesiones y experiencias sonoras sin concesiones.',
-  keywords: [
-    'FADER',
-    'techno Alicante',
-    'club cultural Alicante',
-    'eventos techno',
-    'colectivo música electrónica',
-    'rave Alicante',
-    'Kalicante',
-    'cultura de club',
-    'música electrónica España',
-  ],
-  authors: [{ name: 'FADER Collective' }],
-  creator: 'FADER Collective',
-  publisher: 'FADER Collective',
-  alternates: {
-    canonical: '/',
-  },
-  openGraph: {
-    type: 'website',
-    locale: 'es_ES',
-    url: siteUrl,
-    siteName: 'FADER',
-    title: 'FADER — Electrónica atemporal en Alicante',
-    description:
-      'Colectivo independiente dedicado al techno y la cultura de club en Alicante. Eventos, sesiones y experiencias sonoras.',
-    images: [
-      {
-        url: '/logo.jpeg',
-        width: 500,
-        height: 500,
-        alt: 'FADER logo',
-      },
-    ],
-  },
-  twitter: {
-    card: 'summary_large_image',
-    title: 'FADER — Electrónica atemporal en Alicante',
-    description:
-      'Colectivo independiente. Eventos centrados en el techno, el sonido y la cultura de club.',
-    images: ['/logo.jpeg'],
-  },
-  robots: {
-    index: true,
-    follow: true,
-    googleBot: {
-      index: true,
-      follow: true,
-      'max-image-preview': 'large',
-      'max-snippet': -1,
-    },
-  },
-  category: 'music',
+  title: 'FADER',
+  description: 'FADER — Electrónica atemporal en Alicante',
 }
 
 export default function RootLayout({
@@ -79,14 +44,9 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="es">
+    <html lang="es" className={`${inter.variable} ${switzer.variable}`}>
       <body className={inter.className}>
-        <VideoBg />
-        <div className="video-bg-overlay" />
-        <div className="noise-overlay" />
-        <div className="cursor-glow" id="cursor-glow" />
-        {children}
-        <ClientScripts />
+        <QueryProvider>{children}</QueryProvider>
       </body>
     </html>
   )

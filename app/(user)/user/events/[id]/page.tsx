@@ -1,6 +1,7 @@
 import { notFound } from 'next/navigation'
 import prisma from '@/lib/prisma'
 import { getCurrentUser } from '@/lib/auth'
+import { getDictionary, defaultLocale } from '@/lib/i18n/dictionaries'
 import TicketSelector from './TicketSelector'
 
 export default async function EventDetailPage({
@@ -10,6 +11,7 @@ export default async function EventDetailPage({
 }) {
   const user = await getCurrentUser()
   const { id } = await params
+  const dict = await getDictionary(defaultLocale)
 
   const event = await prisma.event.findUnique({
     where: { id },
@@ -105,6 +107,7 @@ export default async function EventDetailPage({
           stock: tt.stock,
         }))}
         eventId={event.id}
+        dict={dict}
       />
     </div>
   )

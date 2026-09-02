@@ -1,16 +1,16 @@
 import NewsletterForm from '@/app/components/NewsletterForm'
+import type { Dictionary } from '@/lib/i18n/dictionaries'
 
-export default function Editorial() {
+export default function Editorial({ dict }: { dict: Dictionary }) {
   return (
     <section id="editorial" className="editorial sec sec-6 layout-wide">
       <div className="reveal">
-        <div className="section-label" style={{ marginBottom: '40px' }}>06 — Newsletter</div>
-        <h2>Suscríbete a nuestro<br />newsletter</h2>
+        <div className="section-label" style={{ marginBottom: '40px' }}>{dict.editorial.label}</div>
+        <h2>{dict.editorial.title}</h2>
         <p>
-          Recibe información sobre próximos eventos, preventas y anuncios
-          antes de su publicación.
+          {dict.editorial.intro}
         </p>
-        <NewsletterForm />
+        <NewsletterForm dict={dict} />
       </div>
     </section>
   )
