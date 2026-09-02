@@ -86,7 +86,8 @@ export async function POST(request: Request) {
       const totalPaid = Number(order.total)
       const pointsToEarn = Math.floor(totalPaid)
 
-      if (pointsToEarn > 0) {
+      // Staff and admins do not earn points for ticket purchases
+      if (pointsToEarn > 0 && order.user.role === 'USER') {
         await tx.creditTransaction.create({
           data: {
             userId: order.userId,

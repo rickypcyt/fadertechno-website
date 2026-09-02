@@ -12,6 +12,8 @@ const archiveEvents = [
 ]
 
 export default function Archive({ dict }: { dict: Dictionary }) {
+  // Duplicamos para el loop seamless del carrusel mobile.
+  // La segunda copia se marca como clone y se oculta en desktop (grid).
   const items = [...archiveEvents, ...archiveEvents]
 
   return (
@@ -24,7 +26,10 @@ export default function Archive({ dict }: { dict: Dictionary }) {
       <div className="archive-carousel">
         <div className="archive-track archive-track-auto">
           {items.map((event, i) => (
-            <div key={i} className="archive-item">
+            <div
+              key={i}
+              className={`archive-item${i >= archiveEvents.length ? ' archive-item-clone' : ''}`}
+            >
               <div className="archive-poster">
                 <Image
                   src={event.src}
@@ -34,10 +39,6 @@ export default function Archive({ dict }: { dict: Dictionary }) {
                   sizes="(max-width: 860px) 80vw, 25vw"
                   style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
                 />
-                <div className="archive-overlay" />
-              </div>
-              <div className="archive-item-info">
-                <strong>{event.title}</strong>
               </div>
             </div>
           ))}

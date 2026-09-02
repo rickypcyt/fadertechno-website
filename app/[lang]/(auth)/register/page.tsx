@@ -23,21 +23,11 @@ export default async function RegisterPage({
   const benefitKeys = ['points', 'priority', 'tickets', 'rewards'] as const
 
   return (
-    <section className="auth-page">
-      <div className="auth-card">
-        <Link href={`/${lang}`} className="auth-close" aria-label={dict.auth.back}>
-          <X size={18} strokeWidth={2.5} />
-        </Link>
-
-        <h1>{dict.auth.register.title}</h1>
-        <RegisterForm redirect={redirect} dict={dict} />
-        <p className="auth-switch">
-          {dict.auth.register.switch}{' '}
-          <Link href={loginHref}>{dict.auth.register.switchLink}</Link>
-        </p>
-
-        <div className="auth-benefits">
+    <section className="auth-page auth-page--split">
+      <div className="auth-split">
+        <aside className="auth-benefits auth-benefits--panel">
           <h2 className="auth-benefits-title">{b.title}</h2>
+          {b.subtitle && <p className="auth-benefits-subtitle">{b.subtitle}</p>}
           <ul className="auth-benefits-list">
             {benefitKeys.map((key) => (
               <li key={key} className="auth-benefit-item">
@@ -49,6 +39,19 @@ export default async function RegisterPage({
               </li>
             ))}
           </ul>
+        </aside>
+
+        <div className="auth-card">
+          <Link href={`/${lang}`} className="auth-close" aria-label={dict.auth.back}>
+            <X size={18} strokeWidth={2.5} />
+          </Link>
+
+          <h1>{dict.auth.register.title}</h1>
+          <RegisterForm redirect={redirect} dict={dict} />
+          <p className="auth-switch">
+            {dict.auth.register.switch}{' '}
+            <Link href={loginHref}>{dict.auth.register.switchLink}</Link>
+          </p>
         </div>
       </div>
     </section>
