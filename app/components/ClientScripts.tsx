@@ -50,45 +50,10 @@ export default function ClientScripts() {
       history.replaceState(null, '', window.location.pathname)
     }
 
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('visible')
-            observer.unobserve(entry.target)
-          }
-        })
-      },
-      { threshold: 0.05, rootMargin: '0px 0px -40px 0px' }
-    )
-
-    const observeReveals = () => {
-      document.querySelectorAll('.reveal:not(.visible)').forEach((el) => {
-        observer.observe(el)
-      })
-    }
-
-    const initTimer = setTimeout(observeReveals, 100)
-
-    const mutationObserver = new MutationObserver(() => {
-      observeReveals()
-    })
-    mutationObserver.observe(document.body, { childList: true, subtree: true })
-
-    const fallbackTimer = setTimeout(() => {
-      document.querySelectorAll('.reveal:not(.visible)').forEach((el) => {
-        el.classList.add('visible')
-      })
-    }, 3000)
-
     return () => {
       window.removeEventListener('scroll', onScroll)
       window.removeEventListener('mousemove', onMouseMove)
       window.removeEventListener('hashchange', onHashChange)
-      observer.disconnect()
-      mutationObserver.disconnect()
-      clearTimeout(initTimer)
-      clearTimeout(fallbackTimer)
     }
   }, [pathname])
 

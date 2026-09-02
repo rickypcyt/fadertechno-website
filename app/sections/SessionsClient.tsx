@@ -1,5 +1,6 @@
 import Image from 'next/image'
 import Link from 'next/link'
+import { Reveal } from '@/app/components/Reveal'
 import { formatEventDate, formatShortDate } from '@/lib/dates'
 import type { Dictionary } from '@/lib/i18n/dictionaries'
 import type { Locale } from '@/lib/i18n/config'
@@ -32,7 +33,7 @@ export default function SessionsClient({
   return (
     <section id="eventos" className="sec sec-2 layout-wide">
       {/* Próximo evento */}
-      <div className="sessions-event sessions-event-upcoming reveal reveal-right">
+      <Reveal from="right" className="sessions-event sessions-event-upcoming">
         {upcoming ? (
           <>
             <div className="section-label sessions-label">{dict.sessions.nextLabel}</div>
@@ -115,11 +116,11 @@ export default function SessionsClient({
             </div>
           </div>
         )}
-      </div>
+      </Reveal>
 
       {/* Último evento pasado */}
       {lastPast && (
-        <div className="sessions-past reveal reveal-left">
+        <Reveal from="left" className="sessions-past">
           <div className="sessions-past-header">
             <div className="section-label sessions-label">{dict.sessions.lastLabel}</div>
             <div className="sessions-past-date">
@@ -168,7 +169,7 @@ export default function SessionsClient({
               </div>
             </div>
           </div>
-        </div>
+        </Reveal>
       )}
     </section>
   )

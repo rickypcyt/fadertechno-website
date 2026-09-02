@@ -1,3 +1,5 @@
+import { Reveal } from '@/app/components/Reveal'
+
 type Width = 'full' | 'wide' | 'normal' | 'narrow' | 'tight'
 
 const widthMap: Record<Width, string> = {
@@ -89,13 +91,13 @@ interface NumberBlockProps {
 
 export function NumberBlock({ number, label, children }: NumberBlockProps) {
   return (
-    <div className="number-block reveal">
+    <Reveal className="number-block">
       <div className="number-block-head">
         <span className="number-block-num">{number}</span>
         <span className="number-block-label">{label}</span>
       </div>
       <div className="number-block-body">{children}</div>
-    </div>
+    </Reveal>
   )
 }
 

@@ -1,3 +1,4 @@
+import { Reveal } from '@/app/components/Reveal'
 import type { Dictionary } from '@/lib/i18n/dictionaries'
 
 export default function Historia({ dict }: { dict: Dictionary }) {
@@ -6,38 +7,38 @@ export default function Historia({ dict }: { dict: Dictionary }) {
   return (
     <section id="historia" className="historia sec sec-4 layout-wide">
       <div className="historia-inner">
-        <div className="historia-head reveal reveal-left">
+        <Reveal from="left" className="historia-head">
           <div className="section-label">{dict.historia.label}</div>
           <h2>{dict.historia.title}</h2>
-        </div>
+        </Reveal>
 
-        <div className="historia-block reveal reveal-left">
+        <Reveal from="left" className="historia-block">
           <h3>{blocks.origen.title}</h3>
           <p>
             {blocks.origen.body}
           </p>
-        </div>
+        </Reveal>
 
-        <div className="historia-block reveal reveal-right">
+        <Reveal from="right" className="historia-block">
           <h3>{blocks.enfoque.title}</h3>
           <p>
             {blocks.enfoque.body}
           </p>
-        </div>
+        </Reveal>
 
-        <div className="historia-block reveal reveal-left">
+        <Reveal from="left" className="historia-block">
           <h3>{blocks.experiencia.title}</h3>
           <p>
             {blocks.experiencia.body}
           </p>
-        </div>
+        </Reveal>
 
-        <div className="historia-block reveal reveal-right">
+        <Reveal from="right" className="historia-block">
           <h3>{blocks.comunidad.title}</h3>
           <p>
             {blocks.comunidad.body}
           </p>
-        </div>
+        </Reveal>
       </div>
     </section>
   )

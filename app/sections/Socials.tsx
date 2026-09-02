@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { Reveal } from '@/app/components/Reveal'
 import type { Dictionary } from '@/lib/i18n/dictionaries'
 
 function ArrowUpRight({ size = 24 }: { size?: number }) {
@@ -26,20 +27,22 @@ export default function Socials({ dict }: { dict: Dictionary }) {
 
   return (
     <section id="redes" className="sec sec-7 layout-wide">
-      <div className="reveal reveal-left" style={{ marginBottom: '40px' }}>
+      <Reveal from="left" style={{ marginBottom: '40px' }}>
         <div className="section-label">{dict.socials.label}</div>
-      </div>
-      <div className="socials-list reveal reveal-stagger">
-        {socials.map((social) => (
-          <Link key={social.label} href={social.href} className="socials-row">
-            <span className="socials-row-text">
-              <span className="socials-row-name">
-                {social.label}
-                <span className="socials-row-arrow"><ArrowUpRight size={24} /></span>
+      </Reveal>
+      <div className="socials-list">
+        {socials.map((social, i) => (
+          <Reveal key={social.label} from="fade" delay={i * 0.08}>
+            <Link href={social.href} className="socials-row">
+              <span className="socials-row-text">
+                <span className="socials-row-name">
+                  {social.label}
+                  <span className="socials-row-arrow"><ArrowUpRight size={24} /></span>
+                </span>
+                <span className="socials-row-info">{social.info}</span>
               </span>
-              <span className="socials-row-info">{social.info}</span>
-            </span>
-          </Link>
+            </Link>
+          </Reveal>
         ))}
       </div>
     </section>

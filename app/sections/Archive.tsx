@@ -1,6 +1,7 @@
 'use client'
 
 import Image from 'next/image'
+import { Reveal } from '@/app/components/Reveal'
 import type { Dictionary } from '@/lib/i18n/dictionaries'
 
 const archiveEvents = [
@@ -13,15 +14,15 @@ const archiveEvents = [
 export default function Archive({ dict }: { dict: Dictionary }) {
   return (
     <section id="archivo" className="sec sec-5 layout-wide">
-      <div className="reveal reveal-right" style={{ marginBottom: '56px' }}>
+      <Reveal from="right" style={{ marginBottom: '56px' }}>
         <div className="section-label">{dict.archive.label}</div>
         <h2 className="section-title">{dict.archive.title}</h2>
-      </div>
+      </Reveal>
 
-      <div className="archive-carousel reveal reveal-stagger">
+      <div className="archive-carousel">
         <div className="archive-track">
           {archiveEvents.map((event, i) => (
-            <div key={i} className="archive-item">
+            <Reveal key={i} from="fade" delay={i * 0.08} className="archive-item">
               <div className="archive-poster">
                 <Image
                   src={event.src}
@@ -36,7 +37,7 @@ export default function Archive({ dict }: { dict: Dictionary }) {
               <div className="archive-item-info">
                 <strong>{event.title}</strong>
               </div>
-            </div>
+            </Reveal>
           ))}
         </div>
       </div>

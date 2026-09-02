@@ -1,4 +1,5 @@
 import Image from 'next/image'
+import { Reveal } from '@/app/components/Reveal'
 import type { Dictionary } from '@/lib/i18n/dictionaries'
 
 type Artist = {
@@ -36,16 +37,18 @@ const artists: Artist[] = [
 export default function Artists({ dict }: { dict: Dictionary }) {
   return (
     <section id="artistas" className="sec sec-3 layout-wide">
-      <div className="reveal reveal-scale" style={{ marginBottom: '56px' }}>
+      <Reveal from="scale" style={{ marginBottom: '56px' }}>
         <div className="section-label">{dict.artists.label}</div>
         <h2 className="section-title">{dict.artists.title}</h2>
-      </div>
+      </Reveal>
 
       <div className="artists-grid">
-        {artists.map((artist) => (
-          <div
+        {artists.map((artist, i) => (
+          <Reveal
             key={artist.name}
-            className={`artist-card reveal reveal-scale ${artist.span}`}
+            from="scale"
+            delay={i * 0.08}
+            className={`artist-card ${artist.span}`}
           >
             <Image
               src={artist.image}
@@ -58,7 +61,7 @@ export default function Artists({ dict }: { dict: Dictionary }) {
             <div className="artist-overlay">
               <h4>{artist.name}</h4>
             </div>
-          </div>
+          </Reveal>
         ))}
       </div>
     </section>

@@ -4,6 +4,7 @@ import { useEffect } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import { motion, useReducedMotion } from 'motion/react'
 import { Ticket, UserPlus } from 'lucide-react'
 import { authClient } from '@/lib/auth-client'
 import { useUserStore } from '@/lib/store'
@@ -13,6 +14,7 @@ import { locales, type Locale } from '@/lib/i18n/config'
 export default function Nav({ dict }: { dict: Dictionary }) {
   const { isLoggedIn, ticketsUrl, setUser, clearUser } = useUserStore()
   const pathname = usePathname()
+  const reduceMotion = useReducedMotion()
 
   const links = [
     { href: '#eventos', label: dict.nav.eventos },
@@ -59,7 +61,23 @@ export default function Nav({ dict }: { dict: Dictionary }) {
               height={56}
               priority
             />
-            <span className="nav-logo-shine-overlay" aria-hidden="true" />
+            <motion.span
+              aria-hidden="true"
+              className="nav-logo-shine-overlay"
+              initial={reduceMotion ? false : { x: '100%' }}
+              animate={
+                reduceMotion
+                  ? undefined
+                  : { x: ['100%', '-150%', '-150%'] }
+              }
+              transition={{
+                duration: 4,
+                ease: 'easeInOut',
+                times: [0, 0.6, 1],
+                repeat: Infinity,
+                repeatDelay: 0,
+              }}
+            />
           </span>
           <span className="nav-logo-text">FADER</span>
         </Link>
