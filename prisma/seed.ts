@@ -3,10 +3,15 @@ import { PrismaClient } from '@prisma/client'
 const prisma = new PrismaClient()
 
 async function main() {
-  // Crear o encontrar venue Kalicante
+  // Crear o actualizar venue Kalicante
   const venue = await prisma.venue.upsert({
     where: { slug: 'kalicante' },
-    update: {},
+    update: {
+      name: 'Kalicante',
+      address: 'Alicante',
+      city: 'Alicante',
+      capacity: 300,
+    },
     create: {
       name: 'Kalicante',
       slug: 'kalicante',
@@ -16,29 +21,42 @@ async function main() {
     },
   })
 
-  // Crear evento TBA
+  // Crear o actualizar evento TBA.
+  // Horas en UTC para que representen 22:00-06:00 hora de Alicante (CEST, UTC+2):
+  //   2026-09-27T20:00:00Z -> 22:00 Alicante
+  //   2026-09-28T04:00:00Z -> 06:00 Alicante
   const event = await prisma.event.upsert({
     where: { slug: 'fadermusicclubdiscotecawilson' },
     update: {
+      title: 'FADER Music Club Discoteca Wilson',
+      description:
+        'Próximo evento de FADER. Pronto anunciaremos line-up y fecha definitiva. Una sesión centrada en el techno hipnótico y el dub techno, en un espacio diseñado desde el sonido y la luz.',
+      startDate: new Date('2026-09-27T20:00:00Z'),
+      endDate: new Date('2026-09-28T04:00:00Z'),
+      venueId: venue.id,
       published: true,
-      startDate: new Date('2026-09-27T22:00:00Z'),
     },
     create: {
       title: 'FADER Music Club Discoteca Wilson',
       slug: 'fadermusicclubdiscotecawilson',
       description:
         'Próximo evento de FADER. Pronto anunciaremos line-up y fecha definitiva. Una sesión centrada en el techno hipnótico y el dub techno, en un espacio diseñado desde el sonido y la luz.',
-      startDate: new Date('2026-09-27T22:00:00Z'),
-      endDate: new Date('2026-09-28T06:00:00Z'),
+      startDate: new Date('2026-09-27T20:00:00Z'),
+      endDate: new Date('2026-09-28T04:00:00Z'),
       venueId: venue.id,
       published: true,
     },
   })
 
-  // Crear ticket types
+  // Crear o actualizar ticket types.
+  // El update no toca `stock` deliberadamente: si ya se han vendido entradas,
+  // volver a ejecutar el seed no debe restablecer el stock disponible.
   const earlyBird = await prisma.ticketType.upsert({
     where: { id: 'early-bird-015' },
-    update: {},
+    update: {
+      name: 'Early Bird',
+      price: 12,
+    },
     create: {
       id: 'early-bird-015',
       name: 'Early Bird',
@@ -50,7 +68,10 @@ async function main() {
 
   const presale = await prisma.ticketType.upsert({
     where: { id: 'presale-015' },
-    update: {},
+    update: {
+      name: 'Preventa',
+      price: 18,
+    },
     create: {
       id: 'presale-015',
       name: 'Preventa',
@@ -62,7 +83,10 @@ async function main() {
 
   const door = await prisma.ticketType.upsert({
     where: { id: 'door-015' },
-    update: {},
+    update: {
+      name: 'Taquilla',
+      price: 25,
+    },
     create: {
       id: 'door-015',
       name: 'Taquilla',

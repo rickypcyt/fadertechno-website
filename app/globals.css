@@ -827,9 +827,6 @@ img {
   text-align: center;
   gap: 20px;
   padding: 40px 48px;
-  background: rgba(2, 1, 10, 0.45);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 
@@ -1444,7 +1441,6 @@ img {
 .archive-track {
   display: flex;
   white-space: nowrap;
-  gap: 20px;
   overflow: hidden;
   padding: 4px 0 8px;
 }
@@ -1466,18 +1462,19 @@ img {
   text-decoration: none;
   color: inherit;
   flex: 0 0 auto;
-  width: 340px;
+  width: 220px;
+  margin-right: 20px;
 }
 
 @media (min-width: 541px) {
   .archive-item {
-    width: 380px;
+    width: 250px;
   }
 }
 
 @media (min-width: 861px) {
   .archive-item {
-    width: 360px;
+    width: 240px;
   }
 }
 
@@ -1746,7 +1743,7 @@ img {
 }
 
 .socials-row-info {
-  font-size: var(--fs-lead);
+  font-size: var(--fs-body);
   color: var(--text-dim);
   white-space: nowrap;
 }
