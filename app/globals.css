@@ -273,7 +273,7 @@ img {
 }
 
 .sec-divider {
-  border-top: 1px solid var(--border);
+  border-top: 0px solid var(--border);
 }
 
 .sec-line {
@@ -479,6 +479,16 @@ img {
   transform: translateZ(0);
   backface-visibility: hidden;
   contain: layout style paint;
+}
+
+.marquee-track-auto {
+  width: max-content;
+  animation: marquee-scroll 50s linear infinite;
+}
+
+@keyframes marquee-scroll {
+  from { transform: translateX(-50%); }
+  to { transform: translateX(0); }
 }
 
 .marquee-item {
