@@ -272,6 +272,11 @@ img {
   background: transparent;
 }
 
+.sec-7 {
+  padding-top: 32px;
+  padding-bottom: 32px;
+}
+
 .sec-divider {
   border-top: 0px solid var(--border);
 }
@@ -831,13 +836,13 @@ img {
   position: relative;
   width: 100%;
   aspect-ratio: 21 / 9;
-  min-height: 320px;
+  min-height: 200px;
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: hidden;
   background: transparent;
-  margin-top: 74px;
+  margin-top: 0;
 }
 
 .hero-content {
@@ -849,8 +854,8 @@ img {
   align-items: center;
   justify-content: center;
   text-align: center;
-  gap: 20px;
-  padding: 40px 48px;
+  gap: 14px;
+  padding: 20px 48px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 
@@ -1810,7 +1815,7 @@ img {
 
 /* ===== FOOTER (Massive type) ===== */
 .footer {
-  padding: 80px 24px 40px;
+  padding: 32px 24px 40px;
   background: transparent;
   position: relative;
   z-index: 1;
@@ -1987,7 +1992,7 @@ img {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 24px;
+  padding: 12px;
   position: relative;
   z-index: 2;
   overflow-y: auto;
@@ -2014,7 +2019,7 @@ img {
   -webkit-backdrop-filter: blur(24px) saturate(140%);
   border: 1.5px solid rgba(255, 255, 255, 0.1);
   border-radius: 28px;
-  padding: 56px 36px 36px;
+  padding: 36px 36px 32px;
   box-shadow:
     0 24px 60px rgba(0, 0, 0, 0.5),
     inset 0 1px 0 rgba(255, 255, 255, 0.12),
@@ -2214,7 +2219,7 @@ img {
 /* ===== AUTH MOBILE ===== */
 @media (max-width: 768px) {
   .auth-page {
-    padding: 24px 16px;
+    padding: 12px 16px;
     align-items: center;
     overflow-y: auto;
   }
@@ -2223,7 +2228,7 @@ img {
     max-width: none;
     width: 100%;
     margin: auto;
-    padding: 64px 22px 28px;
+    padding: 40px 22px 24px;
     border-radius: 28px;
     box-shadow:
       0 20px 60px rgba(0, 0, 0, 0.55),
@@ -2260,6 +2265,78 @@ img {
 
   .auth-switch {
     margin-top: 22px;
+  }
+}
+
+/* ===== AUTH BENEFITS ===== */
+.auth-benefits {
+  margin-top: 28px;
+  padding-top: 24px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.auth-benefits-title {
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text);
+  margin: 0 0 20px;
+}
+
+.auth-benefits-subtitle {
+  font-size: 0.85rem;
+  color: var(--text-dim);
+  margin: 0 0 20px;
+  line-height: 1.5;
+}
+
+.auth-benefits-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.auth-benefit-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.auth-benefit-dot {
+  flex-shrink: 0;
+  width: 7px;
+  height: 7px;
+  margin-top: 7px;
+  border-radius: 50%;
+  background: var(--text);
+}
+
+.auth-benefit-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.auth-benefit-name {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text);
+  margin: 0 0 2px;
+}
+
+.auth-benefit-desc {
+  font-size: 0.8rem;
+  color: var(--text-dim);
+  line-height: 1.45;
+  margin: 0;
+}
+
+@media (max-width: 768px) {
+  .auth-benefits {
+    margin-top: 24px;
   }
 }
 
@@ -4440,14 +4517,14 @@ img {
   }
 
   .hero {
-    margin-top: 74px;
+    margin-top: 0;
     aspect-ratio: 16 / 9;
-    min-height: 280px;
+    min-height: 180px;
   }
 
   .hero-content {
-    padding: 32px 20px;
-    gap: 16px;
+    padding: 16px 20px;
+    gap: 12px;
   }
 
   .hero-tag {
@@ -4524,14 +4601,14 @@ img {
 
 @media (max-width: 480px) {
   .hero {
-    margin-top: 74px;
+    margin-top: 0;
     aspect-ratio: 4 / 3;
-    min-height: 240px;
+    min-height: 160px;
   }
 
   .hero-content {
-    padding: 24px 16px;
-    gap: 14px;
+    padding: 12px 16px;
+    gap: 10px;
   }
 
   .hero-tag {

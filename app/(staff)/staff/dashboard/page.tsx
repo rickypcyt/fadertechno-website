@@ -1,11 +1,12 @@
 import { getCurrentUser } from '@/lib/auth'
 import { getNavGrouped } from '@/lib/nav'
-import { getGreeting, getFaderSubtitle } from '@/lib/greeting'
+import { getDictionary, defaultLocale } from '@/lib/i18n/dictionaries'
 import AppHome from '@/app/components/admin/AppHome'
 
 export default async function StaffDashboard() {
   const user = await getCurrentUser()
   if (!user) return null
+  const dict = await getDictionary(defaultLocale)
 
   // App grid: user + staff group items (exclude the dashboard itself)
   const navGroups = getNavGrouped(user.role)
@@ -19,6 +20,7 @@ export default async function StaffDashboard() {
     <AppHome
       apps={staffApps}
       role={user.role}
+      dict={dict}
     />
   )
 }

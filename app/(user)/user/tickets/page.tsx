@@ -1,10 +1,13 @@
 import prisma from '@/lib/prisma'
 import { requireRole } from '@/lib/permissions'
 import { Role } from '@/lib/roles'
+import { getDictionary, defaultLocale } from '@/lib/i18n/dictionaries'
 import TicketQR from '@/app/components/user/TicketQR'
 
 export default async function UserTicketsPage() {
   const user = await requireRole(Role.USER)
+  const dict = await getDictionary(defaultLocale)
+  const t = dict.panel.userTickets
 
   const tickets = await prisma.ticket.findMany({
     where: {
@@ -28,14 +31,14 @@ export default async function UserTicketsPage() {
 
   return (
     <div>
-      <h1>Mis entradas</h1>
-      <p className="text-dim">{tickets.length} entradas en total</p>
+      <h1>{t.title}</h1>
+      <p className="text-dim">{t.summary.replace('{count}', String(tickets.length))}</p>
 
       <h2 style={{ fontSize: '1.1rem', marginTop: '40px', marginBottom: '16px' }}>
-        Activas ({activeTickets.length})
+        {t.active.replace('{count}', String(activeTickets.length))}
       </h2>
       {activeTickets.length === 0 ? (
-        <p className="text-dim">No tienes entradas activas.</p>
+        <p className="text-dim">{t.noActive}</p>
       ) : (
         <div className="ticket-list">
           {activeTickets.map((ticket: typeof activeTickets[0]) => (
@@ -50,16 +53,17 @@ export default async function UserTicketsPage() {
                 month: 'long',
               })}
               venue={ticket.ticketType.event.venue.name}
+              dict={dict}
             />
           ))}
         </div>
       )}
 
       <h2 style={{ fontSize: '1.1rem', marginTop: '40px', marginBottom: '16px' }}>
-        Usadas ({usedTickets.length})
+        {t.used.replace('{count}', String(usedTickets.length))}
       </h2>
       {usedTickets.length === 0 ? (
-        <p className="text-dim">Aún no has usado ninguna entrada.</p>
+        <p className="text-dim">{t.noUsed}</p>
       ) : (
         <div className="admin-list">
           {usedTickets.map((ticket: typeof usedTickets[0]) => (
@@ -74,7 +78,7 @@ export default async function UserTicketsPage() {
                     new Date(ticket.checkedInAt).toLocaleDateString('es-ES')}
                 </div>
               </div>
-              <span className="admin-badge muted">Usada</span>
+              <span className="admin-badge muted">{t.usedBadge}</span>
             </div>
           ))}
         </div>
@@ -84,7 +88,7 @@ export default async function UserTicketsPage() {
       {usedTickets.length > 0 && (
         <>
           <h2 style={{ fontSize: '1.1rem', marginTop: '40px', marginBottom: '16px' }}>
-            Eventos pasados
+            {t.pastEvents}
           </h2>
           <div className="ticket-list">
             {usedTickets.map((ticket: typeof usedTickets[0]) => (
@@ -99,6 +103,7 @@ export default async function UserTicketsPage() {
                   month: 'long',
                 })}
                 venue={ticket.ticketType.event.venue.name}
+                dict={dict}
               />
             ))}
           </div>
@@ -107,7 +112,7 @@ export default async function UserTicketsPage() {
 
       <div style={{ marginTop: '40px' }}>
         <a href="/user/events" className="nav-cta">
-          Ver eventos disponibles
+          {t.seeEvents}
         </a>
       </div>
     </div>

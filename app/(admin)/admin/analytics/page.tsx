@@ -1,5 +1,6 @@
 import prisma from '@/lib/prisma'
 import { requireRole } from '@/lib/permissions'
+import { getDictionary, defaultLocale } from '@/lib/i18n/dictionaries'
 import { TrendingUp, Ticket, Users, Mail, Euro, CheckCircle2, Calendar, AlertCircle } from 'lucide-react'
 
 export const dynamic = 'force-dynamic'
@@ -50,6 +51,8 @@ function ProgressBar({ value, max, label, right }: { value: number; max: number;
 
 export default async function AdminAnalyticsPage() {
   await requireRole('ADMIN')
+  const dict = await getDictionary(defaultLocale)
+  const t = dict.panel.analytics
 
   const now = new Date()
   const thirtyDaysAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000)
@@ -154,51 +157,51 @@ export default async function AdminAnalyticsPage() {
 
   return (
     <div className="admin-page analytics-page">
-      <h1>Analytics</h1>
-      <p className="text-dim">Métricas del club en tiempo real</p>
+      <h1>{t.title}</h1>
+      <p className="text-dim">{t.subtitle}</p>
 
       {/* KPI cards */}
       <div className="analytics-kpi-grid">
         <StatCard
           icon={Euro}
-          label="Ingresos totales"
+          label={t.totalRevenue}
           value={`${totalRevenue.toLocaleString('es-ES')} €`}
-          sub={`${revenue30d.toLocaleString('es-ES')} € últimos 30 días`}
+          sub={`${revenue30d.toLocaleString('es-ES')} € ${t.last30d}`}
           accent="linear-gradient(135deg, #10B981 0%, #059669 100%)"
         />
         <StatCard
           icon={Ticket}
-          label="Entradas vendidas"
+          label={t.ticketsSold}
           value={totalTickets}
-          sub={`${avgTicketsPerEvent} promedio por evento`}
+          sub={`${avgTicketsPerEvent} ${t.avgPerEvent}`}
           accent="linear-gradient(135deg, #8B5CF6 0%, #6366F1 100%)"
         />
         <StatCard
           icon={CheckCircle2}
-          label="Check-in"
+          label={t.checkIn}
           value={checkedIn}
-          sub={`${checkInRate}% · ${pendingTickets} pendientes`}
+          sub={`${checkInRate}% · ${pendingTickets} ${t.pending}`}
           accent="linear-gradient(135deg, #14B8A6 0%, #0D9488 100%)"
         />
         <StatCard
           icon={Users}
-          label="Usuarios"
+          label={t.users}
           value={totalUsers}
-          sub={`+${newUsers30d} en 30 días`}
+          sub={`+${newUsers30d} ${t.new30d}`}
           accent="linear-gradient(135deg, #3B82F6 0%, #2563EB 100%)"
         />
         <StatCard
           icon={Calendar}
-          label="Eventos"
+          label={t.events}
           value={totalEvents}
-          sub={`${upcomingEvents} próximos`}
+          sub={`${upcomingEvents} ${t.upcoming}`}
           accent="linear-gradient(135deg, #EF4444 0%, #F97316 100%)"
         />
         <StatCard
           icon={Mail}
-          label="Newsletter"
+          label={t.newsletter}
           value={totalSubscribers}
-          sub="suscriptores activos"
+          sub={t.activeSubs}
           accent="linear-gradient(135deg, #06B6D4 0%, #0891B2 100%)"
         />
       </div>
@@ -207,10 +210,10 @@ export default async function AdminAnalyticsPage() {
       <div className="analytics-section">
         <h2 className="analytics-section-title">
           <TrendingUp size={18} strokeWidth={2} />
-          Top eventos por ingresos
+          {t.topByRevenue}
         </h2>
         {revenueByEvent.length === 0 ? (
-          <p className="text-dim">No hay eventos con ventas.</p>
+          <p className="text-dim">{t.noEventsSales}</p>
         ) : (
           <div className="analytics-bars">
             {revenueByEvent.map((e) => (
@@ -219,7 +222,7 @@ export default async function AdminAnalyticsPage() {
                 label={e.title}
                 value={e.revenue}
                 max={maxRevenue}
-                right={`${e.revenue.toLocaleString('es-ES')} € · ${e.ticketsSold} entradas · ${e.fillRate}%`}
+                right={`${e.revenue.toLocaleString('es-ES')} € · ${e.ticketsSold} ${e.ticketsSold === 1 ? t.ticketSingle : t.ticketPlural} · ${e.fillRate}%`}
               />
             ))}
           </div>
@@ -230,19 +233,19 @@ export default async function AdminAnalyticsPage() {
       <div className="analytics-section">
         <h2 className="analytics-section-title">
           <Ticket size={18} strokeWidth={2} />
-          Ventas por tipo de entrada
+          {t.salesByType}
         </h2>
         {ticketTypeStats.length === 0 ? (
-          <p className="text-dim">No hay entradas vendidas.</p>
+          <p className="text-dim">{t.noTicketsSold}</p>
         ) : (
           <div className="analytics-bars">
-            {ticketTypeStats.map((t) => (
+            {ticketTypeStats.map((tt) => (
               <ProgressBar
-                key={t.name}
-                label={t.name}
-                value={t.count}
+                key={tt.name}
+                label={tt.name}
+                value={tt.count}
                 max={maxTicketTypeCount}
-                right={`${t.count} · ${t.revenue.toLocaleString('es-ES')} €`}
+                right={`${tt.count} · ${tt.revenue.toLocaleString('es-ES')} €`}
               />
             ))}
           </div>
@@ -253,10 +256,10 @@ export default async function AdminAnalyticsPage() {
       <div className="analytics-section">
         <h2 className="analytics-section-title">
           <Calendar size={18} strokeWidth={2} />
-          Ventas recientes (30 días)
+          {t.recentSales}
         </h2>
         {recentOrders.length === 0 ? (
-          <p className="text-dim">No hay ventas en los últimos 30 días.</p>
+          <p className="text-dim">{t.noRecentSales}</p>
         ) : (
           <div className="admin-list">
             {recentOrders.map((order: typeof recentOrders[0]) => (
@@ -264,7 +267,7 @@ export default async function AdminAnalyticsPage() {
                 <div>
                   <div><strong>{order.event.title}</strong></div>
                   <div className="text-dim" style={{ fontSize: '1rem' }}>
-                    {order.tickets.length} {order.tickets.length === 1 ? 'entrada' : 'entradas'} ·{' '}
+                    {order.tickets.length} {order.tickets.length === 1 ? t.ticketSingle : t.ticketPlural} ·{' '}
                     {new Date(order.createdAt).toLocaleDateString('es-ES', { day: 'numeric', month: 'short' })}
                   </div>
                 </div>
@@ -278,21 +281,21 @@ export default async function AdminAnalyticsPage() {
       {/* Summary footer */}
       <div className="analytics-summary">
         <div className="analytics-summary-item">
-          <span className="analytics-summary-label">Ticket medio</span>
+          <span className="analytics-summary-label">{t.avgTicket}</span>
           <span className="analytics-summary-value">
             {totalTickets > 0 ? `${(totalRevenue / totalTickets).toFixed(2)} €` : '—'}
           </span>
         </div>
         <div className="analytics-summary-item">
-          <span className="analytics-summary-label">Ingreso medio por evento</span>
+          <span className="analytics-summary-label">{t.avgRevenuePerEvent}</span>
           <span className="analytics-summary-value">{avgRevenuePerEvent.toLocaleString('es-ES')} €</span>
         </div>
         <div className="analytics-summary-item">
-          <span className="analytics-summary-label">Conversión check-in</span>
+          <span className="analytics-summary-label">{t.checkInConversion}</span>
           <span className="analytics-summary-value">{checkInRate}%</span>
         </div>
         <div className="analytics-summary-item">
-          <span className="analytics-summary-label">Órdenes pagadas</span>
+          <span className="analytics-summary-label">{t.paidOrders}</span>
           <span className="analytics-summary-value">{paidOrders.length}</span>
         </div>
       </div>

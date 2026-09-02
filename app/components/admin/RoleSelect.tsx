@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import type { Dictionary } from '@/lib/i18n/dictionaries'
 
 const roles = ['USER', 'STAFF', 'ADMIN'] as const
 
@@ -15,9 +16,11 @@ type User = {
 export default function RoleSelect({
   user,
   currentUserId,
+  dict,
 }: {
   user: User
   currentUserId: string
+  dict: Dictionary
 }) {
   const [role, setRole] = useState(user.role)
   const [saving, setSaving] = useState(false)
@@ -43,7 +46,7 @@ export default function RoleSelect({
 
       setRole(newRole)
     } catch {
-      setError('Error de conexión')
+      setError(dict.panel.common.connectionError)
     } finally {
       setSaving(false)
     }
@@ -67,10 +70,10 @@ export default function RoleSelect({
         ))}
       </select>
       {isSelf && (
-        <span className="role-self-badge">Tú</span>
+        <span className="role-self-badge">{dict.panel.common.you}</span>
       )}
       {error && <span className="role-error">{error}</span>}
-      {saving && <span className="role-saving">...</span>}
+      {saving && <span className="role-saving">{dict.panel.common.loading}</span>}
     </div>
   )
 }

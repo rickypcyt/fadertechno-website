@@ -7,14 +7,18 @@ import {
   sendWelcomeTestEmail,
   type WelcomeEmailConfig,
 } from '@/app/actions/welcome-email'
+import type { Dictionary } from '@/lib/i18n/dictionaries'
 
 export default function WelcomeEmailComposer({
   initialConfig,
   adminEmail,
+  dict,
 }: {
   initialConfig: WelcomeEmailConfig
   adminEmail: string
+  dict: Dictionary
 }) {
+  const t = dict.panel.newsletter
   const [subject, setSubject] = useState(initialConfig.subject)
   const [content, setContent] = useState(initialConfig.content)
   const [ctaText, setCtaText] = useState(initialConfig.ctaText)
@@ -74,7 +78,7 @@ export default function WelcomeEmailComposer({
       const result = await saveWelcomeEmailConfig(currentConfig)
       setSaveState({ loading: false, result })
     } catch {
-      setSaveState({ loading: false, result: { error: 'Error inesperado' } })
+      setSaveState({ loading: false, result: { error: dict.panel.common.unexpectedError } })
     }
   }
 
@@ -84,69 +88,69 @@ export default function WelcomeEmailComposer({
       const result = await sendWelcomeTestEmail(currentConfig)
       setTestState({ loading: false, result })
     } catch {
-      setTestState({ loading: false, result: { error: 'Error inesperado' } })
+      setTestState({ loading: false, result: { error: dict.panel.common.unexpectedError } })
     }
   }
 
   return (
     <div className="newsletter-composer">
       <div className="newsletter-composer-form">
-        <h2>Email de bienvenida</h2>
+        <h2>{t.welcomeEmail}</h2>
         <p className="text-dim" style={{ marginBottom: '20px' }}>
-          Se envía automáticamente cuando alguien se suscribe a la newsletter.
+          {t.welcomeAuto}
         </p>
 
         <label className="admin-form-label">
-          Asunto
+          {t.subject}
           <input
             type="text"
             value={subject}
             onChange={(e) => setSubject(e.target.value)}
-            placeholder="Asunto del email"
+            placeholder={t.subjectPlaceholder}
             className="admin-input"
           />
         </label>
 
         <label className="admin-form-label">
-          Imagen (URL)
+          {t.imageLabel}
           <input
             type="url"
             value={image}
             onChange={(e) => setImage(e.target.value)}
-            placeholder="https://... (opcional)"
+            placeholder={t.imagePlaceholder}
             className="admin-input"
           />
         </label>
 
         <label className="admin-form-label">
-          Contenido
+          {t.contentLabel}
           <textarea
             value={content}
             onChange={(e) => setContent(e.target.value)}
-            placeholder="Escribe el contenido del email..."
+            placeholder={t.welcomeContentPlaceholder}
             rows={8}
             className="admin-input admin-textarea"
           />
         </label>
 
         <label className="admin-form-label">
-          Texto del botón
+          {t.ctaTextLabel}
           <input
             type="text"
             value={ctaText}
             onChange={(e) => setCtaText(e.target.value)}
-            placeholder="Comprar entradas"
+            placeholder={t.ctaTextPlaceholder}
             className="admin-input"
           />
         </label>
 
         <label className="admin-form-label">
-          URL del botón (opcional)
+          {t.ctaUrlLabel}
           <input
             type="url"
             value={ctaUrl}
             onChange={(e) => setCtaUrl(e.target.value)}
-            placeholder="Vacío = próximo evento"
+            placeholder={t.ctaUrlPlaceholder}
             className="admin-input"
           />
         </label>
@@ -160,7 +164,7 @@ export default function WelcomeEmailComposer({
             }
             className="btn btn-ghost"
           >
-            {testState.loading ? 'Enviando...' : `Probar a ${adminEmail}`}
+            {testState.loading ? dict.panel.common.sending : t.testTo.replace('{email}', adminEmail)}
           </button>
           <button
             type="button"
@@ -173,13 +177,13 @@ export default function WelcomeEmailComposer({
             }
             className="nav-cta"
           >
-            {saveState.loading ? 'Guardando...' : 'Guardar configuración'}
+            {saveState.loading ? dict.panel.common.saving : t.saveConfig}
           </button>
         </div>
 
         {testState.result?.success && (
           <div className="newsletter-success show">
-            Email de prueba enviado a {adminEmail}
+            {t.testSent.replace('{email}', adminEmail)}
           </div>
         )}
         {testState.result?.error && (
@@ -187,7 +191,7 @@ export default function WelcomeEmailComposer({
         )}
         {saveState.result?.success && (
           <div className="newsletter-success show">
-            Configuración guardada.
+            {t.configSaved}
           </div>
         )}
         {saveState.result?.error && (
@@ -197,10 +201,10 @@ export default function WelcomeEmailComposer({
 
       <div className="newsletter-preview">
         <div className="newsletter-preview-header">
-          <h3>Preview en vivo</h3>
+          <h3>{t.livePreview}</h3>
           {previewLoading && (
             <span className="text-dim" style={{ fontSize: '1rem' }}>
-              actualizando...
+              {t.updating}
             </span>
           )}
         </div>
@@ -227,7 +231,7 @@ export default function WelcomeEmailComposer({
                 textAlign: 'center',
               }}
             >
-              Escribe un asunto y contenido para ver el preview
+              {t.previewEmpty}
             </div>
           )}
         </div>

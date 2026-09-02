@@ -2,6 +2,7 @@
 
 import { QRCodeSVG } from 'qrcode.react'
 import { useState } from 'react'
+import type { Dictionary } from '@/lib/i18n/dictionaries'
 
 type Props = {
   code: string
@@ -9,10 +10,12 @@ type Props = {
   ticketType: string
   eventDate: string
   venue: string
+  dict: Dictionary
 }
 
-export default function TicketQR({ code, eventTitle, ticketType, eventDate, venue }: Props) {
+export default function TicketQR({ code, eventTitle, ticketType, eventDate, venue, dict }: Props) {
   const [showQR, setShowQR] = useState(false)
+  const t = dict.panel.userTickets
 
   const verifyUrl = `${typeof window !== 'undefined' ? window.location.origin : ''}/staff/verify?code=${code}`
 
@@ -22,20 +25,20 @@ export default function TicketQR({ code, eventTitle, ticketType, eventDate, venu
 
       <div className="ticket-card-header">
         <div className="ticket-card-event">{eventTitle}</div>
-        <span className="ticket-badge">VÁLIDA</span>
+        <span className="ticket-badge">{t.valid}</span>
       </div>
 
       <div className="ticket-card-meta">
         <div className="ticket-meta-row">
-          <span className="ticket-meta-label">Tipo</span>
+          <span className="ticket-meta-label">{t.type}</span>
           <span className="ticket-meta-value">{ticketType}</span>
         </div>
         <div className="ticket-meta-row">
-          <span className="ticket-meta-label">Fecha</span>
+          <span className="ticket-meta-label">{t.date}</span>
           <span className="ticket-meta-value">{eventDate}</span>
         </div>
         <div className="ticket-meta-row">
-          <span className="ticket-meta-label">Sala</span>
+          <span className="ticket-meta-label">{t.venue}</span>
           <span className="ticket-meta-value">{venue}</span>
         </div>
       </div>
@@ -50,7 +53,7 @@ export default function TicketQR({ code, eventTitle, ticketType, eventDate, venu
           onClick={() => setShowQR((v) => !v)}
           aria-expanded={showQR}
         >
-          {showQR ? '✕ Cerrar' : '⬡ Mostrar QR'}
+          {showQR ? t.hideQR : t.showQR}
         </button>
       </div>
 
@@ -70,7 +73,7 @@ export default function TicketQR({ code, eventTitle, ticketType, eventDate, venu
             <div className="ticket-qr-corner ticket-qr-corner-bl" />
             <div className="ticket-qr-corner ticket-qr-corner-br" />
           </div>
-          <p className="ticket-qr-hint">Muestra este código en la entrada</p>
+          <p className="ticket-qr-hint">{t.qrHint}</p>
         </div>
       )}
     </div>

@@ -1,13 +1,8 @@
 import { Role } from '@/lib/roles'
+import type { Dictionary } from '@/lib/i18n/dictionaries'
 
-const GREETINGS: Record<string, string> = {
-  USER: 'Bienvenido a FADER',
-  STAFF: 'Listo para el club',
-  ADMIN: 'Control del club',
-}
-
-export function getGreeting(role: Role, name: string | null): string {
-  const base = GREETINGS[role] ?? GREETINGS.USER
+export function getGreeting(role: Role, name: string | null, dict: Dictionary): string {
+  const base = dict.panel.greeting[role] ?? dict.panel.greeting.USER
   return name ? `${base}, ${name}` : base
 }
 

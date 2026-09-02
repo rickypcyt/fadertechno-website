@@ -1,8 +1,11 @@
 import prisma from '@/lib/prisma'
 import { getCurrentUser } from '@/lib/auth'
+import { getDictionary, defaultLocale } from '@/lib/i18n/dictionaries'
 
 export default async function EventsPage() {
   const user = await getCurrentUser()
+  const dict = await getDictionary(defaultLocale)
+  const t = dict.panel.userEvents
 
   const events = await prisma.event.findMany({
     where: {
@@ -30,13 +33,13 @@ export default async function EventsPage() {
 
   return (
     <div>
-      <h1>Eventos</h1>
-      <p className="text-dim">Próximos eventos disponibles</p>
+      <h1>{t.title}</h1>
+      <p className="text-dim">{t.subtitle}</p>
 
       <div className="admin-grid" style={{ marginTop: '32px' }}>
         {events.length === 0 ? (
           <div className="admin-card">
-            <p className="text-dim">Por el momento no hay eventos disponibles.</p>
+            <p className="text-dim">{t.empty}</p>
           </div>
         ) : (
           events.map((event) => {
@@ -57,11 +60,11 @@ export default async function EventsPage() {
                 )}
                 <div className="admin-card-meta">
                   {hasTicket ? (
-                    <span className="admin-badge">Comprado</span>
+                    <span className="admin-badge">{t.bought}</span>
                   ) : (
                     <>
-                      <span className="admin-badge">desde {minPrice}€</span>
-                      <a href={`/evento/${event.slug}`} className="nav-cta">Comprar</a>
+                      <span className="admin-badge">{t.from.replace('{price}', String(minPrice))}</span>
+                      <a href={`/evento/${event.slug}`} className="nav-cta">{t.buy}</a>
                     </>
                   )}
                 </div>

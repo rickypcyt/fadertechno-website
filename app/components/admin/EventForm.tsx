@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import type { Dictionary } from '@/lib/i18n/dictionaries'
 
 type TicketTypeInput = {
   name: string
@@ -8,7 +9,8 @@ type TicketTypeInput = {
   stock: string
 }
 
-export default function EventForm() {
+export default function EventForm({ dict }: { dict: Dictionary }) {
+  const t = dict.panel.events
   const [open, setOpen] = useState(false)
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
@@ -57,7 +59,7 @@ export default function EventForm() {
 
     const validTickets = ticketTypes.filter((tt) => tt.name && tt.price)
     if (validTickets.length === 0) {
-      setError('Añade al menos un tipo de entrada con nombre y precio')
+      setError(t.errorNoTickets)
       setLoading(false)
       return
     }
@@ -85,12 +87,12 @@ export default function EventForm() {
       const data = await res.json()
 
       if (!res.ok) {
-        setError(data.error ?? 'Error al crear evento')
+        setError(data.error ?? t.errorCreate)
         setLoading(false)
         return
       }
 
-      setSuccess('Evento creado correctamente')
+      setSuccess(t.success)
       reset()
       setTimeout(() => {
         setOpen(false)
@@ -98,7 +100,7 @@ export default function EventForm() {
         window.location.reload()
       }, 1500)
     } catch {
-      setError('Error de conexión')
+      setError(dict.panel.common.connectionError)
       setLoading(false)
     }
   }
@@ -110,7 +112,7 @@ export default function EventForm() {
         className="admin-create-btn"
         onClick={() => setOpen(true)}
       >
-        + Crear evento
+        + {t.create}
       </button>
     )
   }
@@ -119,7 +121,7 @@ export default function EventForm() {
     <div className="event-form-overlay" onClick={() => setOpen(false)}>
       <div className="event-form-modal" onClick={(e) => e.stopPropagation()}>
         <div className="event-form-header">
-          <h2>Nuevo evento</h2>
+          <h2>{t.newEvent}</h2>
           <button
             type="button"
             className="event-form-close"
@@ -131,22 +133,22 @@ export default function EventForm() {
 
         <form onSubmit={handleSubmit} className="event-form-body">
           <div className="form-field">
-            <label>Título *</label>
+            <label>{t.titleLabel}</label>
             <input
               type="text"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              placeholder="Ej: FADER Night Vol. 5"
+              placeholder={t.titlePlaceholder}
               required
             />
           </div>
 
           <div className="form-field">
-            <label>Descripción *</label>
+            <label>{t.descriptionLabel}</label>
             <textarea
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              placeholder="Describe el evento..."
+              placeholder={t.descriptionPlaceholder}
               rows={4}
               required
             />
@@ -154,7 +156,7 @@ export default function EventForm() {
 
           <div className="form-row">
             <div className="form-field">
-              <label>Fecha de inicio *</label>
+              <label>{t.startLabel}</label>
               <input
                 type="datetime-local"
                 value={startDate}
@@ -163,7 +165,7 @@ export default function EventForm() {
               />
             </div>
             <div className="form-field">
-              <label>Fecha de fin</label>
+              <label>{t.endLabel}</label>
               <input
                 type="datetime-local"
                 value={endDate}
@@ -174,17 +176,17 @@ export default function EventForm() {
 
           <div className="form-row">
             <div className="form-field">
-              <label>Sala *</label>
+              <label>{t.venueLabel}</label>
               <input
                 type="text"
                 value={venueName}
                 onChange={(e) => setVenueName(e.target.value)}
-                placeholder="Ej: Sala Apolo"
+                placeholder={t.venuePlaceholder}
                 required
               />
             </div>
             <div className="form-field">
-              <label>URL del cartel</label>
+              <label>{t.coverLabel}</label>
               <input
                 type="url"
                 value={coverUrl}
@@ -196,13 +198,13 @@ export default function EventForm() {
 
           <div className="event-form-section">
             <div className="event-form-section-header">
-              <label>Tipos de entrada</label>
+              <label>{t.ticketTypesLabel}</label>
               <button
                 type="button"
                 className="event-form-add-btn"
                 onClick={addTicketType}
               >
-                + Añadir
+                {t.add}
               </button>
             </div>
 
@@ -210,20 +212,20 @@ export default function EventForm() {
               <div key={idx} className="ticket-type-row">
                 <input
                   type="text"
-                  placeholder="Nombre (Ej: Early Bird)"
+                  placeholder={t.ticketNamePlaceholder}
                   value={tt.name}
                   onChange={(e) => updateTicketType(idx, 'name', e.target.value)}
                 />
                 <input
                   type="number"
                   step="0.01"
-                  placeholder="Precio €"
+                  placeholder={t.ticketPricePlaceholder}
                   value={tt.price}
                   onChange={(e) => updateTicketType(idx, 'price', e.target.value)}
                 />
                 <input
                   type="number"
-                  placeholder="Stock"
+                  placeholder={t.ticketStockPlaceholder}
                   value={tt.stock}
                   onChange={(e) => updateTicketType(idx, 'stock', e.target.value)}
                 />
@@ -246,7 +248,7 @@ export default function EventForm() {
               checked={published}
               onChange={(e) => setPublished(e.target.checked)}
             />
-            <span>Publicar evento (visible para los usuarios)</span>
+            <span>{t.publishLabel}</span>
           </label>
 
           {error && <p className="auth-error">{error}</p>}
@@ -258,14 +260,14 @@ export default function EventForm() {
               className="btn btn-ghost"
               onClick={() => setOpen(false)}
             >
-              Cancelar
+              {dict.panel.common.cancel}
             </button>
             <button
               type="submit"
               className="event-form-submit"
               disabled={loading}
             >
-              {loading ? 'Creando...' : 'Crear evento'}
+              {loading ? dict.panel.common.creating : t.createSubmit}
             </button>
           </div>
         </form>

@@ -1,4 +1,5 @@
 import Nav from '../components/Nav'
+import Marquee from '../components/layout/Marquee'
 import Hero from '../sections/Hero'
 import Manifesto from '../sections/Manifesto'
 import Sessions from '../sections/Sessions'
@@ -8,7 +9,6 @@ import Archive from '../sections/Archive'
 import Editorial from '../sections/Editorial'
 import Socials from '../sections/Socials'
 import Footer from '../sections/Footer'
-import Marquee from '../components/layout/Marquee'
 import prisma from '@/lib/prisma'
 import { getDictionary, hasLocale, type Locale } from '@/lib/i18n/dictionaries'
 import { notFound } from 'next/navigation'
@@ -82,6 +82,16 @@ export default async function Home({
       ))}
       <Nav dict={dict} />
       <main className="public-page">
+        <div
+          style={{
+            position: 'relative',
+            marginTop: '140px',
+            height: 'clamp(3rem, 8vw, 6rem)',
+            overflow: 'hidden',
+          }}
+        >
+          <Marquee items={['FADER', 'MUSIC', 'CLUB']} speed={50} opacity={0.4} />
+        </div>
         <Hero dict={dict} />
         <Manifesto dict={dict} />
         <Sessions dict={dict} lang={lang} />
@@ -91,13 +101,6 @@ export default async function Home({
         <Editorial dict={dict} />
         <Socials dict={dict} />
       </main>
-      <div style={{ position: 'relative', overflow: 'hidden', height: '160px', borderTop: '1px solid var(--border)', borderBottom: '1px solid var(--border)' }}>
-        <Marquee
-          items={['FADER', 'MUSIC', 'CLUB']}
-          speed={50}
-          opacity={0.4}
-        />
-      </div>
       <Footer dict={dict} />
     </>
   )

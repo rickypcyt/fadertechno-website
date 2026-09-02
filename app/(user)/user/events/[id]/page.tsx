@@ -80,18 +80,18 @@ export default async function EventDetailPage({
 
       {hasTicket && (
         <div className="admin-card" style={{ marginTop: '32px' }}>
-          <div className="admin-card-label">Ya tienes entrada</div>
+          <div className="admin-card-label">{dict.panel.userTickets.hasTicket}</div>
           <div className="admin-card-value">
-            {userTickets.length} {userTickets.length === 1 ? 'entrada' : 'entradas'}
+            {userTickets.length} {userTickets.length === 1 ? dict.panel.userTickets.ticketSingle : dict.panel.userTickets.ticketPlural}
           </div>
           <a href="/user/tickets" className="admin-card-link">
-            Ver mis entradas →
+            {dict.panel.userTickets.viewTickets}
           </a>
         </div>
       )}
 
       <h2 style={{ fontSize: '1.1rem', marginTop: '40px', marginBottom: '16px' }}>
-        Entradas
+        {dict.panel.userTickets.ticketsSection}
       </h2>
 
       <TicketSelector

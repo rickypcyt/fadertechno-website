@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useRef, useCallback, useEffect } from 'react'
+import type { Dictionary } from '@/lib/i18n/dictionaries'
 
 type TicketInfo = {
   id: string
@@ -20,7 +21,8 @@ type VerifyResult = {
   message: string
 }
 
-export default function VerifyClient() {
+export default function VerifyClient({ dict }: { dict: Dictionary }) {
+  const t = dict.panel.verify
   const [code, setCode] = useState('')
   const [result, setResult] = useState<VerifyResult | null>(null)
   const [loading, setLoading] = useState(false)
@@ -44,7 +46,7 @@ export default function VerifyClient() {
       setResult(data)
       setRecentChecks((prev) => [data, ...prev].slice(0, 5))
     } catch {
-      setResult({ status: 'error', message: 'Error de conexión' })
+      setResult({ status: 'error', message: dict.panel.common.connectionError })
     } finally {
       setLoading(false)
     }
@@ -64,7 +66,7 @@ export default function VerifyClient() {
         scanFrame()
       }
     } catch {
-      setResult({ status: 'error', message: 'No se pudo acceder a la cámara' })
+      setResult({ status: 'error', message: t.cameraError })
       setScanning(false)
     }
   }, [])
@@ -126,24 +128,24 @@ export default function VerifyClient() {
 
   return (
     <div className="verify-page">
-      <h1>Validar entrada</h1>
-      <p className="text-dim">Escanea el QR o introduce el código manualmente</p>
+      <h1>{t.title}</h1>
+      <p className="text-dim">{t.subtitle}</p>
 
       <div className="verify-stats">
         <div className="verify-stat-card verify-stat-valid">
           <div className="verify-stat-icon">✓</div>
           <div className="verify-stat-num">{stats.valid}</div>
-          <div className="verify-stat-label">Válidas</div>
+          <div className="verify-stat-label">{t.valid}</div>
         </div>
         <div className="verify-stat-card verify-stat-warn">
           <div className="verify-stat-icon">⚠</div>
           <div className="verify-stat-num">{stats.already}</div>
-          <div className="verify-stat-label">Repetidas</div>
+          <div className="verify-stat-label">{t.repeated}</div>
         </div>
         <div className="verify-stat-card verify-stat-err">
           <div className="verify-stat-icon">✗</div>
           <div className="verify-stat-num">{stats.errors}</div>
-          <div className="verify-stat-label">Errores</div>
+          <div className="verify-stat-label">{t.errors}</div>
         </div>
       </div>
 
@@ -155,7 +157,7 @@ export default function VerifyClient() {
             onClick={startCamera}
           >
             <span className="verify-camera-icon">⬡</span>
-            Abrir cámara
+            {t.openCamera}
           </button>
         ) : (
           <div className="verify-camera-wrap">
@@ -174,14 +176,14 @@ export default function VerifyClient() {
               className="verify-stop-btn"
               onClick={stopCamera}
             >
-              ✕ Cerrar cámara
+              {t.closeCamera}
             </button>
           </div>
         )}
       </div>
 
       <div className="verify-divider">
-        <span>o introduce el código</span>
+        <span>{t.orCode}</span>
       </div>
 
       <form
@@ -200,7 +202,7 @@ export default function VerifyClient() {
           className="verify-submit-btn"
           disabled={loading || !code.trim()}
         >
-          {loading ? <span className="verify-spinner" /> : 'Validar'}
+          {loading ? <span className="verify-spinner" /> : t.validate}
         </button>
       </form>
 
@@ -215,7 +217,7 @@ export default function VerifyClient() {
           <div className="verify-result-body">
             {result.status === 'valid' && (
               <>
-                <div className="verify-result-title">Entrada válida</div>
+                <div className="verify-result-title">{t.validTitle}</div>
                 {result.ticket && (
                   <>
                     <div className="verify-result-sub">{result.ticket.ticketType.name}</div>
@@ -229,21 +231,21 @@ export default function VerifyClient() {
             )}
             {result.status === 'already' && (
               <>
-                <div className="verify-result-title">Entrada ya usada</div>
+                <div className="verify-result-title">{t.alreadyTitle}</div>
                 {result.ticket && (
                   <>
                     <div className="verify-result-meta">
                       {result.ticket.order.user.name ?? result.ticket.order.user.email}
                     </div>
                     <div className="verify-result-time">
-                      Validada: {result.ticket.checkedInAt && new Date(result.ticket.checkedInAt).toLocaleTimeString('es-ES')}
+                      {t.validatedAt.replace('{time}', result.ticket.checkedInAt ? new Date(result.ticket.checkedInAt).toLocaleTimeString('es-ES') : '')}
                     </div>
                   </>
                 )}
               </>
             )}
             {result.status === 'not_found' && (
-              <div className="verify-result-title">Código no encontrado</div>
+              <div className="verify-result-title">{t.notFoundTitle}</div>
             )}
             {result.status === 'error' && (
               <div className="verify-result-title">{result.message}</div>
@@ -254,7 +256,7 @@ export default function VerifyClient() {
 
       {recentChecks.length > 0 && (
         <div className="verify-recent">
-          <h3 className="verify-recent-title">Validaciones recientes</h3>
+          <h3 className="verify-recent-title">{t.recent}</h3>
           <div className="verify-recent-list">
             {recentChecks.map((check, i) => (
               <div key={i} className={`verify-recent-item verify-recent-${check.status}`}>

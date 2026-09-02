@@ -1,10 +1,13 @@
 import prisma from '@/lib/prisma'
 import { requireRole } from '@/lib/permissions'
 import { Role } from '@/lib/roles'
+import { getDictionary, defaultLocale } from '@/lib/i18n/dictionaries'
 import ProfileForm from '@/app/components/user/ProfileForm'
 
 export default async function UserProfilePage() {
   const user = await requireRole(Role.USER)
+  const dict = await getDictionary(defaultLocale)
+  const t = dict.panel.profile
 
   const dbUser = await prisma.user.findUnique({
     where: { id: user.id },
@@ -15,8 +18,8 @@ export default async function UserProfilePage() {
 
   return (
     <div>
-      <h1>Perfil</h1>
-      <p className="text-dim">Edita tu información personal</p>
+      <h1>{t.title}</h1>
+      <p className="text-dim">{t.subtitle}</p>
 
       <div className="admin-card" style={{ marginTop: '32px', maxWidth: '480px' }}>
         <ProfileForm
@@ -27,6 +30,7 @@ export default async function UserProfilePage() {
             role: dbUser.role,
             createdAt: dbUser.createdAt.toISOString(),
           }}
+          dict={dict}
         />
       </div>
     </div>

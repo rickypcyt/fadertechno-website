@@ -3,6 +3,8 @@ import { getCurrentUser } from '@/lib/auth'
 import { roleHierarchy } from '@/lib/roles'
 import SidePanel from '@/app/components/SidePanel'
 import AdminBackBar from '@/app/components/admin/AdminBackBar'
+import { I18nProvider } from '@/lib/i18n/I18nProvider'
+import { getDictionary, defaultLocale } from '@/lib/i18n/dictionaries'
 import '../globals.css'
 import QueryProvider from '../components/QueryProvider'
 
@@ -18,23 +20,26 @@ export default async function AdminLayout({
   }
 
   const isAdmin = (roleHierarchy[user.role] ?? 0) >= roleHierarchy['ADMIN']
+  const dict = await getDictionary(defaultLocale)
 
   return (
     <QueryProvider>
-      {isAdmin ? (
-        <div className="admin-shell">
-          <SidePanel userRole={user.role} />
-          <main className="admin-main">
-            <AdminBackBar role={user.role} />
-            {children}
-          </main>
-        </div>
-      ) : (
-        <div className="admin-unauthorized">
-          <h1>403</h1>
-          <p>No tienes permisos para acceder al panel.</p>
-        </div>
-      )}
+      <I18nProvider dict={dict}>
+        {isAdmin ? (
+          <div className="admin-shell">
+            <SidePanel userRole={user.role} />
+            <main className="admin-main">
+              <AdminBackBar role={user.role} />
+              {children}
+            </main>
+          </div>
+        ) : (
+          <div className="admin-unauthorized">
+            <h1>{dict.panel.unauthorized.title}</h1>
+            <p>{dict.panel.unauthorized.admin}</p>
+          </div>
+        )}
+      </I18nProvider>
     </QueryProvider>
   )
 }

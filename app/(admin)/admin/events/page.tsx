@@ -1,10 +1,13 @@
 import prisma from '@/lib/prisma'
 import { requireRole } from '@/lib/permissions'
+import { getDictionary, defaultLocale } from '@/lib/i18n/dictionaries'
 import EventForm from '@/app/components/admin/EventForm'
 import EventPublishToggle from '@/app/components/admin/EventPublishToggle'
 
 export default async function AdminEventsPage() {
   await requireRole('ADMIN')
+  const dict = await getDictionary(defaultLocale)
+  const t = dict.panel.events
 
   const events = await prisma.event.findMany({
     include: {
@@ -14,19 +17,25 @@ export default async function AdminEventsPage() {
     orderBy: { startDate: 'desc' },
   })
 
+  const publishedCount = events.filter((e: typeof events[0]) => e.published).length
+
   return (
     <div className="admin-page">
       <div className="admin-page-header">
         <div>
-          <h1>Eventos</h1>
-          <p className="text-dim">{events.length} eventos · {events.filter((e: typeof events[0]) => e.published).length} publicados</p>
+          <h1>{t.title}</h1>
+          <p className="text-dim">
+            {t.countPublished
+              .replace('{count}', String(events.length))
+              .replace('{published}', String(publishedCount))}
+          </p>
         </div>
-        <EventForm />
+        <EventForm dict={dict} />
       </div>
 
       <div className="event-cards" style={{ marginTop: '24px' }}>
         {events.length === 0 ? (
-          <p className="text-dim">No hay eventos creados. Crea el primero con el botón de arriba.</p>
+          <p className="text-dim">{t.empty}</p>
         ) : (
           events.map((event: typeof events[0]) => {
             const sold = event.ticketTypes.reduce(
@@ -44,9 +53,9 @@ export default async function AdminEventsPage() {
                 <div className="event-card-header">
                   <div className="event-card-title">
                     <strong>{event.title}</strong>
-                    {isPast && <span className="event-card-tag">Pasado</span>}
+                    {isPast && <span className="event-card-tag">{t.past}</span>}
                   </div>
-                  <EventPublishToggle eventId={event.id} published={event.published} />
+                  <EventPublishToggle eventId={event.id} published={event.published} dict={dict} />
                 </div>
                 <div className="event-card-meta">
                   <span>
@@ -63,15 +72,15 @@ export default async function AdminEventsPage() {
                 </div>
                 <div className="event-card-stats">
                   <div className="event-card-stat">
-                    <span className="event-card-stat-label">Vendidas</span>
+                    <span className="event-card-stat-label">{t.sold}</span>
                     <span className="event-card-stat-value">{sold} / {totalStock}</span>
                   </div>
                   <div className="event-card-stat">
-                    <span className="event-card-stat-label">Tipos</span>
+                    <span className="event-card-stat-label">{t.types}</span>
                     <span className="event-card-stat-value">{event.ticketTypes.length}</span>
                   </div>
                   <div className="event-card-stat">
-                    <span className="event-card-stat-label">Ocupación</span>
+                    <span className="event-card-stat-label">{t.occupancy}</span>
                     <span className="event-card-stat-value">{fillPct}%</span>
                   </div>
                 </div>

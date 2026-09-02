@@ -6,14 +6,18 @@ import {
   sendNewsletter,
   sendTestEmail,
 } from '@/app/actions/newsletter'
+import type { Dictionary } from '@/lib/i18n/dictionaries'
 
 export default function NewsletterComposer({
   subscriberCount,
   adminEmail,
+  dict,
 }: {
   subscriberCount: number
   adminEmail: string
+  dict: Dictionary
 }) {
+  const t = dict.panel.newsletter
   const [subject, setSubject] = useState('')
   const [content, setContent] = useState('')
   const [image, setImage] = useState('')
@@ -68,7 +72,7 @@ export default function NewsletterComposer({
         setPreviewHtml('')
       }
     } catch {
-      setSendState({ loading: false, result: { error: 'Error inesperado' } })
+      setSendState({ loading: false, result: { error: dict.panel.common.unexpectedError } })
     }
   }
 
@@ -78,43 +82,43 @@ export default function NewsletterComposer({
       const result = await sendTestEmail(subject, content, image || undefined)
       setTestState({ loading: false, result })
     } catch {
-      setTestState({ loading: false, result: { error: 'Error inesperado' } })
+      setTestState({ loading: false, result: { error: dict.panel.common.unexpectedError } })
     }
   }
 
   return (
     <div className="newsletter-composer">
       <div className="newsletter-composer-form">
-        <h2>Componer newsletter</h2>
+        <h2>{t.compose}</h2>
 
         <label className="admin-form-label">
-          Asunto
+          {t.subject}
           <input
             type="text"
             value={subject}
             onChange={(e) => setSubject(e.target.value)}
-            placeholder="Asunto del email"
+            placeholder={t.subjectPlaceholder}
             className="admin-input"
           />
         </label>
 
         <label className="admin-form-label">
-          Imagen (URL)
+          {t.imageLabel}
           <input
             type="url"
             value={image}
             onChange={(e) => setImage(e.target.value)}
-            placeholder="https://... (opcional)"
+            placeholder={t.imagePlaceholder}
             className="admin-input"
           />
         </label>
 
         <label className="admin-form-label">
-          Contenido
+          {t.contentLabel}
           <textarea
             value={content}
             onChange={(e) => setContent(e.target.value)}
-            placeholder="Escribe el contenido del newsletter..."
+            placeholder={t.contentPlaceholder}
             rows={12}
             className="admin-input admin-textarea"
           />
@@ -127,7 +131,7 @@ export default function NewsletterComposer({
             disabled={testState.loading || !subject.trim() || !content.trim()}
             className="btn btn-ghost"
           >
-            {testState.loading ? 'Enviando...' : `Probar a ${adminEmail}`}
+            {testState.loading ? dict.panel.common.sending : t.testTo.replace('{email}', adminEmail)}
           </button>
           <button
             type="button"
@@ -136,14 +140,14 @@ export default function NewsletterComposer({
             className="nav-cta"
           >
             {sendState.loading
-              ? 'Enviando...'
-              : `Enviar a ${subscriberCount} suscriptores`}
+              ? dict.panel.common.sending
+              : t.sendTo.replace('{count}', String(subscriberCount))}
           </button>
         </div>
 
         {testState.result?.success && (
           <div className="newsletter-success show">
-            Email de prueba enviado a {adminEmail}
+            {t.testSent.replace('{email}', adminEmail)}
           </div>
         )}
         {testState.result?.error && (
@@ -151,7 +155,7 @@ export default function NewsletterComposer({
         )}
         {sendState.result?.success && (
           <div className="newsletter-success show">
-            Newsletter enviado a {sendState.result.sent} suscriptores.
+            {t.sent.replace('{count}', String(sendState.result.sent))}
           </div>
         )}
         {sendState.result?.error && (
@@ -161,10 +165,10 @@ export default function NewsletterComposer({
 
       <div className="newsletter-preview">
         <div className="newsletter-preview-header">
-          <h3>Preview en vivo</h3>
+          <h3>{t.livePreview}</h3>
           {previewLoading && (
             <span className="text-dim" style={{ fontSize: '1rem' }}>
-              actualizando...
+              {t.updating}
             </span>
           )}
         </div>
@@ -191,7 +195,7 @@ export default function NewsletterComposer({
                 textAlign: 'center',
               }}
             >
-              Escribe un asunto y contenido para ver el preview
+              {t.previewEmpty}
             </div>
           )}
         </div>

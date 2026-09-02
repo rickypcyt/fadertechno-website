@@ -1,9 +1,12 @@
 import prisma from '@/lib/prisma'
 import { requireRole } from '@/lib/permissions'
 import { Role } from '@/lib/roles'
+import { getDictionary, defaultLocale } from '@/lib/i18n/dictionaries'
 
 export default async function UserRewardsPage() {
   const user = await requireRole(Role.USER)
+  const dict = await getDictionary(defaultLocale)
+  const t = dict.panel.userRewards
 
   const transactions = await prisma.creditTransaction.findMany({
     where: { userId: user.id },
@@ -19,19 +22,19 @@ export default async function UserRewardsPage() {
 
   return (
     <div className="admin-page">
-      <h1 style={{ fontSize: '1.3rem' }}>Canjear puntos</h1>
-      <p className="text-dim">Gasta tus créditos en recompensas</p>
+      <h1 style={{ fontSize: '1.3rem' }}>{t.title}</h1>
+      <p className="text-dim">{t.subtitle}</p>
 
       <div className="admin-card" style={{ marginTop: '32px', marginBottom: '32px' }}>
-        <div className="admin-card-label">Saldo disponible</div>
-        <div className="admin-card-value">{creditBalance} créditos</div>
+        <div className="admin-card-label">{t.balance}</div>
+        <div className="admin-card-value">{creditBalance} {dict.panel.common.credits}</div>
       </div>
 
       <h2 style={{ fontSize: '1.1rem', marginBottom: '16px' }}>
-        Recompensas disponibles
+        {t.available}
       </h2>
       {rewards.length === 0 ? (
-        <p className="text-dim">No hay recompensas disponibles ahora mismo.</p>
+        <p className="text-dim">{t.empty}</p>
       ) : (
         <div className="admin-list">
           {rewards.map((reward: typeof rewards[0]) => {
@@ -50,18 +53,21 @@ export default async function UserRewardsPage() {
                     </div>
                   )}
                   <div className="text-dim" style={{ fontSize: '1rem' }}>
-                    Coste: {reward.cost} créditos
-                    {reward.stock !== null && ` · Stock: ${reward.stock}`}
+                    {reward.stock !== null
+                      ? t.costStockLabel
+                          .replace('{cost}', String(reward.cost))
+                          .replace('{stock}', String(reward.stock))
+                      : t.costLabel.replace('{cost}', String(reward.cost))}
                   </div>
                 </div>
                 <div className="admin-actions">
                   {outOfStock ? (
-                    <span className="admin-badge muted">Agotado</span>
+                    <span className="admin-badge muted">{t.soldOut}</span>
                   ) : canAfford ? (
-                    <button className="nav-cta">Canjear</button>
+                    <button className="nav-cta">{t.redeem}</button>
                   ) : (
                     <span className="admin-badge muted">
-                      Faltan {reward.cost - creditBalance}
+                      {t.missing.replace('{amount}', String(reward.cost - creditBalance))}
                     </span>
                   )}
                 </div>
@@ -72,10 +78,10 @@ export default async function UserRewardsPage() {
       )}
 
       <h2 style={{ fontSize: '1.1rem', marginTop: '40px', marginBottom: '16px' }}>
-        Historial de puntos
+        {t.history}
       </h2>
       {transactions.length === 0 ? (
-        <p className="text-dim">Sin movimientos todavía.</p>
+        <p className="text-dim">{t.noHistory}</p>
       ) : (
         <div className="admin-list">
           {transactions.map((tx: typeof transactions[0]) => (

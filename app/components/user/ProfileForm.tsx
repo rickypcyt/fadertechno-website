@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { updateProfile } from '@/app/actions/update-profile'
+import type { Dictionary } from '@/lib/i18n/dictionaries'
 
 interface ProfileFormProps {
   user: {
@@ -11,9 +12,11 @@ interface ProfileFormProps {
     role: string
     createdAt: string
   }
+  dict: Dictionary
 }
 
-export default function ProfileForm({ user }: ProfileFormProps) {
+export default function ProfileForm({ user, dict }: ProfileFormProps) {
+  const t = dict.panel.profile
   const [name, setName] = useState(user.name)
   const [saved, setSaved] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -34,27 +37,27 @@ export default function ProfileForm({ user }: ProfileFormProps) {
   return (
     <form onSubmit={handleSubmit} className="auth-form">
       <div className="form-field">
-        <label>Nombre</label>
+        <label>{t.name}</label>
         <input
           type="text"
           value={name}
           onChange={(e) => setName(e.target.value)}
-          placeholder="Tu nombre"
+          placeholder={t.namePlaceholder}
         />
       </div>
 
       <div className="form-field">
-        <label>Email</label>
+        <label>{t.email}</label>
         <input type="email" value={user.email} disabled />
       </div>
 
       <div className="form-field">
-        <label>Rol</label>
+        <label>{t.role}</label>
         <input type="text" value={user.role} disabled />
       </div>
 
       <div className="form-field">
-        <label>Miembro desde</label>
+        <label>{t.memberSince}</label>
         <input
           type="text"
           value={new Date(user.createdAt).toLocaleDateString('es-ES')}
@@ -63,10 +66,10 @@ export default function ProfileForm({ user }: ProfileFormProps) {
       </div>
 
       {error && <p className="auth-error">{error}</p>}
-      {saved && <p style={{ color: 'var(--accent)' }}>Guardado correctamente.</p>}
+      {saved && <p style={{ color: 'var(--accent)' }}>{t.saved}</p>}
 
       <button type="submit" className="nav-cta">
-        Guardar cambios
+        {t.saveChanges}
       </button>
     </form>
   )

@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import type { NavItem } from '@/lib/nav'
 import type { Role } from '@/lib/roles'
+import type { Dictionary } from '@/lib/i18n/dictionaries'
 import SignOutButton from '@/app/components/admin/SignOutButton'
 import BackToDashboard from '@/app/components/admin/BackToDashboard'
 
@@ -10,11 +11,13 @@ type Props = {
   subtitle?: string
   profileHref?: string
   role: Role
+  dict: Dictionary
 }
 
 export default function AppHome({
   apps,
   role,
+  dict,
 }: Props) {
   return (
     <div className="app-home">
@@ -26,6 +29,7 @@ export default function AppHome({
       <section className="app-home-grid">
         {apps.map((app) => {
           const Icon = app.icon
+          const label = dict.panel.nav[app.labelKey as keyof typeof dict.panel.nav] ?? app.label
           return (
             <Link
               key={app.href}
@@ -35,7 +39,7 @@ export default function AppHome({
               <span className="app-home-icon">
                 <Icon size={32} strokeWidth={1.8} />
               </span>
-              <span className="app-home-label">{app.label}</span>
+              <span className="app-home-label">{label}</span>
             </Link>
           )
         })}
