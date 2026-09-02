@@ -13,12 +13,12 @@ export default async function StaffDashboard() {
     .filter((g) => g.group === 'user' || g.group === 'staff')
     .flatMap((g) => g.items)
     .filter((a) => a.href !== '/staff/dashboard' && a.href !== '/user/dashboard')
+    .sort((a, b) => a.label.localeCompare(b.label, 'es'))
 
   return (
     <AppHome
       apps={staffApps}
-      greeting={getGreeting(user.role, user.name)}
-      subtitle={getFaderSubtitle()}
+      role={user.role}
     />
   )
 }

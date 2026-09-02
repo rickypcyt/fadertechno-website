@@ -29,6 +29,7 @@ export default function BackToDashboard({ role }: Props) {
   return (
     <Link href={href} className="back-dashboard" aria-label={label}>
       <Icon size={20} strokeWidth={2} />
+      <span>{label}</span>
     </Link>
   )
 }

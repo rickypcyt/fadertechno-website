@@ -2,7 +2,7 @@ import { redirect } from 'next/navigation'
 import { getCurrentUser } from '@/lib/auth'
 import { roleHierarchy } from '@/lib/roles'
 import SidePanel from '@/app/components/SidePanel'
-import BackToDashboard from '@/app/components/admin/BackToDashboard'
+import AdminBackBar from '@/app/components/admin/AdminBackBar'
 import '../globals.css'
 import QueryProvider from '../components/QueryProvider'
 
@@ -25,9 +25,7 @@ export default async function AdminLayout({
         <div className="admin-shell">
           <SidePanel userRole={user.role} />
           <main className="admin-main">
-            <div className="admin-back-bar">
-              <BackToDashboard role={user.role} />
-            </div>
+            <AdminBackBar role={user.role} />
             {children}
           </main>
         </div>

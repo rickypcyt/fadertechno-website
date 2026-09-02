@@ -2,10 +2,8 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { Home, LogOut } from 'lucide-react'
 import { getNavGrouped } from '@/lib/nav'
 import { roleHierarchy, Role } from '@/lib/roles'
-import SignOutButton from './admin/SignOutButton'
 
 interface SidePanelProps {
   userRole: string
@@ -52,15 +50,6 @@ export default function SidePanel({ userRole }: SidePanelProps) {
           </div>
         ))}
       </nav>
-      <div className="admin-sidebar-footer">
-        <Link href="/" className="admin-nav-link admin-nav-link-back">
-          <span className="admin-nav-tile">
-            <Home size={20} strokeWidth={1.8} />
-          </span>
-          <span className="admin-nav-label">Volver al inicio</span>
-        </Link>
-        <SignOutButton />
-      </div>
     </aside>
   )
 }

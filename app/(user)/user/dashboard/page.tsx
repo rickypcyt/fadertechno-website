@@ -10,15 +10,15 @@ export default async function UserDashboardPage() {
 
   // App grid: user's own group items (exclude the dashboard itself)
   const navGroups = getNavGrouped(user.role)
-  const userApps = navGroups
+  const userApps = (navGroups
     .find((g) => g.group === 'user')
-    ?.items.filter((a) => a.href !== '/user/dashboard') ?? []
+    ?.items.filter((a) => a.href !== '/user/dashboard') ?? [])
+    .sort((a, b) => a.label.localeCompare(b.label, 'es'))
 
   return (
     <AppHome
       apps={userApps}
-      greeting={getGreeting(user.role, user.name)}
-      subtitle={getFaderSubtitle()}
+      role={user.role}
     />
   )
 }

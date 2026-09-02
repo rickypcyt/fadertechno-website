@@ -1,25 +1,27 @@
 import Link from 'next/link'
 import type { NavItem } from '@/lib/nav'
+import type { Role } from '@/lib/roles'
+import SignOutButton from '@/app/components/admin/SignOutButton'
+import BackToDashboard from '@/app/components/admin/BackToDashboard'
 
 type Props = {
   apps: NavItem[]
   greeting?: string
   subtitle?: string
+  profileHref?: string
+  role: Role
 }
 
 export default function AppHome({
   apps,
-  greeting,
-  subtitle,
+  role,
 }: Props) {
   return (
     <div className="app-home">
-      <header className="app-home-header">
-        <div className="app-home-greeting">
-          <h1 className="app-home-title">{greeting ?? 'Panel'}</h1>
-          {subtitle && <p className="app-home-subtitle">{subtitle}</p>}
-        </div>
-      </header>
+      <nav className="app-home-navbar">
+        <BackToDashboard role={role} />
+        <SignOutButton />
+      </nav>
 
       <section className="app-home-grid">
         {apps.map((app) => {

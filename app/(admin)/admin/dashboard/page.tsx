@@ -19,12 +19,12 @@ export default async function DashboardPage() {
         a.href !== '/staff/dashboard' &&
         a.href !== '/user/dashboard'
     )
+    .sort((a, b) => a.label.localeCompare(b.label, 'es'))
 
   return (
     <AppHome
       apps={adminApps}
-      greeting={getGreeting(user?.role ?? Role.ADMIN, user?.name ?? null)}
-      subtitle={getFaderSubtitle()}
+      role={user?.role ?? Role.ADMIN}
     />
   )
 }

@@ -3,10 +3,10 @@
 import { useRef, useEffect, useState, useCallback } from 'react'
 
 const VIDEOS = [
-  '/fader.mp4',
-  '/banner2.mp4',
-  '/banner3.mp4',
-  '/banner4.mp4',
+  '/optimized/fader.mp4',
+  '/optimized/banner2.mp4',
+  '/optimized/banner3.mp4',
+  '/optimized/banner4.mp4',
 ]
 
 const CROSSFADE_MS = 2000
@@ -32,6 +32,13 @@ export default function VideoBg() {
   }, [index])
 
   const getEl = useCallback((s: Slot) => (s === 0 ? videoA.current : videoB.current), [])
+
+  // Set the src and reload. Uses optimized mp4 (30fps, CRF 28, faststart).
+  const setSources = useCallback((el: HTMLVideoElement | null, i: number) => {
+    if (!el) return
+    el.src = VIDEOS[i]
+    el.load()
+  }, [])
 
   const tryPlay = useCallback((el: HTMLVideoElement | null) => {
     if (!el) return
@@ -73,14 +80,9 @@ export default function VideoBg() {
       const inel = getEl(inactiveSlot)
       if (!inel) return
       inel.pause()
-      try {
-        inel.removeAttribute('src')
-        inel.load()
-      } catch {}
-      inel.src = VIDEOS[followingIndex]
-      inel.load()
+      setSources(inel, followingIndex)
     }, CROSSFADE_MS + 500)
-  }, [getEl, tryPlay])
+  }, [getEl, tryPlay, setSources])
 
   // When the active video ends, crossfade to the next one
   const handleEnded = useCallback(() => {
@@ -120,21 +122,21 @@ export default function VideoBg() {
     const currentEl = getEl(activeRef.current)
     if (currentEl) {
       currentEl.playbackRate = 1
-      currentEl.src = VIDEOS[indexRef.current]
-      currentEl.load()
+      setSources(currentEl, indexRef.current)
       tryPlay(currentEl)
     }
 
-    // Preload next video into inactive slot
+    // Preload next video into inactive slot (lazy: wait a tick so the
+    // active video's bytes take priority on the network)
     const nextSlot: Slot = activeRef.current === 0 ? 1 : 0
     const nextIndex = (indexRef.current + 1) % VIDEOS.length
     const nextEl = getEl(nextSlot)
     if (nextEl) {
       nextEl.playbackRate = 1
-      nextEl.src = VIDEOS[nextIndex]
-      nextEl.load()
+      const t = window.setTimeout(() => setSources(nextEl, nextIndex), 1500)
+      return () => window.clearTimeout(t)
     }
-  }, [getEl, tryPlay])
+  }, [getEl, tryPlay, setSources])
 
   // Resume active video when returning to the tab
   useEffect(() => {

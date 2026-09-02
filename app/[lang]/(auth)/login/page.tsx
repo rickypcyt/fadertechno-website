@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { X } from 'lucide-react'
 import LoginForm from '@/app/components/auth/LoginForm'
 import { getDictionary, hasLocale } from '@/lib/i18n/dictionaries'
 import { notFound } from 'next/navigation'
@@ -21,7 +22,9 @@ export default async function LoginPage({
   return (
     <section className="auth-page">
       <div className="auth-card">
-        <Link href={`/${lang}`} className="auth-close" aria-label={dict.auth.back}>×</Link>
+        <Link href={`/${lang}`} className="auth-close" aria-label={dict.auth.back}>
+          <X size={18} strokeWidth={2.5} />
+        </Link>
         <h1>{dict.auth.login.title}</h1>
         <LoginForm redirect={redirect} dict={dict} />
         <p className="auth-switch">
