@@ -77,6 +77,7 @@ export default function Nav({ dict }: { dict: Dictionary }) {
                 repeat: Infinity,
                 repeatDelay: 0,
               }}
+              suppressHydrationWarning
             />
           </span>
           <span className="nav-logo-text">FADER</span>

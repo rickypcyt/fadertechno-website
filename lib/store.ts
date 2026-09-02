@@ -1,7 +1,7 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 
-type UserRole = 'USER' | 'PROMOTER' | 'STAFF' | 'ADMIN' | 'SUPER_ADMIN' | null
+type UserRole = 'USER' | 'STAFF' | 'ADMIN' | null
 
 interface UserState {
   // User
@@ -21,15 +21,13 @@ interface UserState {
   setNavDrawer: (open: boolean) => void
 }
 
-const DEFAULT_TICKETS_URL = '/user/tickets'
+const DEFAULT_TICKETS_URL = '/user/dashboard'
 
 function getTicketsUrlForRole(role: UserRole): string {
   if (!role) return DEFAULT_TICKETS_URL
   switch (role) {
-    case 'SUPER_ADMIN': return '/admin/superadmin'
     case 'ADMIN': return '/admin/dashboard'
     case 'STAFF': return '/staff/dashboard'
-    case 'PROMOTER': return '/promoter'
     default: return DEFAULT_TICKETS_URL
   }
 }

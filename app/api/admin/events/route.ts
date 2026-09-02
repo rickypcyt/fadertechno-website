@@ -3,7 +3,7 @@ import { getCurrentUser } from '@/lib/auth'
 
 export async function POST(request: Request) {
   const user = await getCurrentUser()
-  if (!user || !['ADMIN', 'SUPER_ADMIN'].includes(user.role)) {
+  if (!user || user.role !== 'ADMIN') {
     return Response.json({ error: 'No autorizado' }, { status: 401 })
   }
 
@@ -71,7 +71,7 @@ export async function POST(request: Request) {
 
 export async function PATCH(request: Request) {
   const user = await getCurrentUser()
-  if (!user || !['ADMIN', 'SUPER_ADMIN'].includes(user.role)) {
+  if (!user || user.role !== 'ADMIN') {
     return Response.json({ error: 'No autorizado' }, { status: 401 })
   }
 

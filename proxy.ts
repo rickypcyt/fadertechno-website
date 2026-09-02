@@ -20,7 +20,6 @@ export function proxy(request: Request) {
     pathname.startsWith('/api') ||
     pathname.startsWith('/admin') ||
     pathname.startsWith('/staff') ||
-    pathname.startsWith('/promoter') ||
     pathname.startsWith('/user') ||
     pathname.includes('.')
   ) {
@@ -43,5 +42,5 @@ export function proxy(request: Request) {
 }
 
 export const config = {
-  matcher: ['/((?!_next|api|admin|staff|promoter|user|.*\\..*).*)'],
+  matcher: ['/((?!_next|api|admin|staff|user|.*\\..*).*)'],
 }

@@ -10,7 +10,7 @@ interface MarqueeProps {
 
 export default function Marquee({
   items,
-  speed = 40,
+  speed = 50,
   opacity = 0.06,
 }: MarqueeProps) {
   const ref = useRef<HTMLDivElement>(null)
@@ -21,7 +21,7 @@ export default function Marquee({
     el.style.animationDuration = `${speed}s`
   }, [speed])
 
-  const content = [...items, ...items, ...items]
+  const content = [...items, ...items, ...items, ...items, ...items, ...items]
 
   return (
     <div className="marquee" style={{ opacity }}>

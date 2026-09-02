@@ -8,12 +8,9 @@ export async function getRedirectUrl(): Promise<string> {
 
   switch (user.role) {
     case 'ADMIN':
-    case 'SUPER_ADMIN':
       return '/admin/dashboard'
     case 'STAFF':
       return '/staff/dashboard'
-    case 'PROMOTER':
-      return '/promoter/dashboard'
     case 'USER':
     default:
       return '/user/dashboard'

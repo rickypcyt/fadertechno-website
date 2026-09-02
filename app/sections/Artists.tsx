@@ -7,14 +7,14 @@ type Artist = {
   genre: string
   image: string
   span: string
-  descKey: 'LITN' | 'Cristian Camilo' | 'RUISUK'
+  descKey: 'LITN' | 'Cristian Camilo' | 'RUISUK' | 'Audio Units' | 'Hexxe' | 'Linear System'
 }
 
 const artists: Artist[] = [
   {
     name: 'LITN',
     genre: 'Deep Techno',
-    image: '/litn.jpg',
+    image: '/litn.jpg?v=2',
     span: 'col-4',
     descKey: 'LITN',
   },
@@ -31,6 +31,27 @@ const artists: Artist[] = [
     image: '/ruisuk.jpeg',
     span: 'col-4',
     descKey: 'RUISUK',
+  },
+  {
+    name: 'Audio Units',
+    genre: 'Techno',
+    image: '',
+    span: 'col-4',
+    descKey: 'Audio Units',
+  },
+  {
+    name: 'Hexxe',
+    genre: 'Techno',
+    image: '',
+    span: 'col-4',
+    descKey: 'Hexxe',
+  },
+  {
+    name: 'Linear System',
+    genre: 'Techno',
+    image: '',
+    span: 'col-4',
+    descKey: 'Linear System',
   },
 ]
 
@@ -50,14 +71,18 @@ export default function Artists({ dict }: { dict: Dictionary }) {
             delay={i * 0.08}
             className={`artist-card ${artist.span}`}
           >
-            <Image
-              src={artist.image}
-              alt={artist.name}
-              width={600}
-              height={800}
-              sizes="(max-width: 860px) 100vw, 33vw"
-              style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
-            />
+            {artist.image ? (
+              <Image
+                src={artist.image}
+                alt={artist.name}
+                width={600}
+                height={800}
+                sizes="(max-width: 860px) 100vw, 33vw"
+                style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+              />
+            ) : (
+              <div className="artist-placeholder" />
+            )}
             <div className="artist-overlay">
               <h4>{artist.name}</h4>
             </div>

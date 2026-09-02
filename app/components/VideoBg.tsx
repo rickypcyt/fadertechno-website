@@ -9,11 +9,7 @@ const VIDEOS = [
   '/banner4.mp4',
 ]
 
-const ROTATION_MS = 60_000
-const CROSSFADE_MS = 1000
-// Time to wait after a switch before swapping the src of the now-inactive slot,
-// so we don't yank the source while it's still fading out.
-const SWAP_DELAY_MS = CROSSFADE_MS + 500
+const CROSSFADE_MS = 2000
 const STORAGE_KEY = 'video-bg-index'
 
 type Slot = 0 | 1
@@ -24,13 +20,8 @@ export default function VideoBg() {
   const videoB = useRef<HTMLVideoElement>(null)
   const [active, setActive] = useState<Slot>(0)
   const [index, setIndex] = useState(0)
-  // Only used to disable the (already subtle) crossfade; the video itself
-  // still plays — it's a slow background, not motion that triggers vestibular
-  // issues.
   const [instantSwap, setInstantSwap] = useState(false)
 
-  // Refs mirroring state so the rotation loop can read latest values without
-  // re-subscribing the interval every render.
   const activeRef = useRef<Slot>(0)
   const indexRef = useRef(0)
   useEffect(() => {
@@ -42,36 +33,13 @@ export default function VideoBg() {
 
   const getEl = useCallback((s: Slot) => (s === 0 ? videoA.current : videoB.current), [])
 
-  // Ping-pong (seamless reverse) loop: instead of jumping back to frame 0
-  // when the video ends, we play it backwards (negative playbackRate) and
-  // then forward again — no visible cut. Tracked per-slot so each video
-  // keeps its own direction state.
-  const dirA = useRef<1 | -1>(1)
-  const dirB = useRef<1 | -1>(1)
-  const getDir = useCallback((s: Slot) => (s === 0 ? dirA : dirB), [])
-  const setDir = useCallback((s: Slot, d: 1 | -1) => {
-    const ref = s === 0 ? dirA : dirB
-    ref.current = d
-  }, [])
-
-  // Small threshold (seconds) to detect "we're back at the start" while
-  // playing in reverse. timeupdate fires ~4×/s so this is more than enough.
-  const REVERSE_START_THRESHOLD = 0.05
-
   const tryPlay = useCallback((el: HTMLVideoElement | null) => {
     if (!el) return
     const p = el.play()
     if (!p) return
-    p.then(() => {
-      // Forward start — direction is flipped back to 1 by onTimeUpdate
-      // when the reverse pass reaches the beginning.
-      el.playbackRate = 1
-    }).catch(() => {
-      // Autoplay blocked: retry on first user interaction.
+    p.catch(() => {
       const resume = () => {
-        el.play().then(() => {
-          el.playbackRate = 1
-        }).catch(() => {})
+        el.play().catch(() => {})
       }
       document.addEventListener('click', resume, { once: true })
       document.addEventListener('touchstart', resume, { once: true })
@@ -79,43 +47,54 @@ export default function VideoBg() {
     })
   }, [])
 
-  // Seamless reverse: when the forward pass ends, flip to negative
-  // playbackRate and keep playing — no cut, no jump to 0.
-  const handleEnded = useCallback((slot: Slot) => {
-    const el = getEl(slot)
+  // Crossfade to the next video. The inactive slot already has the next video
+  // preloaded — we just start it and swap opacity.
+  const crossfadeToNext = useCallback(() => {
+    const nextSlot: Slot = activeRef.current === 0 ? 1 : 0
+    const nextIndex = (indexRef.current + 1) % VIDEOS.length
+    const el = getEl(nextSlot)
     if (!el) return
+
+    // Start the incoming video from the beginning
     try {
-      el.playbackRate = -1
-      setDir(slot, -1)
-      // Some browsers pause on ended; kick it back into motion.
-      const p = el.play()
-      if (p) p.catch(() => {})
+      el.currentTime = 0
+      el.playbackRate = 1
     } catch {}
-  }, [getEl, setDir])
+    tryPlay(el)
 
-  // When the reverse pass reaches the start, flip back to forward.
-  const handleTimeUpdate = useCallback((slot: Slot) => {
-    const el = getEl(slot)
-    if (!el) return
-    const dir = getDir(slot).current
-    if (dir === -1 && el.currentTime <= REVERSE_START_THRESHOLD) {
+    setActive(nextSlot)
+    setIndex(nextIndex)
+
+    // After the crossfade finishes, preload the following video into the
+    // now-inactive slot so it's ready for the next transition.
+    window.setTimeout(() => {
+      const inactiveSlot: Slot = nextSlot === 0 ? 1 : 0
+      const followingIndex = (nextIndex + 1) % VIDEOS.length
+      const inel = getEl(inactiveSlot)
+      if (!inel) return
+      inel.pause()
       try {
-        el.currentTime = 0
-        el.playbackRate = 1
-        setDir(slot, 1)
+        inel.removeAttribute('src')
+        inel.load()
       } catch {}
-    }
-  }, [getEl, getDir, setDir])
+      inel.src = VIDEOS[followingIndex]
+      inel.load()
+    }, CROSSFADE_MS + 500)
+  }, [getEl, tryPlay])
 
-  // Reduced motion => drop the crossfade to an instant swap, but keep the
-  // video (it's a slow, dim background, not vestibular-triggering motion).
+  // When the active video ends, crossfade to the next one
+  const handleEnded = useCallback(() => {
+    crossfadeToNext()
+  }, [crossfadeToNext])
+
+  // Reduced motion => instant swap, no crossfade
   useEffect(() => {
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
       setInstantSwap(true)
     }
   }, [])
 
-  // Restore last index from sessionStorage so a refresh continues the cycle.
+  // Restore last index from sessionStorage
   useEffect(() => {
     try {
       const saved = sessionStorage.getItem(STORAGE_KEY)
@@ -129,78 +108,35 @@ export default function VideoBg() {
     } catch {}
   }, [])
 
-  // Persist index.
+  // Persist index
   useEffect(() => {
     try {
       sessionStorage.setItem(STORAGE_KEY, String(index))
     } catch {}
   }, [index])
 
-  // Bootstrap + rotation loop. Runs once on mount.
+  // Bootstrap: load current video into active slot, preload next into inactive
   useEffect(() => {
-    // Load current video into the active slot and start it.
     const currentEl = getEl(activeRef.current)
     if (currentEl) {
-      setDir(activeRef.current, 1)
       currentEl.playbackRate = 1
       currentEl.src = VIDEOS[indexRef.current]
       currentEl.load()
       tryPlay(currentEl)
     }
 
-    // Preload the next video into the inactive slot so it's ready to fade in.
-    const preloadNext = () => {
-      const nextSlot: Slot = activeRef.current === 0 ? 1 : 0
-      const nextIndex = (indexRef.current + 1) % VIDEOS.length
-      const el = getEl(nextSlot)
-      if (el) {
-        setDir(nextSlot, 1)
-        el.playbackRate = 1
-        el.src = VIDEOS[nextIndex]
-        el.load()
-      }
+    // Preload next video into inactive slot
+    const nextSlot: Slot = activeRef.current === 0 ? 1 : 0
+    const nextIndex = (indexRef.current + 1) % VIDEOS.length
+    const nextEl = getEl(nextSlot)
+    if (nextEl) {
+      nextEl.playbackRate = 1
+      nextEl.src = VIDEOS[nextIndex]
+      nextEl.load()
     }
-    preloadNext()
+  }, [getEl, tryPlay])
 
-    const interval = setInterval(() => {
-      const nextSlot: Slot = activeRef.current === 0 ? 1 : 0
-      const nextIndex = (indexRef.current + 1) % VIDEOS.length
-      const el = getEl(nextSlot)
-      if (!el) return
-
-      // Start the incoming video from its beginning (forward), then crossfade.
-      setDir(nextSlot, 1)
-      try {
-        el.currentTime = 0
-        el.playbackRate = 1
-      } catch {}
-      tryPlay(el)
-
-      setActive(nextSlot)
-      setIndex(nextIndex)
-
-      // After the crossfade finishes, swap the now-inactive slot's src to the
-      // following video (paused/preloaded) — keeps only two videos in memory.
-      window.setTimeout(() => {
-        const inactiveSlot: Slot = nextSlot === 0 ? 1 : 0
-        const followingIndex = (nextIndex + 1) % VIDEOS.length
-        const inel = getEl(inactiveSlot)
-        if (!inel) return
-        inel.pause()
-        setDir(inactiveSlot, 1)
-        try {
-          inel.removeAttribute('src')
-          inel.load()
-        } catch {}
-        inel.src = VIDEOS[followingIndex]
-        inel.load()
-      }, SWAP_DELAY_MS)
-    }, ROTATION_MS)
-
-    return () => clearInterval(interval)
-  }, [getEl, getDir, setDir, tryPlay])
-
-  // Resume the active video when returning to the tab.
+  // Resume active video when returning to the tab
   useEffect(() => {
     const onVis = () => {
       if (!document.hidden) tryPlay(getEl(activeRef.current))
@@ -216,8 +152,7 @@ export default function VideoBg() {
         muted
         playsInline
         preload="auto"
-        onEnded={() => handleEnded(0)}
-        onTimeUpdate={() => handleTimeUpdate(0)}
+        onEnded={handleEnded}
         className={active === 0 ? 'is-active' : 'is-hidden'}
         style={instantSwap ? { transition: 'none' } : undefined}
       />
@@ -226,8 +161,7 @@ export default function VideoBg() {
         muted
         playsInline
         preload="auto"
-        onEnded={() => handleEnded(1)}
-        onTimeUpdate={() => handleTimeUpdate(1)}
+        onEnded={handleEnded}
         className={active === 1 ? 'is-active' : 'is-hidden'}
         style={instantSwap ? { transition: 'none' } : undefined}
       />

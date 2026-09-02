@@ -52,10 +52,8 @@ export default function LoginForm({ redirect, dict }: { redirect?: string; dict:
       const meRes = await fetch('/api/me', { credentials: 'include' })
       if (meRes.ok) {
         const me = await meRes.json()
-        if (me.role === 'SUPER_ADMIN') router.replace('/admin/superadmin')
-        else if (me.role === 'ADMIN') router.replace('/admin/dashboard')
+        if (me.role === 'ADMIN') router.replace('/admin/dashboard')
         else if (me.role === 'STAFF') router.replace('/staff/dashboard')
-        else if (me.role === 'PROMOTER') router.replace('/promoter')
         else router.replace('/user/dashboard')
         router.refresh()
         return

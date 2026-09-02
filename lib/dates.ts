@@ -7,7 +7,8 @@ const locales = { es, en: enUS }
  * Format event date as "Sábado 15 feb" / "Saturday 15 Feb"
  */
 export function formatEventDate(date: Date, locale: 'es' | 'en' = 'es'): string {
-  return format(new Date(date), 'EEEE d MMM', { locale: locales[locale] })
+  const formatted = format(new Date(date), 'EEEE d MMM', { locale: locales[locale] })
+  return formatted.charAt(0).toUpperCase() + formatted.slice(1)
 }
 
 /**

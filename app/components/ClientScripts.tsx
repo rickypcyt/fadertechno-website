@@ -7,6 +7,12 @@ export default function ClientScripts() {
   const pathname = usePathname()
 
   useEffect(() => {
+    const segments = pathname.split('/')
+    const maybeLang = segments[1]
+    if (maybeLang === 'es' || maybeLang === 'en') {
+      document.documentElement.lang = maybeLang
+    }
+
     const nav = document.getElementById('nav')
     const progressBar = document.getElementById('scroll-progress')
     const glow = document.getElementById('cursor-glow')

@@ -106,7 +106,7 @@
     "intro": "Get info about upcoming events, releases and exclusive content.",
     "emailLabel": "Email",
     "required": "*",
-    "submit": "Submit",
+    "submit": "Join FADER",
     "success": "You're in.",
     "error": "Subscription failed. Try again."
   },

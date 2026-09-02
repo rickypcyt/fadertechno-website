@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 
-const roles = ['USER', 'STAFF', 'PROMOTER', 'ADMIN', 'SUPER_ADMIN'] as const
+const roles = ['USER', 'STAFF', 'ADMIN'] as const
 
 type User = {
   id: string

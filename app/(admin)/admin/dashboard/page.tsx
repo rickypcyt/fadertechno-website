@@ -1,27 +1,30 @@
 import { requireRole } from '@/lib/permissions'
 import { getCurrentUser } from '@/lib/auth'
+import { Role } from '@/lib/roles'
 import { getNavGrouped } from '@/lib/nav'
+import { getGreeting, getFaderSubtitle } from '@/lib/greeting'
 import AppHome from '@/app/components/admin/AppHome'
 
 export default async function DashboardPage() {
   await requireRole('ADMIN')
   const user = await getCurrentUser()
 
-  // App grid: admin group items (exclude the dashboard itself)
-  const navGroups = getNavGrouped(user?.role ?? 'ADMIN')
+  // App grid: user + staff + admin group items (exclude dashboards)
+  const navGroups = getNavGrouped(user?.role ?? Role.ADMIN)
   const adminApps = navGroups
-    .find((g) => g.group === 'admin')
-    ?.items.filter((a) => a.href !== '/admin/dashboard') ?? []
+    .flatMap((g) => g.items)
+    .filter(
+      (a) =>
+        a.href !== '/admin/dashboard' &&
+        a.href !== '/staff/dashboard' &&
+        a.href !== '/user/dashboard'
+    )
 
   return (
     <AppHome
       apps={adminApps}
-      greeting={`Hola, ${user?.name ?? ''}`.trim() || 'Hola'}
-      subtitle={new Date().toLocaleDateString('es-ES', {
-        weekday: 'long',
-        day: 'numeric',
-        month: 'long',
-      })}
+      greeting={getGreeting(user?.role ?? Role.ADMIN, user?.name ?? null)}
+      subtitle={getFaderSubtitle()}
     />
   )
 }

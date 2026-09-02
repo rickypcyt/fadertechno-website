@@ -5,7 +5,7 @@ export default function Historia({ dict }: { dict: Dictionary }) {
   const blocks = dict.historia.blocks
 
   return (
-    <section id="historia" className="historia sec sec-4 layout-wide">
+    <section id="historia" className="historia sec sec-4 layout-full">
       <div className="historia-inner">
         <Reveal from="left" className="historia-head">
           <div className="section-label">{dict.historia.label}</div>

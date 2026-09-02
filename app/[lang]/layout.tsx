@@ -1,5 +1,4 @@
 import type { Metadata } from 'next'
-import { inter, switzer } from '../fonts'
 import '../globals.css'
 import ClientScripts from '../components/ClientScripts'
 import VideoBg from '../components/VideoBg'
@@ -89,19 +88,15 @@ export default async function LangLayout({
   const dict = await getDictionary(lang)
 
   return (
-    <html lang={lang} className={`${inter.variable} ${switzer.variable}`}>
-      <body className={inter.className}>
-        <QueryProvider>
-          <I18nProvider dict={dict}>
-            <VideoBg />
-            <div className="video-bg-overlay" />
-            <div className="noise-overlay" />
-            <div className="cursor-glow" id="cursor-glow" />
-            {children}
-            <ClientScripts />
-          </I18nProvider>
-        </QueryProvider>
-      </body>
-    </html>
+    <QueryProvider>
+      <I18nProvider dict={dict}>
+        <VideoBg />
+        <div className="video-bg-overlay" />
+        <div className="noise-overlay" />
+        <div className="cursor-glow" id="cursor-glow" />
+        {children}
+        <ClientScripts />
+      </I18nProvider>
+    </QueryProvider>
   )
 }

@@ -2,6 +2,7 @@ import { requireRole } from '@/lib/permissions'
 import { Role } from '@/lib/roles'
 import { getCurrentUser } from '@/lib/auth'
 import { getNavGrouped } from '@/lib/nav'
+import { getGreeting, getFaderSubtitle } from '@/lib/greeting'
 import AppHome from '@/app/components/admin/AppHome'
 
 export default async function UserDashboardPage() {
@@ -13,17 +14,11 @@ export default async function UserDashboardPage() {
     .find((g) => g.group === 'user')
     ?.items.filter((a) => a.href !== '/user/dashboard') ?? []
 
-  const greeting = `Hola, ${user.name ?? ''}`.trim()
-
   return (
     <AppHome
       apps={userApps}
-      greeting={greeting || 'Hola'}
-      subtitle={new Date().toLocaleDateString('es-ES', {
-        weekday: 'long',
-        day: 'numeric',
-        month: 'long',
-      })}
+      greeting={getGreeting(user.role, user.name)}
+      subtitle={getFaderSubtitle()}
     />
   )
 }

@@ -3,7 +3,7 @@ import { getCurrentUser } from '@/lib/auth'
 
 export async function POST(request: Request) {
   const user = await getCurrentUser()
-  if (!user || !['STAFF', 'ADMIN', 'SUPER_ADMIN'].includes(user.role)) {
+  if (!user || !['STAFF', 'ADMIN'].includes(user.role)) {
     return Response.json({ status: 'error', message: 'No autorizado' }, { status: 401 })
   }
 

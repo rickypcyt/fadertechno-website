@@ -1,19 +1,16 @@
 import Link from 'next/link'
-import { ArrowLeft, Home } from 'lucide-react'
 import type { NavItem } from '@/lib/nav'
 
 type Props = {
   apps: NavItem[]
   greeting?: string
   subtitle?: string
-  homeHref?: string
 }
 
 export default function AppHome({
   apps,
   greeting,
   subtitle,
-  homeHref = '/',
 }: Props) {
   return (
     <div className="app-home">
@@ -22,10 +19,6 @@ export default function AppHome({
           <h1 className="app-home-title">{greeting ?? 'Panel'}</h1>
           {subtitle && <p className="app-home-subtitle">{subtitle}</p>}
         </div>
-        <Link href={homeHref} className="app-home-back">
-          <Home size={18} strokeWidth={2} />
-          <span>Volver al inicio</span>
-        </Link>
       </header>
 
       <section className="app-home-grid">

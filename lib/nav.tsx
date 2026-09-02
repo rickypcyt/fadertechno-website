@@ -7,15 +7,9 @@ import {
   ShieldCheck,
   ScanLine,
   LayoutDashboard,
-  Zap,
-  Mic2,
-  Megaphone,
   Users,
-  Images,
   Mail,
-  Handshake,
   BarChart3,
-  Settings,
   type LucideIcon,
 } from 'lucide-react'
 import { Role, roleHierarchy } from '@/lib/roles'
@@ -29,7 +23,6 @@ export type NavItem = {
   color: string
   group: NavGroup
   minRole: Role
-  superAdminOnly?: boolean
 }
 
 export const navGroupLabels: Record<NavGroup, string> = {
@@ -111,15 +104,6 @@ export const allNavItems: NavItem[] = [
     minRole: Role.ADMIN,
   },
   {
-    href: '/admin/superadmin',
-    label: 'Super Admin',
-    icon: Zap,
-    color: 'linear-gradient(135deg, #F59E0B 0%, #FBBF24 100%)',
-    group: 'admin',
-    minRole: Role.ADMIN,
-    superAdminOnly: true,
-  },
-  {
     href: '/admin/events',
     label: 'Eventos',
     icon: Calendar,
@@ -136,34 +120,10 @@ export const allNavItems: NavItem[] = [
     minRole: Role.ADMIN,
   },
   {
-    href: '/admin/artists',
-    label: 'Artistas',
-    icon: Mic2,
-    color: 'linear-gradient(135deg, #EC4899 0%, #F43F5E 100%)',
-    group: 'admin',
-    minRole: Role.ADMIN,
-  },
-  {
-    href: '/admin/promoters',
-    label: 'RRPP',
-    icon: Megaphone,
-    color: 'linear-gradient(135deg, #10B981 0%, #059669 100%)',
-    group: 'admin',
-    minRole: Role.ADMIN,
-  },
-  {
     href: '/admin/users',
     label: 'Usuarios',
     icon: Users,
     color: 'linear-gradient(135deg, #3B82F6 0%, #2563EB 100%)',
-    group: 'admin',
-    minRole: Role.ADMIN,
-  },
-  {
-    href: '/admin/gallery',
-    label: 'Galería',
-    icon: Images,
-    color: 'linear-gradient(135deg, #14B8A6 0%, #0D9488 100%)',
     group: 'admin',
     minRole: Role.ADMIN,
   },
@@ -184,26 +144,10 @@ export const allNavItems: NavItem[] = [
     minRole: Role.ADMIN,
   },
   {
-    href: '/admin/sponsors',
-    label: 'Patrocinadores',
-    icon: Handshake,
-    color: 'linear-gradient(135deg, #A855F7 0%, #7C3AED 100%)',
-    group: 'admin',
-    minRole: Role.ADMIN,
-  },
-  {
     href: '/admin/analytics',
     label: 'Analytics',
     icon: BarChart3,
     color: 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)',
-    group: 'admin',
-    minRole: Role.ADMIN,
-  },
-  {
-    href: '/admin/settings',
-    label: 'Ajustes',
-    icon: Settings,
-    color: 'linear-gradient(135deg, #64748B 0%, #475569 100%)',
     group: 'admin',
     minRole: Role.ADMIN,
   },
@@ -214,7 +158,6 @@ export type NavGrouped = { group: NavGroup; label: string; items: NavItem[] }
 export function getNavGrouped(role: string): NavGrouped[] {
   const level = roleHierarchy[role] ?? 0
   const visible = allNavItems.filter((item) => {
-    if (item.superAdminOnly && role !== 'SUPER_ADMIN') return false
     return level >= roleHierarchy[item.minRole]
   })
 

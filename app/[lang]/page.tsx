@@ -15,6 +15,8 @@ import { notFound } from 'next/navigation'
 
 const siteUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'https://faderclub.com'
 
+export const dynamic = 'force-dynamic'
+
 export default async function Home({
   params,
 }: {
@@ -93,7 +95,7 @@ export default async function Home({
         <Marquee
           items={['FADER', 'MUSIC', 'CLUB']}
           speed={50}
-          opacity={0.25}
+          opacity={0.4}
         />
       </div>
       <Footer dict={dict} />

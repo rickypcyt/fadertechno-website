@@ -40,8 +40,8 @@ export default function Footer({ dict }: { dict: Dictionary }) {
       </div>
 
       <div className="footer-bottom">
-        <span>{dict.footer.location}</span>
         <span>{dict.footer.rights}</span>
+        <span className="footer-brand-location">Alicante, Spain</span>
       </div>
     </footer>
   )

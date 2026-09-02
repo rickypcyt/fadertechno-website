@@ -6,7 +6,7 @@ import { useUserStore } from '@/lib/store'
 import { useEffect } from 'react'
 
 interface MeResponse {
-  role: 'USER' | 'PROMOTER' | 'STAFF' | 'ADMIN' | 'SUPER_ADMIN'
+  role: 'USER' | 'STAFF' | 'ADMIN'
   name?: string
   email?: string
 }

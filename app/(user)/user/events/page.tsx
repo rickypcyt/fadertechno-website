@@ -30,19 +30,13 @@ export default async function EventsPage() {
 
   return (
     <div>
-      <div style={{ marginBottom: '24px' }}>
-        <a href="/" className="back-link">Volver</a>
-      </div>
       <h1>Eventos</h1>
       <p className="text-dim">Próximos eventos disponibles</p>
 
       <div className="admin-grid" style={{ marginTop: '32px' }}>
         {events.length === 0 ? (
           <div className="admin-card">
-            <h3>FADER Club Wilson</h3>
-            <p className="text-dim">14 de Agosto · Discoteca Wilson — Alicante · +18</p>
-            <p className="text-dim">Line-up: RUISUK, Cristian Camilo, LITN</p>
-            <div className="admin-card-meta"><span className="admin-badge">14 Ago</span></div>
+            <p className="text-dim">Por el momento no hay eventos disponibles.</p>
           </div>
         ) : (
           events.map((event) => {

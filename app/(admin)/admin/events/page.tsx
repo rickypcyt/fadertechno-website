@@ -1,6 +1,7 @@
 import prisma from '@/lib/prisma'
 import { requireRole } from '@/lib/permissions'
 import EventForm from '@/app/components/admin/EventForm'
+import EventPublishToggle from '@/app/components/admin/EventPublishToggle'
 
 export default async function AdminEventsPage() {
   await requireRole('ADMIN')
@@ -23,7 +24,7 @@ export default async function AdminEventsPage() {
         <EventForm />
       </div>
 
-      <div className="admin-list" style={{ marginTop: '24px' }}>
+      <div className="event-cards" style={{ marginTop: '24px' }}>
         {events.length === 0 ? (
           <p className="text-dim">No hay eventos creados. Crea el primero con el botón de arriba.</p>
         ) : (
@@ -36,26 +37,47 @@ export default async function AdminEventsPage() {
               (sum: number, tt: typeof event.ticketTypes[0]) => sum + tt.stock,
               0
             )
+            const fillPct = totalStock > 0 ? Math.min(100, Math.round((sold / totalStock) * 100)) : 0
+            const isPast = new Date(event.startDate) < new Date()
             return (
-              <div key={event.id} className="admin-list-item">
-                <div>
-                  <div><strong>{event.title}</strong></div>
-                  <div className="text-dim" style={{ fontSize: '1rem' }}>
+              <div key={event.id} className={`event-card${event.published ? '' : ' is-draft'}${isPast ? ' is-past' : ''}`}>
+                <div className="event-card-header">
+                  <div className="event-card-title">
+                    <strong>{event.title}</strong>
+                    {isPast && <span className="event-card-tag">Pasado</span>}
+                  </div>
+                  <EventPublishToggle eventId={event.id} published={event.published} />
+                </div>
+                <div className="event-card-meta">
+                  <span>
                     {new Date(event.startDate).toLocaleDateString('es-ES', {
                       day: 'numeric',
                       month: 'short',
                       year: 'numeric',
                       hour: '2-digit',
                       minute: '2-digit',
-                    })} · {event.venue.name}
+                    })}
+                  </span>
+                  <span className="event-card-dot">·</span>
+                  <span>{event.venue.name}</span>
+                </div>
+                <div className="event-card-stats">
+                  <div className="event-card-stat">
+                    <span className="event-card-stat-label">Vendidas</span>
+                    <span className="event-card-stat-value">{sold} / {totalStock}</span>
                   </div>
-                  <div className="text-dim" style={{ fontSize: '1rem' }}>
-                    {sold} / {totalStock} vendidas · {event.ticketTypes.length} tipos
+                  <div className="event-card-stat">
+                    <span className="event-card-stat-label">Tipos</span>
+                    <span className="event-card-stat-value">{event.ticketTypes.length}</span>
+                  </div>
+                  <div className="event-card-stat">
+                    <span className="event-card-stat-label">Ocupación</span>
+                    <span className="event-card-stat-value">{fillPct}%</span>
                   </div>
                 </div>
-                <span className={`admin-badge${event.published ? '' : ' muted'}`}>
-                  {event.published ? 'Activo' : 'Borrador'}
-                </span>
+                <div className="event-card-bar-track">
+                  <div className="event-card-bar-fill" style={{ width: `${fillPct}%` }} />
+                </div>
               </div>
             )
           })
