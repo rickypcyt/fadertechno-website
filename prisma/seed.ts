@@ -21,18 +21,18 @@ async function main() {
     },
   })
 
-  // Crear o actualizar evento TBA.
+  // Crear o actualizar evento Wilson (14 ago 2026, evento pasado).
   // Horas en UTC para que representen 22:00-06:00 hora de Alicante (CEST, UTC+2):
-  //   2026-09-27T20:00:00Z -> 22:00 Alicante
-  //   2026-09-28T04:00:00Z -> 06:00 Alicante
+  //   2026-08-14T20:00:00Z -> 22:00 Alicante
+  //   2026-08-15T04:00:00Z -> 06:00 Alicante
   const event = await prisma.event.upsert({
     where: { slug: 'fadermusicclubdiscotecawilson' },
     update: {
       title: 'FADER Music Club Discoteca Wilson',
       description:
         'Próximo evento de FADER. Pronto anunciaremos line-up y fecha definitiva. Una sesión centrada en el techno hipnótico y el dub techno, en un espacio diseñado desde el sonido y la luz.',
-      startDate: new Date('2026-09-27T20:00:00Z'),
-      endDate: new Date('2026-09-28T04:00:00Z'),
+      startDate: new Date('2026-08-14T20:00:00Z'),
+      endDate: new Date('2026-08-15T04:00:00Z'),
       venueId: venue.id,
       published: true,
     },
@@ -41,8 +41,8 @@ async function main() {
       slug: 'fadermusicclubdiscotecawilson',
       description:
         'Próximo evento de FADER. Pronto anunciaremos line-up y fecha definitiva. Una sesión centrada en el techno hipnótico y el dub techno, en un espacio diseñado desde el sonido y la luz.',
-      startDate: new Date('2026-09-27T20:00:00Z'),
-      endDate: new Date('2026-09-28T04:00:00Z'),
+      startDate: new Date('2026-08-14T20:00:00Z'),
+      endDate: new Date('2026-08-15T04:00:00Z'),
       venueId: venue.id,
       published: true,
     },

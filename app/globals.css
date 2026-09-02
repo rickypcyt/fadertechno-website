@@ -474,10 +474,11 @@ img {
 .marquee-track {
   display: flex;
   white-space: nowrap;
-  animation: marquee-scroll 50s linear infinite;
-  animation-duration: var(--marquee-duration, 50s);
   will-change: transform;
+  /* Promueve el track a su propia capa GPU en Safari iOS */
+  transform: translateZ(0);
   backface-visibility: hidden;
+  contain: layout style paint;
 }
 
 .marquee-item {
@@ -490,11 +491,6 @@ img {
   flex-shrink: 0;
   margin-right: 40px;
   color: var(--text);
-}
-
-@keyframes marquee-scroll {
-  from { transform: translate3d(0, 0, 0); }
-  to { transform: translate3d(-50%, 0, 0); }
 }
 
 @media (max-width: 768px) {
