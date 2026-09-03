@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "dev:full": "concurrently -k -n next,inngest,stripe -c green,cyan,magenta \"next dev\" \"npx inngest-cli@latest dev\" \"stripe listen --forward-to localhost:3000/api/webhook/stripe\"",
     "build": "next build",
     "start": "next start",
     "postinstall": "prisma generate",
@@ -53,6 +54,7 @@
     "@types/react": "19",
     "@types/react-dom": "19",
     "@types/ws": "^8.18.1",
+    "concurrently": "^10.0.5",
     "prisma": "5",
     "typescript": "5"
   }
